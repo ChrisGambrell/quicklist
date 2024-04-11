@@ -1,11 +1,10 @@
 import DeleteRuleButton from '@/components/delete-rule-button'
 import { Listing } from '@/components/listing'
-import NewUploadForm from '@/components/new-upload-form'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Separator } from '@/components/ui/separator'
 import { createClient } from '@/utils/supabase/server'
-import { addRule } from './actions'
+import { addRule, createListing } from './actions'
 
 export const dynamic = 'force-dynamic'
 
@@ -16,11 +15,6 @@ export default async function RootPage() {
 
 	return (
 		<div className='grid gap-8'>
-			<div className='space-y-2'>
-				<h3 className='tracking-tight font-bold'>Upload new item</h3>
-				<NewUploadForm />
-			</div>
-			<Separator />
 			<div className='grid gap-2'>
 				<h3 className='tracking-tight font-bold'>Rules</h3>
 
@@ -39,7 +33,14 @@ export default async function RootPage() {
 			</div>
 			<Separator />
 			<div className='grid gap-2'>
-				<h3 className='tracking-tight font-bold'>Uploaded items</h3>
+				<div className='flex items-end space-x-4'>
+					<div className='flex-1'>
+						<h3 className='tracking-tight font-bold text-3xl'>My listings</h3>
+					</div>
+					<form action={createListing} className='flex-shrink-0'>
+						<Button size='sm'>New Listing</Button>
+					</form>
+				</div>
 				<div className='grid gap-2'>
 					{listings?.map((listing) => (
 						<Listing key={listing.id} listing={listing} />
