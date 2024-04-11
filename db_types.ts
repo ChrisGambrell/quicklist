@@ -34,32 +34,6 @@ export type Database = {
   }
   public: {
     Tables: {
-      listing_images: {
-        Row: {
-          file_path: string
-          id: string
-          listing_id: string | null
-        }
-        Insert: {
-          file_path: string
-          id?: string
-          listing_id?: string | null
-        }
-        Update: {
-          file_path?: string
-          id?: string
-          listing_id?: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "listing_images_listing_id_fkey"
-            columns: ["listing_id"]
-            isOneToOne: false
-            referencedRelation: "listings"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
       listings: {
         Row: {
           description: string | null
