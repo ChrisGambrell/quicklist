@@ -24,16 +24,7 @@ export default async function RootPage() {
 			</div>
 			<Separator />
 			<div className='grid gap-2'>
-				<div className='flex items-center space-x-2'>
-					<div className='flex-1'>
-						<h3 className='tracking-tight font-bold'>Rules</h3>
-					</div>
-					<div className='flex-shrink-0'>
-						<Button size='icon' variant='ghost'>
-							<PlusIcon className='w-5 h-5' />
-						</Button>
-					</div>
-				</div>
+				<h3 className='tracking-tight font-bold'>Rules</h3>
 
 				<form action={addRule} className='grid gap-2'>
 					{rules?.map((rule) => (
