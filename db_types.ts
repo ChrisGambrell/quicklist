@@ -36,43 +36,49 @@ export type Database = {
     Tables: {
       listings: {
         Row: {
+          created_at: string
           description: string | null
-          file_path: string | null
           id: string
           price: number | null
-          status: Database["public"]["Enums"]["listing_status_type"]
           title: string | null
+          updated_at: string
         }
         Insert: {
+          created_at?: string
           description?: string | null
-          file_path?: string | null
           id?: string
           price?: number | null
-          status?: Database["public"]["Enums"]["listing_status_type"]
           title?: string | null
+          updated_at?: string
         }
         Update: {
+          created_at?: string
           description?: string | null
-          file_path?: string | null
           id?: string
           price?: number | null
-          status?: Database["public"]["Enums"]["listing_status_type"]
           title?: string | null
+          updated_at?: string
         }
         Relationships: []
       }
       rules: {
         Row: {
+          created_at: string
           id: string
           rule: string
+          updated_at: string
         }
         Insert: {
+          created_at?: string
           id?: string
           rule: string
+          updated_at?: string
         }
         Update: {
+          created_at?: string
           id?: string
           rule?: string
+          updated_at?: string
         }
         Relationships: []
       }
@@ -84,7 +90,7 @@ export type Database = {
       [_ in never]: never
     }
     Enums: {
-      listing_status_type: "draft" | "published"
+      [_ in never]: never
     }
     CompositeTypes: {
       [_ in never]: never
