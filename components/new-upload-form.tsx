@@ -30,6 +30,10 @@ export default function NewUploadForm() {
 			if (signedUrlError || !data?.signedUrl) throw signedUrlError?.message ?? new Error('Failed to create signed url')
 			const signedUrl = data.signedUrl.replace('http://127.0.0.1:54321', process.env.NEXT_PUBLIC_NGROK_URL ?? '')
 
+			const { data: rules } = await supabase.from('rules').select()
+			const rulesText = rules?.map((rule) => rule.rule).join('; ') ?? ''
+			console.log('rulesText', rulesText)
+
 			const openai = new OpenAI({ apiKey: process.env.NEXT_PUBLIC_OPENAI_KEY, dangerouslyAllowBrowser: true })
 			const res = await openai.chat.completions.create({
 				model: 'gpt-4-vision-preview',
@@ -39,7 +43,7 @@ export default function NewUploadForm() {
 						content: [
 							{
 								type: 'text',
-								text: 'Describe this item for an Ebay listing in the following format: \'{"title": "[title]", "description": "[description]", "price": [price]}\'"',
+								text: `Describe this item for an Ebay listing in the following format: \'{"title": "[title]", "description": "[description]", "price": [price]}\'" with these rules: ${rulesText}`,
 							},
 							{ type: 'image_url', image_url: { url: signedUrl } },
 						],

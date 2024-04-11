@@ -8,10 +8,12 @@
 		"start": "next start",
 		"lint": "next lint",
 		"supabase:restart": "npx supabase stop && npx supabase start",
-		"supabase:gen-types": "npx supabase gen types typescript --local > ./db_types.ts"
+		"supabase:gen-types": "npx supabase gen types typescript --local > ./db_types.ts",
+		"supabase:up": "npx supabase migration up && npm run supabase:gen-types"
 	},
 	"dependencies": {
 		"@radix-ui/react-alert-dialog": "^1.0.5",
+		"@radix-ui/react-separator": "^1.0.3",
 		"@radix-ui/react-slot": "^1.0.2",
 		"@supabase/supabase-js": "^2.42.0",
 		"class-variance-authority": "^0.7.0",
