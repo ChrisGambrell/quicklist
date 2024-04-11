@@ -12,7 +12,7 @@ export async function Listing({ listing }: { listing: Tables<'listings'> }) {
 			href={`/listing/${listing.id}`}>
 			<div className='flex-shrink-0'>
 				{images && images.length > 0 ? (
-					<img className='h-12 sm:h-24 rounded-lg' src={images[0].signedUrl} />
+					<img className='h-12 w-12 sm:h-24 sm:w-24 object-cover rounded-lg' src={images[0].signedUrl} />
 				) : (
 					<div className='h-12 w-12 sm:h-24 sm:w-24 rounded-lg bg-gray-200 flex items-center justify-center'>
 						<ImageIcon className='w-5 h-5 sm:w-7 sm:h-7 text-gray-400' />
