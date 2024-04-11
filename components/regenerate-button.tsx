@@ -16,7 +16,7 @@ export default function RegenerateButton({ listingId }: { listingId: string }) {
 	}
 
 	return (
-		<Button disabled={isLoading} variant='secondary' onClick={regenerate}>
+		<Button className='sm:w-fit' disabled={isLoading} variant='secondary' onClick={regenerate}>
 			Regenerate from images
 		</Button>
 	)

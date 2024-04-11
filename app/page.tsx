@@ -40,7 +40,7 @@ export default async function RootPage() {
 			<Separator />
 			<div className='grid gap-2'>
 				<h3 className='tracking-tight font-bold'>Uploaded items</h3>
-				<div className='grid gap-6'>
+				<div className='grid gap-2'>
 					{listings?.map((listing) => (
 						<Listing key={listing.id} listing={listing} />
 					))}

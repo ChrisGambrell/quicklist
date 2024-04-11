@@ -1,30 +1,24 @@
 import { Tables } from '@/db_types'
-import { createClient } from '@/utils/supabase/server'
+import { getListingImages } from '@/utils/helpers'
 import Link from 'next/link'
-import DeleteListingButton from './delete-listing-button'
-import { Badge } from './ui/badge'
 
 export async function Listing({ listing }: { listing: Tables<'listings'> }) {
-	const supabase = createClient()
-	const { data } = await supabase.storage.from('listings').createSignedUrl(listing.file_path ?? '', 60 * 60)
+	const images = await getListingImages(listing.id)
 
 	return (
-		<div className='flex flex-col sm:flex-row border rounded-lg shadow p-6 space-y-6 sm:space-y-0 sm:space-x-6'>
-			{data?.signedUrl && (
-				<div className='mx-auto'>
-					<img className='h-40 rounded-lg' src={data.signedUrl} />
+		<Link
+			className='flex space-x-2 items-center text-xs border rounded-lg shadow p-2 cursor-pointer hover:shadow-md transition-shadow sm:p-4 sm:text-base sm:items-start sm:space-x-4'
+			href={`/listing/${listing.id}`}>
+			{images && images.length > 0 && (
+				<div className='flex-shrink-0'>
+					<img className='h-12 sm:h-24 rounded-lg' src={images[0].signedUrl} />
 				</div>
 			)}
-			<div className='flex-1 space-y-2'>
-				<div>
-					<Link className='font-bold hover:underline' href={`/listing/${listing.id}`}>
-						{listing.title}
-					</Link>
-				</div>
-				<Badge variant='secondary'>${listing.price}</Badge>
-				<div className='text-sm'>{listing.description}</div>
-				<DeleteListingButton listingId={listing.id} />
+			<div className='flex-1'>
+				<div className='font-semibold'>{listing.title}</div>
+				<div>${listing.price}</div>
+				<div className='line-clamp-1 sm:line-clamp-2'>{listing.description}</div>
 			</div>
-		</div>
+		</Link>
 	)
 }

@@ -1,3 +1,4 @@
+import DeleteListingButton from '@/components/delete-listing-button'
 import RegenerateButton from '@/components/regenerate-button'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -20,8 +21,8 @@ export default async function ListingPage({ params: { listingId } }: { params: {
 	const images = await getListingImages(listingId)
 
 	return (
-		<form className='grid gap-8'>
-			<Button asChild className='w-fit' variant='secondary'>
+		<form className='grid gap-4 sm:gap-8'>
+			<Button asChild className='sm:w-fit' variant='secondary'>
 				<Link href='/'>
 					<ArrowLeftIcon className='w-5 h-5 mr-2' />
 					Go back
@@ -67,10 +68,11 @@ export default async function ListingPage({ params: { listingId } }: { params: {
 					signedUrls={images?.map((image) => ({ path: image.path, signedUrl: image.signedUrl })) ?? []}
 				/>
 			</div>
-			<div className='space-x-2'>
+			<div className='grid gap-2 sm:flex'>
 				{/* TODO: update listing */}
-				<Button>Update listing</Button>
+				<Button className='sm:w-fit'>Update listing</Button>
 				<RegenerateButton listingId={listingId} />
+				<DeleteListingButton listingId={listingId} />
 			</div>
 		</form>
 	)
