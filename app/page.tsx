@@ -5,7 +5,6 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Separator } from '@/components/ui/separator'
 import { createClient } from '@/utils/supabase/server'
-import { PlusIcon, XIcon } from 'lucide-react'
 import { addRule } from './actions'
 
 export const dynamic = 'force-dynamic'
@@ -16,11 +15,10 @@ export default async function RootPage() {
 	const { data: rules } = await supabase.from('rules').select()
 
 	return (
-		<div className='max-w-4xl p-2 grid gap-8 sm:mx-auto sm:my-8'>
+		<div className='grid gap-8'>
 			<div className='space-y-2'>
 				<h3 className='tracking-tight font-bold'>Upload new item</h3>
 				<NewUploadForm />
-				<div className='text-sm italic'>When you select a photo, it will automatically upload and generate eBay metadata.</div>
 			</div>
 			<Separator />
 			<div className='grid gap-2'>

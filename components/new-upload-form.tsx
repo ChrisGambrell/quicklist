@@ -2,9 +2,11 @@
 
 import { createClient } from '@/utils/supabase/server'
 import { Loader2Icon } from 'lucide-react'
+import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import OpenAI from 'openai'
 import { useState } from 'react'
+import { Button } from './ui/button'
 import { Input } from './ui/input'
 
 export default function NewUploadForm() {
@@ -19,9 +21,12 @@ export default function NewUploadForm() {
 		try {
 			const supabase = createClient()
 
+			const { data: listing, error: insertError } = await supabase.from('listings').insert({}).select().single()
+			if (insertError || !listing) throw insertError?.message ?? new Error('Failed to insert listing')
+
 			const file = files[0]
 			const fileExt = file.name.split('.').pop()
-			const filePath = `${new Date().getTime()}-${Math.random()}.${fileExt}`
+			const filePath = `${listing.id}/${new Date().getTime()}-${Math.random()}.${fileExt}`
 
 			const { error: uploadFileError } = await supabase.storage.from('listings').upload(filePath, file)
 			if (uploadFileError) throw uploadFileError.message
@@ -32,7 +37,6 @@ export default function NewUploadForm() {
 
 			const { data: rules } = await supabase.from('rules').select()
 			const rulesText = rules?.map((rule) => rule.rule).join('; ') ?? ''
-			console.log('rulesText', rulesText)
 
 			const openai = new OpenAI({ apiKey: process.env.NEXT_PUBLIC_OPENAI_KEY, dangerouslyAllowBrowser: true })
 			const res = await openai.chat.completions.create({
@@ -52,15 +56,19 @@ export default function NewUploadForm() {
 			})
 
 			const json = JSON.parse(`{${res.choices[0].message.content?.replace(/.*{/s, '').replace(/}.*/s, '').trim()}}`)
-			const { error } = await supabase.from('listings').insert({
-				file_path: filePath,
-				title: json.title?.trim() ?? null,
-				description: json.description?.trim() ?? null,
-				price: json.price ?? null,
-			})
-			if (error) throw error.message
 
-			router.refresh()
+			const { error: upsertError } = await supabase
+				.from('listings')
+				.upsert({
+					id: listing.id,
+					title: json.title?.trim() ?? null,
+					description: json.description?.trim() ?? null,
+					price: json.price ?? null,
+				})
+				.single()
+			if (upsertError) throw upsertError.message
+
+			router.push(`/listing/${listing.id}`)
 		} catch (error) {
 			throw error
 		} finally {
@@ -69,9 +77,15 @@ export default function NewUploadForm() {
 	}
 
 	return (
-		<div className='flex space-x-2 items-center'>
-			<Input className='sm:w-fit' disabled={isLoading} type='file' onChange={(event) => upload(event.target.files)} />
-			{isLoading && <Loader2Icon className='w-6 h-6 animate-spin' />}
+		<div>
+			<Button asChild>
+				<Link href='/new'>Start a new listing</Link>
+			</Button>
+			<div className='mt-4'>Or upload a photo to auto-generate eBay fields:</div>
+			<div className='flex items-center space-x-2'>
+				<Input className='sm:w-fit' disabled={isLoading} type='file' onChange={(event) => upload(event.target.files)} />
+				{isLoading && <Loader2Icon className='w-6 h-6 animate-spin' />}
+			</div>
 		</div>
 	)
 }
