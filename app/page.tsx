@@ -17,10 +17,10 @@ export default async function RootPage() {
 	)
 }
 
-function EmptyState({ icon: Icon, type }: { icon: LucideIcon; type: string }) {
+function EmptyState({ buttonType = 'button', icon: Icon, type }: { buttonType?: 'button' | 'submit'; icon: LucideIcon; type: string }) {
 	return (
 		<button
-			type='button'
+			type={buttonType}
 			className='relative block w-full rounded-lg border-2 border-dashed border-gray-300 p-12 text-center hover:border-gray-400 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2'>
 			<Icon className='w-10 h-10 sm:w-12 sm:h-12 mx-auto text-gray-400 stroke-1' />
 			<span className='mt-2 block text-sm font-semibold text-gray-500'>Create a new {type}</span>
@@ -77,7 +77,9 @@ async function ListingList() {
 			</div>
 			<div className='grid gap-2'>
 				{!listings || listings.length === 0 ? (
-					<EmptyState icon={ListTodoIcon} type='listing' />
+					<form action={createListing}>
+						<EmptyState buttonType='submit' icon={ListTodoIcon} type='listing' />
+					</form>
 				) : (
 					listings.map((listing) => <Listing key={listing.id} listing={listing} />)
 				)}

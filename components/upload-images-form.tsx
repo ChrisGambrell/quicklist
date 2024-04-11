@@ -34,11 +34,10 @@ export default function UploadImagesForm({
 
 			const { data, error: signedUrlError } = await supabase.storage.from('listings').createSignedUrl(filePath, 60 * 60)
 			if (signedUrlError || !data?.signedUrl) throw signedUrlError?.message ?? new Error('Failed to create signed url')
-
-			setImages((p) => [...p, { path: filePath, signedUrl: data.signedUrl }])
 		}
 
 		setIsLoading(false)
+		router.refresh()
 	}
 
 	async function deleteImage(path: string | null) {
