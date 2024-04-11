@@ -30,7 +30,7 @@ function EmptyState({ buttonType = 'button', icon: Icon, type }: { buttonType?: 
 
 async function RulesList() {
 	const supabase = createClient()
-	const { data: rules } = await supabase.from('rules').select()
+	const { data: rules } = await supabase.from('rules').select().order('created_at', { ascending: true })
 
 	return (
 		<div className='grid gap-2'>
@@ -63,7 +63,7 @@ async function RulesList() {
 
 async function ListingList() {
 	const supabase = createClient()
-	const { data: listings } = await supabase.from('listings').select()
+	const { data: listings } = await supabase.from('listings').select().order('created_at', { ascending: true })
 
 	return (
 		<div className='grid gap-2'>
