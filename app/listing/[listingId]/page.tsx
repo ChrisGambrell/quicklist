@@ -4,7 +4,10 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import UploadImagesForm from '@/components/upload-images-form'
+import { getListingImages } from '@/utils/helpers'
 import { createClient } from '@/utils/supabase/server'
+import { ArrowLeftIcon } from 'lucide-react'
+import Link from 'next/link'
 import { notFound } from 'next/navigation'
 
 export const dynamic = 'force-dynamic'
@@ -14,14 +17,16 @@ export default async function ListingPage({ params: { listingId } }: { params: {
 
 	const { data: listing } = await supabase.from('listings').select().eq('id', listingId).maybeSingle()
 	if (!listing) return notFound()
-
-	const { data: filePaths } = await supabase.storage.from('listings').list(listingId)
-	const { data: signedUrls } = await supabase.storage
-		.from('listings')
-		.createSignedUrls(filePaths?.map((path) => `${listingId}/${path.name}`) ?? [], 60 * 60 * 24)
+	const images = await getListingImages(listingId)
 
 	return (
 		<form className='grid gap-8'>
+			<Button asChild className='w-fit' variant='secondary'>
+				<Link href='/'>
+					<ArrowLeftIcon className='w-5 h-5 mr-2' />
+					Go back
+				</Link>
+			</Button>
 			<div>
 				<h1 className='text-3xl tracking-tight font-bold'>Add a New Listing</h1>
 			</div>
@@ -59,13 +64,13 @@ export default async function ListingPage({ params: { listingId } }: { params: {
 				<Label htmlFor='image'>Images</Label>
 				<UploadImagesForm
 					listingId={listingId}
-					signedUrls={signedUrls?.map((url) => ({ path: url.path, signedUrl: url.signedUrl })) ?? []}
+					signedUrls={images?.map((image) => ({ path: image.path, signedUrl: image.signedUrl })) ?? []}
 				/>
 			</div>
 			<div className='space-x-2'>
 				{/* TODO: update listing */}
 				<Button>Update listing</Button>
-				<RegenerateButton listingId={listingId} urls={signedUrls?.map((url) => url.signedUrl) ?? []} />
+				<RegenerateButton listingId={listingId} />
 			</div>
 		</form>
 	)

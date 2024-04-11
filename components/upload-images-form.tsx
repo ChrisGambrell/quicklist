@@ -3,7 +3,6 @@
 import { createClient } from '@/utils/supabase/server'
 import { Loader2Icon, UploadIcon, XIcon } from 'lucide-react'
 import { useRouter } from 'next/navigation'
-import OpenAI from 'openai'
 import { ChangeEvent, useState } from 'react'
 
 export default function UploadImagesForm({

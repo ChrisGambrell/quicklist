@@ -1,5 +1,6 @@
 import { Tables } from '@/db_types'
 import { createClient } from '@/utils/supabase/server'
+import Link from 'next/link'
 import DeleteListingButton from './delete-listing-button'
 import { Badge } from './ui/badge'
 
@@ -15,7 +16,11 @@ export async function Listing({ listing }: { listing: Tables<'listings'> }) {
 				</div>
 			)}
 			<div className='flex-1 space-y-2'>
-				<div className='font-bold'>{listing.title}</div>
+				<div>
+					<Link className='font-bold hover:underline' href={`/listing/${listing.id}`}>
+						{listing.title}
+					</Link>
+				</div>
 				<Badge variant='secondary'>${listing.price}</Badge>
 				<div className='text-sm'>{listing.description}</div>
 				<DeleteListingButton listingId={listing.id} />
