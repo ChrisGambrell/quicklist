@@ -81,7 +81,9 @@ async function ListingList() {
 						<EmptyState buttonType='submit' icon={ListTodoIcon} type='listing' />
 					</form>
 				) : (
-					listings.map((listing) => <Listing key={listing.id} listing={listing} />)
+					[...listings.filter((listing) => !listing.title), ...listings.filter((listing) => !!listing.title)].map((listing) => (
+						<Listing key={listing.id} listing={listing} />
+					))
 				)}
 			</div>
 		</div>
