@@ -8,21 +8,17 @@ export async function Listing({ listing }: { listing: Tables<'listings'> }) {
 	const { data } = await supabase.storage.from('listings').createSignedUrl(listing.file_path ?? '', 60 * 60)
 
 	return (
-		<div className='flex border rounded-lg shadow p-6 space-x-6'>
+		<div className='flex flex-col sm:flex-row border rounded-lg shadow p-6 space-y-6 sm:space-y-0 sm:space-x-6'>
 			{data?.signedUrl && (
-				<div className='flex-shrink-0'>
+				<div className='mx-auto'>
 					<img className='h-40 rounded-lg' src={data.signedUrl} />
 				</div>
 			)}
 			<div className='flex-1 space-y-2'>
-				<div className='flex items-center space-x-2'>
-					<div className='flex-1 font-bold line-clamp-1'>{listing.title}</div>
-					<div className='flex-shrink-0'>
-						<DeleteListingButton listingId={listing.id} />
-					</div>
-				</div>
+				<div className='font-bold'>{listing.title}</div>
 				<Badge variant='secondary'>${listing.price}</Badge>
 				<div className='text-sm'>{listing.description}</div>
+				<DeleteListingButton listingId={listing.id} />
 			</div>
 		</div>
 	)

@@ -66,7 +66,7 @@ export default function NewUploadForm() {
 
 	return (
 		<div className='flex space-x-2 items-center'>
-			<Input className='w-fit' disabled={isLoading} type='file' onChange={(event) => upload(event.target.files)} />
+			<Input className='sm:w-fit' disabled={isLoading} type='file' onChange={(event) => upload(event.target.files)} />
 			{isLoading && <Loader2Icon className='w-6 h-6 animate-spin' />}
 		</div>
 	)

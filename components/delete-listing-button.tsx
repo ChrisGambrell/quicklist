@@ -30,8 +30,8 @@ export default function DeleteListingButton({ listingId }: { listingId: string }
 	return (
 		<AlertDialog>
 			<AlertDialogTrigger asChild>
-				<Button size='icon' variant='ghost'>
-					<XIcon className='text-destructive w-5 h-5' />
+				<Button className='w-full sm:w-fit' variant='destructive'>
+					Delete listing
 				</Button>
 			</AlertDialogTrigger>
 			<AlertDialogContent>
