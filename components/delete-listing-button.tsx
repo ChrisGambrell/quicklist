@@ -30,7 +30,7 @@ export default function DeleteListingButton({ listingId }: { listingId: string }
 	return (
 		<AlertDialog>
 			<AlertDialogTrigger asChild>
-				<Button className='w-full sm:w-fit' variant='destructive'>
+				<Button className='w-full sm:w-fit' type='button' variant='destructive'>
 					Delete listing
 				</Button>
 			</AlertDialogTrigger>

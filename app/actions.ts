@@ -10,6 +10,22 @@ export async function createListing() {
 	if (data) redirect(`/listing/${data.id}`)
 }
 
+export async function updateListing(formData: FormData) {
+	const id = formData.get('id') as string
+	if (!id) return
+
+	const title = formData.get('title') as string
+	const description = formData.get('description') as string
+	const price = formData.get('price') as string
+
+	const supabase = createClient()
+	await supabase
+		.from('listings')
+		.upsert({ id, title: title?.trim() ?? null, description: description?.trim() ?? null, price: price ? +price.trim() : null })
+
+	revalidatePath('/', 'layout')
+}
+
 export async function createRule(formData: FormData) {
 	const rule = formData.get('rule') as string
 	if (!rule || !rule.trim()) return

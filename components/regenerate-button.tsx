@@ -30,7 +30,7 @@ export default function RegenerateButton({ listingId }: { listingId: string }) {
 	return (
 		<AlertDialog>
 			<AlertDialogTrigger asChild>
-				<Button className='sm:w-fit' disabled={isLoading} variant='secondary'>
+				<Button className='sm:w-fit' disabled={isLoading} type='button' variant='secondary'>
 					Regenerate from images
 				</Button>
 			</AlertDialogTrigger>

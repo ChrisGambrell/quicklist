@@ -1,3 +1,4 @@
+import { updateListing } from '@/app/actions'
 import DeleteListingButton from '@/components/delete-listing-button'
 import RegenerateButton from '@/components/regenerate-button'
 import { Button } from '@/components/ui/button'
@@ -31,6 +32,7 @@ export default async function ListingPage({ params: { listingId } }: { params: {
 			<div>
 				<h1 className='text-3xl tracking-tight font-bold'>Add a New Listing</h1>
 			</div>
+			<input id='id' name='id' type='hidden' value={listing.id} />
 			<div className='grid gap-2'>
 				<Label htmlFor='title'>Title</Label>
 				<Input
@@ -70,7 +72,9 @@ export default async function ListingPage({ params: { listingId } }: { params: {
 			</div>
 			<div className='grid gap-2 sm:flex'>
 				{/* TODO: update listing */}
-				<Button className='sm:w-fit'>Update listing</Button>
+				<Button className='sm:w-fit' formAction={updateListing}>
+					Update listing
+				</Button>
 				<RegenerateButton listingId={listingId} />
 				<DeleteListingButton listingId={listingId} />
 			</div>
