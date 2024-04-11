@@ -1,7 +1,6 @@
 'use client'
 
 import { createClient } from '@/utils/supabase/server'
-import { XIcon } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import {
 	AlertDialog,
@@ -24,7 +23,7 @@ export default function DeleteListingButton({ listingId }: { listingId: string }
 		const supabase = createClient()
 		const { error } = await supabase.from('listings').delete().eq('id', listingId)
 		if (error) throw error.message
-		router.refresh()
+		router.push('/')
 	}
 
 	return (
