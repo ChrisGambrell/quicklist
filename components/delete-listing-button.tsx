@@ -23,6 +23,7 @@ export default function DeleteListingButton({ listingId }: { listingId: string }
 		const supabase = createClient()
 		const { error } = await supabase.from('listings').delete().eq('id', listingId)
 		if (error) throw error.message
+		// TODO: Doesn't revalidate /
 		router.push('/')
 	}
 

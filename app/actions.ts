@@ -10,7 +10,7 @@ export async function createListing() {
 	if (data) redirect(`/listing/${data.id}`)
 }
 
-export async function addRule(formData: FormData) {
+export async function createRule(formData: FormData) {
 	const rule = formData.get('rule') as string
 	if (!rule || !rule.trim()) return
 
