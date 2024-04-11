@@ -51,6 +51,7 @@ export default async function ListingPage({ params: { listingId } }: { params: {
 					id='description'
 					name='description'
 					placeholder={'Enhance your wardrobe with this timeless navy and white checkered long sleeve shirt...'}
+					rows={6}
 				/>
 			</div>
 			<div className='grid gap-2'>

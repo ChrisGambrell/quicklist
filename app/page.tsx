@@ -1,10 +1,5 @@
-import DeleteRuleButton from '@/components/delete-rule-button'
-import { Listing } from '@/components/listing'
-import NewRule from '@/components/new-rule'
-import { Button } from '@/components/ui/button'
-import { createClient } from '@/utils/supabase/server'
-import { ListTodoIcon, LucideIcon, ScaleIcon } from 'lucide-react'
-import { createListing } from './actions'
+import { ListingList } from '@/components/listing-list'
+import { RulesList } from '@/components/rules-list'
 
 export const dynamic = 'force-dynamic'
 
@@ -13,79 +8,6 @@ export default async function RootPage() {
 		<div className='grid gap-8'>
 			<RulesList />
 			<ListingList />
-		</div>
-	)
-}
-
-function EmptyState({ buttonType = 'button', icon: Icon, type }: { buttonType?: 'button' | 'submit'; icon: LucideIcon; type: string }) {
-	return (
-		<button
-			type={buttonType}
-			className='relative block w-full rounded-lg border-2 border-dashed border-gray-300 p-12 text-center hover:border-gray-400 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2'>
-			<Icon className='w-10 h-10 sm:w-12 sm:h-12 mx-auto text-gray-400 stroke-1' />
-			<span className='mt-2 block text-sm font-semibold text-gray-500'>Create a new {type}</span>
-		</button>
-	)
-}
-
-async function RulesList() {
-	const supabase = createClient()
-	const { data: rules } = await supabase.from('rules').select().order('created_at', { ascending: true })
-
-	return (
-		<div className='grid gap-2'>
-			<div className='flex items-end space-x-4'>
-				<div className='flex-1'>
-					<h2 className='tracking-tight font-bold text-3xl'>My Rules</h2>
-				</div>
-				{/* TODO: Create new rule */}
-				<div className='flex-shrink-0'>
-					<NewRule trigger={<Button size='sm'>New Rule</Button>} />
-				</div>
-			</div>
-			<div className='grid gap-2'>
-				{!rules || rules.length === 0 ? (
-					<NewRule trigger={<EmptyState icon={ScaleIcon} type='rule' />} />
-				) : (
-					rules.map((rule) => (
-						<div key={rule.id} className='flex space-x-2 items-center text-sm border rounded-lg shadow p-1 pl-3 sm:space-x-4'>
-							<div className='flex-1'>{rule.rule}</div>
-							<div className='flex-shrink-0'>
-								<DeleteRuleButton ruleId={rule.id} />
-							</div>
-						</div>
-					))
-				)}
-			</div>
-		</div>
-	)
-}
-
-async function ListingList() {
-	const supabase = createClient()
-	const { data: listings } = await supabase.from('listings').select().order('created_at', { ascending: true })
-
-	return (
-		<div className='grid gap-2'>
-			<div className='flex items-end space-x-4'>
-				<div className='flex-1'>
-					<h2 className='tracking-tight font-bold text-3xl'>My Listings</h2>
-				</div>
-				<form action={createListing} className='flex-shrink-0'>
-					<Button size='sm'>New Listing</Button>
-				</form>
-			</div>
-			<div className='grid gap-2'>
-				{!listings || listings.length === 0 ? (
-					<form action={createListing}>
-						<EmptyState buttonType='submit' icon={ListTodoIcon} type='listing' />
-					</form>
-				) : (
-					[...listings.filter((listing) => !listing.title), ...listings.filter((listing) => !!listing.title)].map((listing) => (
-						<Listing key={listing.id} listing={listing} />
-					))
-				)}
-			</div>
 		</div>
 	)
 }
