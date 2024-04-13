@@ -1,9 +1,11 @@
 import { Tables } from '@/db_types'
-import { getListingImages } from '@/utils/helpers'
+import { getListingImages } from '@/utils/helpers/server'
+import { createClient } from '@/utils/supabase/server'
 import { ImageIcon } from 'lucide-react'
 import Link from 'next/link'
 
 export async function Listing({ listing }: { listing: Tables<'listings'> }) {
+	const supabase = createClient()
 	const images = await getListingImages(listing.id)
 
 	return (
