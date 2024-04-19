@@ -11,7 +11,7 @@ export default function NewListing() {
 	useErrorToaster(state?.errors._global)
 
 	return (
-		<form className='flex-shrink-0' action={action}>
+		<form action={action}>
 			<ActionButton size='sm'>
 				<PlusIcon className='w-4 h-4 mr-2' />
 				New Listing

@@ -17,6 +17,7 @@ import { Button } from '@/components/ui/button'
 import { useState } from 'react'
 import { useFormState } from 'react-dom'
 
+// BUG: Not dismissing alert when done
 export default function RegenerateButton({ listingId }: { listingId: string }) {
 	const [open, setOpen] = useState(false)
 
