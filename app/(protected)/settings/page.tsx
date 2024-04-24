@@ -2,6 +2,7 @@ import { EmptyState } from '@/components/empty-state'
 import { getAuth } from '@/utils/helpers/server'
 import { ScaleIcon } from 'lucide-react'
 import NewRule from './components/new-rule'
+import PasswordForm from './components/password-form'
 import ProfileForm from './components/profile-form'
 import Rule from './components/rule'
 
@@ -12,6 +13,7 @@ export default async function SettingsPage() {
 	return (
 		<div className='grid gap-4 sm:gap-8'>
 			<ProfileForm user={user} />
+			<PasswordForm />
 
 			<div className='grid gap-4'>
 				<div className='flex items-end space-x-4'>
