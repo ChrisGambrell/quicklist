@@ -8,3 +8,9 @@ export type ActionReturn<T extends ZodTypeAny | undefined> = void | {
 	errors?: ActionErrors<T>
 	successTrigger?: boolean | undefined
 }
+
+export type SignedImage = {
+	error: string | null
+	path: string | null
+	signedUrl: string
+}

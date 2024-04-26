@@ -1,27 +1,31 @@
-import NewRuleButton from '@/app/(newlayout)/rules/new-rule-button'
-import Rule from '@/app/(newlayout)/rules/rule'
+import { Listing } from '@/app/(newlayout)/listings/listing'
+import NewListingButton from '@/app/(newlayout)/listings/new-listing-button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Table, TableBody, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { createClient } from '@/utils/supabase/server'
 
-export default async function RulesPage() {
+export default async function ListingsPage() {
 	const supabase = createClient()
-	const { data: rules } = await supabase.from('rules').select().order('created_at', { ascending: true })
+	const { data: listings } = await supabase.from('listings').select().order('created_at', { ascending: true })
 
 	return (
 		<>
 			<Card>
 				<CardHeader>
 					<div className='flex items-start justify-between'>
-						<CardTitle>Rules</CardTitle>
-						<NewRuleButton />
+						<CardTitle>Listings</CardTitle>
+						<NewListingButton />
 					</div>
 				</CardHeader>
 				<CardContent>
 					<Table>
 						<TableHeader>
 							<TableRow>
-								<TableHead>Rule</TableHead>
+								<TableHead className='hidden w-[100px] sm:table-cell'>
+									<span className='sr-only'>Image</span>
+								</TableHead>
+								<TableHead>Title</TableHead>
+								<TableHead className='hidden md:table-cell'>Price</TableHead>
 								<TableHead className='hidden md:table-cell'>Created at</TableHead>
 								<TableHead>
 									<span className='sr-only'>Actions</span>
@@ -29,8 +33,8 @@ export default async function RulesPage() {
 							</TableRow>
 						</TableHeader>
 						<TableBody>
-							{rules?.map((rule) => (
-								<Rule key={rule.id} rule={rule} />
+							{listings?.map((listing) => (
+								<Listing key={listing.id} listing={listing} />
 							))}
 						</TableBody>
 					</Table>

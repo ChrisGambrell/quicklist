@@ -24,8 +24,7 @@ export async function createListing() {
 	const { data, error } = await supabase.from('listings').insert({ user_id: auth.id }).select().single()
 	if (error || !data) return { errors: { _global: [error?.message ?? 'An unexpected error occurred'] } }
 
-	revalidatePath('/', 'layout')
-	redirect(`/listing/${data.id}`)
+	redirect(`/listings/${data.id}/edit`)
 }
 
 export async function updateListing(
@@ -40,6 +39,7 @@ export async function updateListing(
 
 	const { auth, supabase } = await getAuth()
 
+	// TODO: Remove all upserts
 	const { error } = await supabase.from('listings').upsert({ id: listingId, user_id: auth.id, ...parsed.data })
 	if (error) return { errors: { _global: [error.message] } }
 
@@ -52,8 +52,7 @@ export async function deleteListing(listingId: string): Promise<ActionReturn<und
 	const { error } = await supabase.from('listings').delete().eq('id', listingId)
 	if (error) return { errors: { _global: [error.message] } }
 
-	revalidatePath('/', 'layout')
-	redirect('/')
+	redirect('/listings')
 }
 
 export async function generateListingData(listingId: string): Promise<ActionReturn<undefined>> {

@@ -20,7 +20,7 @@ import { useState } from 'react'
 import { useFormState } from 'react-dom'
 
 // BUG: After adding a rule, the trigger does not open the dialog back up
-export default function NewRule() {
+export default function NewRuleButton() {
 	const [open, setOpen] = useState(false)
 
 	const [state, action] = useFormState(createRule, null)

@@ -38,8 +38,8 @@ export default function EditRuleClient({ rule }: { rule: Tables<'rules'> }) {
 					</ActionButton>
 				</div>
 			</div>
-			<div className='grid gap-4 md:grid-cols-[1fr_250px] lg:grid-cols-3 lg:gap-8'>
-				<div className='grid auto-rows-max items-start gap-4 lg:col-span-2 lg:gap-8'>
+			<div className='grid gap-4 md:grid-cols-[1fr_250px] lg:grid-cols-3'>
+				<div className='grid auto-rows-max items-start gap-4 lg:col-span-2'>
 					<Card>
 						<CardHeader>
 							<CardTitle>Rule Details</CardTitle>
@@ -56,7 +56,7 @@ export default function EditRuleClient({ rule }: { rule: Tables<'rules'> }) {
 						</CardContent>
 					</Card>
 				</div>
-				<div className='grid auto-rows-max items-start gap-4 lg:gap-8'>
+				<div className='grid auto-rows-max items-start gap-4'>
 					<Card>
 						<CardHeader>
 							<CardTitle>Delete Rule</CardTitle>
