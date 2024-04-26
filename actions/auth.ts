@@ -42,13 +42,3 @@ export async function signUp(prevState: any, formData: FormData): Promise<Action
 	revalidatePath('/', 'layout')
 	return { successTrigger: true }
 }
-
-export async function signOut() {
-	const supabase = createClient()
-
-	const { error } = await supabase.auth.signOut()
-	if (error) return { errors: { _global: [error.message] } }
-
-	revalidatePath('/', 'layout')
-	redirect('/sign-in')
-}

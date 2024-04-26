@@ -21,7 +21,7 @@ export async function Listing({ listing }: { listing: Tables<'listings'> }) {
 				/>
 			</TableCell>
 			<TableCell className='font-medium w-[99%]'>
-				<div className='line-clamp-1'>{listing.title}</div>
+				<div className='line-clamp-1'>{listing.title ?? '-'}</div>
 			</TableCell>
 			<TableCell className='hidden md:table-cell whitespace-nowrap'>{listing.price !== null ? `$${listing.price}` : '-'}</TableCell>
 			<TableCell className='hidden md:table-cell whitespace-nowrap'>{new Date(listing.created_at).toDateString()}</TableCell>

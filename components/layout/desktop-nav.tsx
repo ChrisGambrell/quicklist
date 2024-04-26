@@ -1,14 +1,12 @@
-import { HomeIcon, Package2Icon, ScaleIcon, SettingsIcon } from 'lucide-react'
+import { HomeIcon, Package2Icon, ScaleIcon } from 'lucide-react'
 import Link from 'next/link'
 import NavLink from './nav-link'
+import UserMenu from './user-menu'
 
 export const links = [
-	[
-		// TODO: Fix back to /listings
-		{ href: '/listings', exact: true, icon: <HomeIcon className='w-5 h-5' />, label: 'Dashboard' },
-		{ href: '/rules', icon: <ScaleIcon className='w-5 h-5' />, label: 'Rules' },
-	],
-	[{ href: '/settings', icon: <SettingsIcon className='w-5 h-5' />, label: 'Settings' }],
+	// TODO: Fix back to /listings
+	{ href: '/listings', exact: true, icon: <HomeIcon className='w-5 h-5' />, label: 'Dashboard' },
+	{ href: '/rules', icon: <ScaleIcon className='w-5 h-5' />, label: 'Rules' },
 ]
 
 export default function DesktopNav() {
@@ -21,14 +19,12 @@ export default function DesktopNav() {
 					<Package2Icon className='h-4 w-4 transition-all group-hover:scale-110' />
 					<span className='sr-only'>eBay Lister</span>
 				</Link>
-				{links[0].map((link) => (
+				{links.map((link) => (
 					<NavLink key={link.href} {...link} />
 				))}
 			</nav>
 			<nav className='mt-auto flex flex-col items-center gap-4 px-2 sm:py-5'>
-				{links[1].map((link) => (
-					<NavLink key={link.href} {...link} />
-				))}
+				<UserMenu />
 			</nav>
 		</aside>
 	)

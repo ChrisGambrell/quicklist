@@ -1,4 +1,3 @@
-import SignOutButton from '@/app/(protected)/components/sign-out-button'
 import NavLink from '@/components/nav-link'
 import { getAuth } from '@/utils/helpers/server'
 import { ReactNode } from 'react'
@@ -11,7 +10,6 @@ export default async function ProtectedLayout({ children }: { children: ReactNod
 			<div className='w-full flex items-center justify-between sm:justify-normal sm:space-x-8'>
 				<NavLink href='/'>Listings</NavLink>
 				<NavLink href='/settings'>Settings</NavLink>
-				<SignOutButton />
 			</div>
 			{children}
 		</div>

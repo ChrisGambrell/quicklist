@@ -12,7 +12,6 @@ export default function NewLayout({ children }: { children: ReactNode }) {
 					<MobileNav />
 					{/* <Breadcrumbs /> */}
 					{/* <SiteSearch /> */}
-					{/* <UserMenu /> */}
 				</header>
 				<main className='grid flex-1 items-start gap-4 p-4 sm:px-6 sm:py-0'>{children}</main>
 			</div>
