@@ -1,4 +1,4 @@
-import NewRuleButton from '@/app/(newlayout)/rules/new-rule-button'
+import AddRuleButton from '@/app/(newlayout)/rules/add-rule-button'
 import Rule from '@/app/(newlayout)/rules/rule'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Table, TableBody, TableHead, TableHeader, TableRow } from '@/components/ui/table'
@@ -14,7 +14,7 @@ export default async function RulesPage() {
 				<CardHeader>
 					<div className='flex items-start justify-between'>
 						<CardTitle>Rules</CardTitle>
-						<NewRuleButton />
+						<AddRuleButton />
 					</div>
 				</CardHeader>
 				<CardContent>

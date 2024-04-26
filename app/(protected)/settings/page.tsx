@@ -1,7 +1,7 @@
 import { EmptyState } from '@/components/empty-state'
 import { getAuth } from '@/utils/helpers/server'
 import { ScaleIcon } from 'lucide-react'
-import NewRuleButton from '../../(newlayout)/rules/new-rule-button'
+import AddRuleButton from '../../(newlayout)/rules/add-rule-button'
 import Rule from '../../(newlayout)/rules/rule'
 import PasswordForm from './components/password-form'
 import ProfileForm from './components/profile-form'
@@ -21,7 +21,7 @@ export default async function SettingsPage() {
 						<h2 className='tracking-tight font-bold text-3xl'>My Rules</h2>
 					</div>
 					<div className='flex-shrink-0'>
-						<NewRuleButton />
+						<AddRuleButton />
 					</div>
 				</div>
 				<div className='grid gap-2'>

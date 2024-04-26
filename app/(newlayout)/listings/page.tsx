@@ -1,5 +1,5 @@
+import AddListingButton from '@/app/(newlayout)/listings/add-listing-button'
 import { Listing } from '@/app/(newlayout)/listings/listing'
-import NewListingButton from '@/app/(newlayout)/listings/new-listing-button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Table, TableBody, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { createClient } from '@/utils/supabase/server'
@@ -14,7 +14,7 @@ export default async function ListingsPage() {
 				<CardHeader>
 					<div className='flex items-start justify-between'>
 						<CardTitle>Listings</CardTitle>
-						<NewListingButton />
+						<AddListingButton />
 					</div>
 				</CardHeader>
 				<CardContent>
