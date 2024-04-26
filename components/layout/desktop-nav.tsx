@@ -4,7 +4,6 @@ import NavLink from './nav-link'
 import UserMenu from './user-menu'
 
 export const links = [
-	// TODO: Fix back to /listings
 	{ href: '/listings', icon: <HomeIcon className='w-5 h-5' />, label: 'Dashboard' },
 	{ href: '/rules', icon: <ScaleIcon className='w-5 h-5' />, label: 'Rules' },
 ]

@@ -1,4 +1,4 @@
-import { ActionErrors } from '@/utils/helpers'
+import { ActionErrors } from '@/utils/types'
 import { useEffect } from 'react'
 import { useFormState } from 'react-dom'
 import { UseFormStateProps } from 'react-hook-form'

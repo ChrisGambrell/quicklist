@@ -1,8 +1,8 @@
 'use server'
 
-import { ActionReturn } from '@/utils/helpers'
-import { getAuth } from '@/utils/helpers/server'
+import { getAuth } from '@/utils/helpers'
 import { createClient } from '@/utils/supabase/server'
+import { ActionReturn } from '@/utils/types'
 import { revalidatePath } from 'next/cache'
 import { z } from 'zod'
 
@@ -24,7 +24,7 @@ export async function updateName(prevState: any, formData: FormData): Promise<Ac
 		.eq('id', user.id)
 	if (error) return { errors: { _global: [error.message] } }
 
-	revalidatePath('/', 'layout')
+	revalidatePath('/settings', 'layout')
 	return { successTrigger: true }
 }
 

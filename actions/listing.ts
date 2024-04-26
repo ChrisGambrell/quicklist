@@ -1,8 +1,8 @@
 'use server'
 
-import { ActionReturn } from '@/utils/helpers'
-import { getAuth, getListingImages } from '@/utils/helpers/server'
+import { getAuth, getListingImages } from '@/utils/helpers'
 import { createClient } from '@/utils/supabase/server'
+import { ActionReturn } from '@/utils/types'
 import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
 import OpenAI from 'openai'
@@ -37,13 +37,12 @@ export async function updateListing(
 	const parsed = updateListingSchema.safeParse(data)
 	if (!parsed.success) return { errors: parsed.error.flatten().fieldErrors }
 
-	const { auth, supabase } = await getAuth()
+	const supabase = createClient()
 
-	// TODO: Remove all upserts
-	const { error } = await supabase.from('listings').upsert({ id: listingId, user_id: auth.id, ...parsed.data })
+	const { error } = await supabase.from('listings').update(parsed.data).eq('id', listingId)
 	if (error) return { errors: { _global: [error.message] } }
 
-	revalidatePath('/', 'layout')
+	revalidatePath('/listings', 'layout')
 }
 
 export async function deleteListing(listingId: string): Promise<ActionReturn<undefined>> {
@@ -61,7 +60,7 @@ export async function generateListingData(listingId: string): Promise<ActionRetu
 	const { data: listing, error: listingError } = await supabase.from('listings').select().eq('id', listingId).maybeSingle()
 	if (listingError || !listing) return { errors: { _global: [listingError?.message ?? 'Listing not found'] } }
 
-	const images = await getListingImages(listing.id)
+	const images = await getListingImages({ listingId: listing.id })
 	if (!images || images.length === 0) return { errors: { _global: ['No images found'] } }
 
 	const { data: rules, error: rulesError } = await supabase.from('rules').select()
@@ -95,7 +94,7 @@ export async function generateListingData(listingId: string): Promise<ActionRetu
 	const resJson = JSON.parse(`{${res.choices[0].message.content.replace(/.*{/s, '').replace(/}.*/s, '').trim()}}`)
 	const { title, description, price } = resJson
 
-	const { error: upsertError } = await supabase
+	const { error: updateError } = await supabase
 		.from('listings')
 		.update({
 			title: title?.trim() ?? null,
@@ -103,9 +102,9 @@ export async function generateListingData(listingId: string): Promise<ActionRetu
 			price: price ?? null,
 		})
 		.eq('id', listingId)
-	if (upsertError) return { errors: { _global: [upsertError.message] } }
+	if (updateError) return { errors: { _global: [updateError.message] } }
 
-	revalidatePath('/', 'layout')
+	revalidatePath('/listings', 'layout')
 	return { successTrigger: true }
 }
 
@@ -132,8 +131,7 @@ export async function createImages(
 		if (error) return { errors: { _global: [error.message] } }
 	})
 
-	// BUG: Only showing 1 new photo unless a hard-reload
-	revalidatePath('/', 'layout')
+	revalidatePath('/listings', 'layout')
 }
 
 export async function deleteImage(path: string | null) {
@@ -144,5 +142,5 @@ export async function deleteImage(path: string | null) {
 	const { error } = await supabase.storage.from('listings').remove([path])
 	if (error) return { errors: { _global: [error.message] } }
 
-	revalidatePath('/', 'layout')
+	revalidatePath('/listings', 'layout')
 }

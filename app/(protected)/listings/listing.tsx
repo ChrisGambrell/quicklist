@@ -1,20 +1,19 @@
 import { TableCell, TableRow } from '@/components/ui/table'
 import { Tables } from '@/db_types'
-import { getListingImages } from '@/utils/helpers/server'
+import { PLACEHOLDER_IMAGE } from '@/utils/constants'
+import { getListingImages } from '@/utils/helpers'
 import ListingActions from './listing-actions'
 
 export async function Listing({ listing }: { listing: Tables<'listings'> }) {
-	// TODO: Need to pass props as object
-	const images = await getListingImages(listing.id)
+	const images = await getListingImages({ listingId: listing.id })
 
 	return (
 		<TableRow>
 			<TableCell className='hidden sm:table-cell min-w-[100px]'>
-				{/* TODO: Placeholder image */}
 				{/* TODO: Use Image and make sure urls are configured */}
 				<img
 					className='aspect-square rounded-md object-cover'
-					src={images && images.length > 0 ? images[0].signedUrl : 'https://ui.shadcn.com/placeholder.svg'}
+					src={images && images.length > 0 ? images[0].signedUrl : PLACEHOLDER_IMAGE}
 					alt='Product image'
 					height='64'
 					width='64'

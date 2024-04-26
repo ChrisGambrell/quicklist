@@ -11,7 +11,8 @@ import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import { Tables } from '@/db_types'
 import { cn } from '@/lib/utils'
-import { SignedImage } from '@/utils/helpers'
+import { PLACEHOLDER_IMAGE } from '@/utils/constants'
+import { SignedImage } from '@/utils/types'
 import { UploadIcon } from 'lucide-react'
 import { useFormState } from 'react-dom'
 
@@ -154,7 +155,7 @@ function ListingImage({ image, variant }: { image?: SignedImage; variant: 'prima
 		<button formAction={useDeleteImage}>
 			<img
 				className={cn('aspect-square w-full rounded-md object-cover', { 'cursor-pointer': variant === 'secondary' })}
-				src={image?.signedUrl ?? 'https://ui.shadcn.com/placeholder.svg'}
+				src={image?.signedUrl ?? PLACEHOLDER_IMAGE}
 				alt='Listing image'
 				height={sizeMap[variant]}
 				width={sizeMap[variant]}

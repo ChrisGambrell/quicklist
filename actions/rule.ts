@@ -1,8 +1,8 @@
 'use server'
 
-import { ActionReturn } from '@/utils/helpers'
-import { getAuth } from '@/utils/helpers/server'
+import { getAuth } from '@/utils/helpers'
 import { createClient } from '@/utils/supabase/server'
+import { ActionReturn } from '@/utils/types'
 import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
 import { z } from 'zod'
@@ -21,7 +21,7 @@ export async function createRule(prevState: any, formData: FormData): Promise<Ac
 	const { error } = await supabase.from('rules').insert({ user_id: auth.id, ...parsed.data })
 	if (error) return { errors: { _global: [error.message] } }
 
-	revalidatePath('/', 'layout')
+	revalidatePath('/rules', 'layout')
 	return { successTrigger: true }
 }
 
@@ -36,7 +36,7 @@ export async function updateRule(id: string, prevState: any, formData: FormData)
 	const { error } = await supabase.from('rules').update(parsed.data).eq('id', id)
 	if (error) return { errors: { _global: [error.message] } }
 
-	revalidatePath('/', 'layout')
+	revalidatePath('/rules', 'layout')
 	return { successTrigger: true }
 }
 

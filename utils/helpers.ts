@@ -1,16 +1,28 @@
-import { ZodTypeAny, z } from 'zod'
+import { redirect } from 'next/navigation'
+import { createClient } from './supabase/server'
 
-export type ActionErrors<T extends ZodTypeAny | undefined> = T extends ZodTypeAny
-	? z.inferFlattenedErrors<T>['fieldErrors'] & { _global?: string[] | undefined }
-	: { _global?: string[] | undefined }
+export async function getAuth() {
+	const supabase = createClient()
 
-export type ActionReturn<T extends ZodTypeAny | undefined> = void | {
-	errors?: ActionErrors<T>
-	successTrigger?: boolean | undefined
+	const { data: auth, error: authError } = await supabase.auth.getUser()
+	if (authError || !auth.user) redirect('/sign-in')
+
+	const { data: user, error: userError } = await supabase.from('users').select().eq('id', auth.user.id).maybeSingle()
+	if (userError || !user) redirect('/sign-in')
+
+	return { auth: auth.user, user, supabase }
 }
 
-export type SignedImage = {
-	error: string | null
-	path: string | null
-	signedUrl: string
+export async function getListingImages({ listingId }: { listingId: string }) {
+	const supabase = createClient()
+
+	const { data: files } = await supabase.storage.from('listings').list(listingId)
+	if (!files) return null
+
+	const { data: images } = await supabase.storage.from('listings').createSignedUrls(
+		files.map((file) => `${listingId}/${file.name}`),
+		60 * 60 * 24
+	)
+
+	return images
 }

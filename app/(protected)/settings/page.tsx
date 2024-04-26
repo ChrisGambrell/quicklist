@@ -1,4 +1,4 @@
-import { getAuth } from '@/utils/helpers/server'
+import { getAuth } from '@/utils/helpers'
 import NameForm from './forms/name-form'
 
 export default async function ProfileSettingsPage() {
