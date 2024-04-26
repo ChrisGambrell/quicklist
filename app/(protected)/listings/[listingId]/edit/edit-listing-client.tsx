@@ -1,6 +1,6 @@
 'use client'
 
-import { deleteImage, deleteListing, updateListing } from '@/actions/listing'
+import { deleteImage, deleteListing, generateListingData, updateListing } from '@/actions/listing'
 import ActionButton from '@/components/action-button'
 import BackButton from '@/components/back-button'
 import { FormError, useErrorToaster } from '@/components/form'
@@ -13,7 +13,6 @@ import { Tables } from '@/db_types'
 import { cn } from '@/lib/utils'
 import { PLACEHOLDER_IMAGE } from '@/utils/constants'
 import { SignedImage } from '@/utils/types'
-import { UploadIcon } from 'lucide-react'
 import { useFormState } from 'react-dom'
 import UploadImages from './upload-images'
 
@@ -27,6 +26,10 @@ export default function EditListingClient({ images, listing }: { images: SignedI
 	const useUpdateListing = updateListing.bind(null, listing.id)
 	const [updateState, updateAction] = useFormState(useUpdateListing, null)
 	useErrorToaster(updateState?.errors?._global)
+
+	const useGenerateData = generateListingData.bind(null, listing.id)
+	const [generateState, generateAction] = useFormState(useGenerateData, null)
+	useErrorToaster(generateState?.errors?._global)
 
 	const useDeleteListing = deleteListing.bind(null, listing.id)
 	const [deleteState, deleteAction] = useFormState(useDeleteListing, null)
@@ -95,21 +98,19 @@ export default function EditListingClient({ images, listing }: { images: SignedI
 								<div className='grid grid-cols-3 gap-2'>
 									{images &&
 										images.map((image) => <ListingImage key={image.signedUrl} image={image} variant='secondary' />)}
-									{/* TODO: Upload image */}
 									<UploadImages listingId={listing.id} />
 								</div>
 							</div>
 						</CardContent>
 					</Card>
 
-					{/* TODO: Generate listing data */}
 					<Card>
 						<CardHeader>
 							<CardTitle>Generate Listing Data</CardTitle>
 							<CardDescription>Generate the listing&apos;s data based on its details and images.</CardDescription>
 						</CardHeader>
 						<CardContent>
-							<ActionButton className='w-full' formAction={deleteAction} size='sm' variant='secondary'>
+							<ActionButton className='w-full' formAction={generateAction} size='sm' variant='secondary'>
 								Generate
 							</ActionButton>
 						</CardContent>

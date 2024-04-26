@@ -103,6 +103,7 @@ export async function generateListingData(listingId: string): Promise<ActionRetu
 		.eq('id', listingId)
 	if (updateError) return { errors: { _global: [updateError.message] } }
 
+	// BUG: Does not revalidate listing description
 	revalidatePath('/listings', 'layout')
 	return { successTrigger: true }
 }
