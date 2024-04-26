@@ -10,7 +10,7 @@ import { useFormState } from 'react-dom'
 import toast from 'react-hot-toast'
 
 export default function PasswordForm() {
-	const ref = useRef<HTMLFormElement>()
+	const ref = useRef<HTMLFormElement>(null)
 	const [state, action] = useFormState(updatePassword, null)
 	useErrorToaster(state?.errors?._global)
 	useSuccessTrigger(state?.successTrigger, () => {
