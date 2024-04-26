@@ -1,13 +1,46 @@
+'use client'
+
+import { Button } from '@/components/ui/button'
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
+import { TableCell, TableRow } from '@/components/ui/table'
 import { Tables } from '@/db_types'
-import DeleteRuleButton from './delete-rule-button'
+import { createClient } from '@/utils/supabase/client'
+import { MoreHorizontalIcon } from 'lucide-react'
+import { useRouter } from 'next/navigation'
+import toast from 'react-hot-toast'
 
 export default function Rule({ rule }: { rule: Tables<'rules'> }) {
+	const router = useRouter()
+
+	async function deleteRule() {
+		const supabase = createClient()
+
+		const { error } = await supabase.from('rules').delete().eq('id', rule.id)
+		if (error) return toast.error(error.message)
+
+		toast.success('Rule deleted')
+		router.refresh()
+	}
+
 	return (
-		<div className='flex space-x-2 items-center text-sm border rounded-lg shadow p-1 pl-3 sm:space-x-4'>
-			<div className='flex-1'>{rule.rule}</div>
-			<div className='flex-shrink-0'>
-				<DeleteRuleButton ruleId={rule.id} />
-			</div>
-		</div>
+		<TableRow>
+			<TableCell className='font-medium truncate'>{rule.rule}</TableCell>
+			<TableCell className='hidden md:table-cell'>{new Date(rule.created_at).toDateString()}</TableCell>
+			<TableCell>
+				<DropdownMenu>
+					<DropdownMenuTrigger asChild>
+						<Button aria-haspopup='true' size='icon' variant='ghost'>
+							<MoreHorizontalIcon className='h-4 w-4' />
+							<span className='sr-only'>Toggle menu</span>
+						</Button>
+					</DropdownMenuTrigger>
+					<DropdownMenuContent align='end'>
+						<DropdownMenuLabel>Actions</DropdownMenuLabel>
+						<DropdownMenuItem onClick={() => router.push(`/rules/${rule.id}/edit`)}>Edit</DropdownMenuItem>
+						<DropdownMenuItem onClick={deleteRule}>Delete</DropdownMenuItem>
+					</DropdownMenuContent>
+				</DropdownMenu>
+			</TableCell>
+		</TableRow>
 	)
 }

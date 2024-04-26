@@ -32,7 +32,7 @@ export default function PasswordForm() {
 			</div>
 
 			<div>
-				<ActionButton>Update profile</ActionButton>
+				<ActionButton>Update password</ActionButton>
 			</div>
 		</form>
 	)

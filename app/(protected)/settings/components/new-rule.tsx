@@ -15,10 +15,11 @@ import {
 	DialogTrigger,
 } from '@/components/ui/dialog'
 import { Input } from '@/components/ui/input'
-import { PlusIcon } from 'lucide-react'
+import { PlusCircleIcon } from 'lucide-react'
 import { useState } from 'react'
 import { useFormState } from 'react-dom'
 
+// BUG: After adding a rule, the trigger does not open the dialog back up
 export default function NewRule() {
 	const [open, setOpen] = useState(false)
 
@@ -29,9 +30,9 @@ export default function NewRule() {
 	return (
 		<Dialog open={open} onOpenChange={setOpen}>
 			<DialogTrigger asChild>
-				<Button size='sm'>
-					<PlusIcon className='w-4 h-4 mr-2' />
-					New Rule
+				<Button size='sm' className='h-8 gap-1'>
+					<PlusCircleIcon className='h-3.5 w-3.5' />
+					<span className='sr-only sm:not-sr-only sm:whitespace-nowrap'>Add Rule</span>
 				</Button>
 			</DialogTrigger>
 			<DialogContent>
