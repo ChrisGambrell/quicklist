@@ -15,6 +15,7 @@ import { PLACEHOLDER_IMAGE } from '@/utils/constants'
 import { SignedImage } from '@/utils/types'
 import { UploadIcon } from 'lucide-react'
 import { useFormState } from 'react-dom'
+import UploadImages from './upload-images'
 
 const placeholder = {
 	title: "Classic Navy and White Checkered Men's Long Sleeve Shirt",
@@ -95,10 +96,7 @@ export default function EditListingClient({ images, listing }: { images: SignedI
 									{images &&
 										images.map((image) => <ListingImage key={image.signedUrl} image={image} variant='secondary' />)}
 									{/* TODO: Upload image */}
-									<button className='flex aspect-square w-full items-center justify-center rounded-md border border-dashed'>
-										<UploadIcon className='h-4 w-4 text-muted-foreground' />
-										<span className='sr-only'>Upload</span>
-									</button>
+									<UploadImages listingId={listing.id} />
 								</div>
 							</div>
 						</CardContent>

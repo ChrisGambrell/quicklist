@@ -16,7 +16,6 @@ const updateListingSchema = z.object({
 		.transform((arg) => (!arg.trim() ? null : arg))
 		.pipe(z.coerce.number().nullable()),
 })
-const createImagesSchema = z.object({ images: z.instanceof(File).array().nonempty() })
 
 export async function createListing() {
 	const { auth, supabase } = await getAuth()
@@ -106,32 +105,6 @@ export async function generateListingData(listingId: string): Promise<ActionRetu
 
 	revalidatePath('/listings', 'layout')
 	return { successTrigger: true }
-}
-
-export async function createImages(
-	listingId: string,
-	prevState: any,
-	formData: FormData
-): Promise<ActionReturn<typeof createImagesSchema>> {
-	const files = formData.getAll('images')
-
-	const parsed = createImagesSchema.safeParse({ images: files })
-	if (!parsed.success) return { errors: parsed.error.flatten().fieldErrors }
-
-	if (parsed.data.images.length === 1 && parsed.data.images[0].size === 0) return { errors: { _global: ['No images provided'] } }
-
-	// FIXME: Check to see if I need to validate owner of listing before uploading images
-	const { supabase } = await getAuth()
-
-	parsed.data.images.forEach(async (file) => {
-		const fileExt = file.name.split('.').pop()
-		const filePath = `${listingId}/${new Date().getTime()}-${Math.random()}.${fileExt}`
-
-		const { error } = await supabase.storage.from('listings').upload(filePath, file)
-		if (error) return { errors: { _global: [error.message] } }
-	})
-
-	revalidatePath('/listings', 'layout')
 }
 
 export async function deleteImage(path: string | null) {
