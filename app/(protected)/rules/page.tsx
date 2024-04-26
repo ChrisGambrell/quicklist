@@ -1,5 +1,5 @@
-import AddRuleButton from '@/app/(newlayout)/rules/add-rule-button'
-import Rule from '@/app/(newlayout)/rules/rule'
+import AddRuleButton from '@/app/(protected)/rules/add-rule-button'
+import Rule from '@/app/(protected)/rules/rule'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Table, TableBody, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { createClient } from '@/utils/supabase/server'

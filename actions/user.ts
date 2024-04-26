@@ -1,28 +1,31 @@
 'use server'
 
 import { ActionReturn } from '@/utils/helpers'
+import { getAuth } from '@/utils/helpers/server'
 import { createClient } from '@/utils/supabase/server'
 import { revalidatePath } from 'next/cache'
 import { z } from 'zod'
 
-const updateUserSchema = z.object({ full_name: z.string().transform((arg) => (!arg.trim() ? null : arg)) })
+const updateNameSchema = z.object({ full_name: z.string().transform((arg) => (!arg.trim() ? null : arg)) })
 const updatePasswordSchema = z.object({ password: z.string().min(8).optional(), confirm_password: z.string().optional() })
 
-export async function updateUser(userId: string, prevState: any, formData: FormData): Promise<ActionReturn<typeof updateUserSchema>> {
+export async function updateName(prevState: any, formData: FormData): Promise<ActionReturn<typeof updateNameSchema>> {
 	const data = Object.fromEntries(formData)
 
-	const parsed = updateUserSchema.safeParse(data)
+	const parsed = updateNameSchema.safeParse(data)
 	if (!parsed.success) return { errors: parsed.error.flatten().fieldErrors }
 
-	const supabase = createClient()
+	const { user, supabase } = await getAuth()
+	if (!user) return { errors: { _global: ['Not authorized'] } }
 
 	const { error } = await supabase
 		.from('users')
 		.update({ ...parsed.data })
-		.eq('id', userId)
+		.eq('id', user.id)
 	if (error) return { errors: { _global: [error.message] } }
 
-	revalidatePath('/settings', 'layout')
+	revalidatePath('/', 'layout')
+	return { successTrigger: true }
 }
 
 export async function updatePassword(prevState: any, formData: FormData): Promise<ActionReturn<typeof updatePasswordSchema>> {
@@ -40,4 +43,5 @@ export async function updatePassword(prevState: any, formData: FormData): Promis
 	if (error) return { errors: { _global: [error.message] } }
 
 	revalidatePath('/settings', 'layout')
+	return { successTrigger: true }
 }

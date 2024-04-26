@@ -1,5 +1,5 @@
-import AddListingButton from '@/app/(newlayout)/listings/add-listing-button'
-import { Listing } from '@/app/(newlayout)/listings/listing'
+import AddListingButton from '@/app/(protected)/listings/add-listing-button'
+import { Listing } from '@/app/(protected)/listings/listing'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Table, TableBody, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { createClient } from '@/utils/supabase/server'
