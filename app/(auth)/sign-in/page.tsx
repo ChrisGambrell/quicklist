@@ -43,7 +43,6 @@ export default function SignInPage() {
 					<ActionButton formAction={passwordAction} type='submit' className='w-full'>
 						Sign in
 					</ActionButton>
-					{/* TODO: log in with google */}
 					<ActionButton formAction={githubAction} variant='outline' className='w-full'>
 						Sign in with Github
 					</ActionButton>
