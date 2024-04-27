@@ -30,9 +30,9 @@ export default function SignInPage() {
 						<div className='flex items-center'>
 							<Label htmlFor='password'>Password</Label>
 							{/* TODO: forgot password */}
-							{/* <Link href='/forgot' className='ml-auto inline-block text-sm underline'>
+							<Link href='/forgot' className='ml-auto inline-block text-sm underline'>
 								Forgot your password?
-							</Link> */}
+							</Link>
 						</div>
 						<Input id='password' name='password' type='password' />
 						<FormError errors={state?.errors} id='password' />

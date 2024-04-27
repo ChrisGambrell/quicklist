@@ -8,6 +8,7 @@ import { z } from 'zod'
 
 const signInSchema = z.object({ email: z.string().email(), password: z.string() })
 const signUpSchema = z.object({ name: z.string().min(1), email: z.string().email(), password: z.string() })
+const passwordResetSchema = z.object({ email: z.string().email() })
 
 export async function signIn(_prevState: any, formData: FormData): Promise<ActionReturn<typeof signInSchema>> {
 	const data = Object.fromEntries(formData)
@@ -39,6 +40,19 @@ export async function signUp(prevState: any, formData: FormData): Promise<Action
 	})
 	if (error) return { errors: { _global: [error.message] } }
 
-	revalidatePath('/', 'layout')
+	return { successTrigger: true }
+}
+
+export async function sendPasswordReset(prevState: any, formData: FormData): Promise<ActionReturn<typeof passwordResetSchema>> {
+	const data = Object.fromEntries(formData)
+
+	const parsed = passwordResetSchema.safeParse(data)
+	if (!parsed.success) return { errors: parsed.error.flatten().fieldErrors }
+
+	const supabase = createClient()
+
+	const { error } = await supabase.auth.resetPasswordForEmail(parsed.data.email, { redirectTo: 'http://127.0.0.1:3000/auth/reset' })
+	if (error) return { errors: { _global: [error.message] } }
+
 	return { successTrigger: true }
 }

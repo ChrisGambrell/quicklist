@@ -1,8 +1,11 @@
 import DesktopNav from '@/components/layout/desktop-nav'
 import MobileNav from '@/components/layout/mobile-nav'
+import { getAuth } from '@/utils/helpers'
 import { ReactNode } from 'react'
 
-export default function NewLayout({ children }: { children: ReactNode }) {
+export default async function ProtectedLayout({ children }: { children: ReactNode }) {
+	await getAuth()
+
 	return (
 		<div className='flex min-h-screen w-full flex-col bg-muted/40'>
 			<DesktopNav />
