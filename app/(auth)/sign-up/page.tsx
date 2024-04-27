@@ -3,9 +3,10 @@
 import { signUp } from '@/actions/auth'
 import ActionButton from '@/components/action-button'
 import { FormError, useErrorToaster, useSuccessTrigger } from '@/components/form'
-import NavLink from '@/components/nav-link'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
+import Link from 'next/link'
 import { useFormState } from 'react-dom'
 import toast from 'react-hot-toast'
 
@@ -15,30 +16,44 @@ export default function SignUpPage() {
 	useSuccessTrigger(state?.successTrigger, () => toast.success('Account created successfully. Check your email for verification.'))
 
 	return (
-		<form className='grid gap-6' action={action}>
-			<h2 className='tracking-tight font-bold text-3xl'>Sign Up</h2>
-
-			<div className='grid gap-2'>
-				<Label htmlFor='name'>Name</Label>
-				<Input id='name' name='name' type='text' />
-				<FormError errors={state?.errors} id='name' />
-			</div>
-			<div className='grid gap-2'>
-				<Label htmlFor='email'>Email address</Label>
-				<Input id='email' name='email' type='text' />
-				<FormError errors={state?.errors} id='email' />
-			</div>
-			<div className='grid gap-2'>
-				<Label htmlFor='password'>Password</Label>
-				<Input id='password' name='password' type='password' />
-				<FormError errors={state?.errors} id='password' />
-			</div>
-
-			<NavLink href='/sign-in'>Already have an account? Sign in</NavLink>
-
-			<div>
-				<ActionButton>Sign up</ActionButton>
-			</div>
-		</form>
+		<Card className='mx-auto max-w-sm border-0 shadow-none sm:border sm:shadow-sm sm:my-20'>
+			<CardHeader>
+				<CardTitle className='text-2xl'>Sign Up</CardTitle>
+				<CardDescription>Enter your information to sign up</CardDescription>
+			</CardHeader>
+			<CardContent>
+				<form className='grid gap-4' action={action}>
+					<div className='grid gap-2'>
+						<Label htmlFor='name'>Name</Label>
+						<Input id='name' name='name' placeholder='Your name' />
+						<FormError errors={state?.errors} id='name' />
+					</div>
+					<div className='grid gap-2'>
+						<Label htmlFor='email'>Email</Label>
+						<Input id='email' name='email' type='email' placeholder='m@example.com' />
+						<FormError errors={state?.errors} id='email' />
+					</div>
+					{/* TODO: Confirm password? */}
+					<div className='grid gap-2'>
+						<Label htmlFor='password'>Password</Label>
+						<Input id='password' name='password' type='password' />
+						<FormError errors={state?.errors} id='password' />
+					</div>
+					<ActionButton type='submit' className='w-full'>
+						Sign up
+					</ActionButton>
+					{/* TODO: log in with google */}
+					{/* <Button variant='outline' className='w-full'>
+						Login with Google
+					</Button> */}
+				</form>
+				<div className='mt-4 text-center text-sm'>
+					Already have an account?{' '}
+					<Link href='/sign-in' className='underline'>
+						Sign in
+					</Link>
+				</div>
+			</CardContent>
+		</Card>
 	)
 }
