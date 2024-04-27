@@ -1,6 +1,6 @@
 'use server'
 
-import { getAuth } from '@/utils/helpers'
+import { getAuth } from '@/utils/_helpers'
 import { createClient } from '@/utils/supabase/server'
 import { ActionReturn } from '@/utils/types'
 import { revalidatePath } from 'next/cache'

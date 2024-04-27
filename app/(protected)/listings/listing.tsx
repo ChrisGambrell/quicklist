@@ -1,7 +1,7 @@
 import { TableCell, TableRow } from '@/components/ui/table'
 import { Tables } from '@/db_types'
+import { getListingImages } from '@/utils/_helpers'
 import { PLACEHOLDER_IMAGE } from '@/utils/constants'
-import { getListingImages } from '@/utils/helpers'
 import ListingActions from './listing-actions'
 
 export async function Listing({ listing }: { listing: Tables<'listings'> }) {

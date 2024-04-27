@@ -1,4 +1,4 @@
-import { getListingImages } from '@/utils/helpers'
+import { getListingImages } from '@/utils/_helpers'
 import { createClient } from '@/utils/supabase/server'
 import { notFound } from 'next/navigation'
 import EditListingClient from './edit-listing-client'

@@ -1,6 +1,6 @@
 'use server'
 
-import { getAuth, getListingImages } from '@/utils/helpers'
+import { getAuth, getListingImages } from '@/utils/_helpers'
 import { createClient } from '@/utils/supabase/server'
 import { ActionReturn } from '@/utils/types'
 import { revalidatePath } from 'next/cache'

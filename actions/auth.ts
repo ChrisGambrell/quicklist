@@ -1,5 +1,6 @@
 'use server'
 
+import { getURL } from '@/utils/helpers'
 import { createClient } from '@/utils/supabase/server'
 import { ActionReturn } from '@/utils/types'
 import { Provider } from '@supabase/supabase-js'
@@ -32,7 +33,7 @@ export async function signInWithOAuth(provider: Provider): Promise<ActionReturn<
 	// TODO: When cancelling the OAuth flow, the user is redirected to /auth/confirm with an error message that should be handled by toaster http://127.0.0.1:3000/sign-in#error=access_denied&error_description=The+user+has+denied+your+application+access.
 	const { data, error } = await supabase.auth.signInWithOAuth({
 		provider,
-		options: { redirectTo: `${process.env.NEXTAUTH_URL}/auth/callback` },
+		options: { redirectTo: getURL('/auth/callback') },
 	})
 	if (error || !data) return { errors: { _global: [error?.message || 'An unknown error occured'] } }
 
@@ -67,7 +68,7 @@ export async function sendPasswordReset(prevState: any, formData: FormData): Pro
 
 	const supabase = createClient()
 
-	const { error } = await supabase.auth.resetPasswordForEmail(parsed.data.email, { redirectTo: `${process.env.NEXTAUTH_URL}/auth/reset` })
+	const { error } = await supabase.auth.resetPasswordForEmail(parsed.data.email, { redirectTo: getURL('/auth/reset') })
 	if (error) return { errors: { _global: [error.message] } }
 
 	return { successTrigger: true }

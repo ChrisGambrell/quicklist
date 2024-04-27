@@ -1,6 +1,6 @@
 import DesktopNav from '@/components/layout/desktop-nav'
 import MobileNav from '@/components/layout/mobile-nav'
-import { getAuth } from '@/utils/helpers'
+import { getAuth } from '@/utils/_helpers'
 import { ReactNode } from 'react'
 
 export default async function ProtectedLayout({ children }: { children: ReactNode }) {
