@@ -1,3 +1,4 @@
+import { Tables } from '@/db_types'
 import { HomeIcon, Package2Icon, ScaleIcon } from 'lucide-react'
 import Link from 'next/link'
 import NavLink from './nav-link'
@@ -8,7 +9,7 @@ export const links = [
 	{ href: '/rules', icon: <ScaleIcon className='w-5 h-5' />, label: 'Rules' },
 ]
 
-export default function DesktopNav() {
+export default function DesktopNav({ user }: { user: Tables<'users'> }) {
 	return (
 		<aside className='fixed inset-y-0 left-0 z-10 hidden w-14 flex-col border-r bg-background sm:flex'>
 			<nav className='flex flex-col items-center gap-4 px-2 sm:py-5'>
@@ -23,7 +24,7 @@ export default function DesktopNav() {
 				))}
 			</nav>
 			<nav className='mt-auto flex flex-col items-center gap-4 px-2 sm:py-5'>
-				<UserMenu />
+				<UserMenu user={user} />
 			</nav>
 		</aside>
 	)

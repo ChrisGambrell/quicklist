@@ -1,12 +1,13 @@
 import { Button } from '@/components/ui/button'
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet'
+import { Tables } from '@/db_types'
 import { Package2Icon, PanelLeftIcon } from 'lucide-react'
 import Link from 'next/link'
 import { links } from './desktop-nav'
 import MobileNavLink from './mobile-nav-link'
 import UserMenu from './user-menu'
 
-export default function MobileNav() {
+export default function MobileNav({ user }: { user: Tables<'users'> }) {
 	return (
 		<Sheet>
 			<SheetTrigger asChild>
@@ -24,7 +25,7 @@ export default function MobileNav() {
 							<Package2Icon className='h-5 w-5 transition-all group-hover:scale-110' />
 							<span className='sr-only'>eBay Lister</span>
 						</Link>
-						<UserMenu />
+						<UserMenu user={user} />
 					</div>
 					{links.map((link) => (
 						<MobileNavLink key={link.href} {...link} />
