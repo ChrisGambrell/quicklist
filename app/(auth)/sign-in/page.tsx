@@ -17,6 +17,10 @@ export default function SignInPage() {
 	const [githubState, githubAction] = useFormState(useSignInWithGithub, null)
 	useErrorToaster(githubState?.errors?._global)
 
+	const useSignInWithGoogle = signInWithOAuth.bind(null, 'google')
+	const [googleState, googleAction] = useFormState(useSignInWithGoogle, null)
+	useErrorToaster(googleState?.errors?._global)
+
 	return (
 		<Card className='mx-auto max-w-sm border-0 shadow-none sm:border sm:shadow-sm sm:my-20'>
 			<CardHeader>
@@ -42,6 +46,9 @@ export default function SignInPage() {
 					</div>
 					<ActionButton formAction={passwordAction} type='submit' className='w-full'>
 						Sign in
+					</ActionButton>
+					<ActionButton formAction={googleAction} variant='outline' className='w-full'>
+						Sign in with Google
 					</ActionButton>
 					<ActionButton formAction={githubAction} variant='outline' className='w-full'>
 						Sign in with Github
