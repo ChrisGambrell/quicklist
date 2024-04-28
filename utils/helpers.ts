@@ -6,6 +6,8 @@ export const getURL = (path: string = '') => {
 			? process.env.NEXT_PUBLIC_VERCEL_URL
 			: 'http://localhost:3000'
 
+	console.log('getURL url:', url)
+
 	// Trim the URL and remove trailing slash
 	url = url.replace(/\/+$/, '')
 	// Include https when not localhost
