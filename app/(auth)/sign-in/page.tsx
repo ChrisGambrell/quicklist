@@ -10,7 +10,7 @@ import Link from 'next/link'
 import { useFormState } from 'react-dom'
 
 export default function SignInPage() {
-	const [passwordState, passwordAction] = useFormState(signInWithPassword, null)
+	const [state, action] = useFormState(signInWithPassword, null)
 	const useSignInWithGithub = signInWithOAuth.bind(null, 'github')
 	const useSignInWithGoogle = signInWithOAuth.bind(null, 'google')
 
@@ -25,7 +25,7 @@ export default function SignInPage() {
 					<div className='grid gap-2'>
 						<Label htmlFor='email'>Email</Label>
 						<Input id='email' name='email' type='email' placeholder='m@example.com' />
-						<FormError value={passwordState?.errors.email} />
+						<FormError value={state?.errors.email} />
 					</div>
 					<div className='grid gap-2'>
 						<div className='flex items-center'>
@@ -35,9 +35,9 @@ export default function SignInPage() {
 							</Link>
 						</div>
 						<Input id='password' name='password' type='password' />
-						<FormError value={passwordState?.errors.password} />
+						<FormError value={state?.errors.password} />
 					</div>
-					<ActionButton formAction={passwordAction} type='submit' className='w-full'>
+					<ActionButton formAction={action} type='submit' className='w-full'>
 						Sign in
 					</ActionButton>
 					<ActionButton formAction={useSignInWithGoogle} variant='outline' className='w-full'>

@@ -13,7 +13,7 @@ import { useFormState } from 'react-dom'
 
 export default function EditRuleClient({ rule }: { rule: Tables<'rules'> }) {
 	const useUpdateRule = updateRule.bind(null, rule.id)
-	const [updateState, updateAction] = useFormState(useUpdateRule, null)
+	const [state, action] = useFormState(useUpdateRule, null)
 	// TODO: Pass these params as an object
 	const useDeleteRule = deleteRule.bind(null, rule.id)
 
@@ -30,7 +30,7 @@ export default function EditRuleClient({ rule }: { rule: Tables<'rules'> }) {
 					<Button variant='outline' size='sm' type='reset'>
 						Discard
 					</Button>
-					<ActionButton formAction={updateAction} size='sm'>
+					<ActionButton formAction={action} size='sm'>
 						Save Rule
 					</ActionButton>
 				</div>
@@ -47,7 +47,7 @@ export default function EditRuleClient({ rule }: { rule: Tables<'rules'> }) {
 								<div className='grid gap-3'>
 									<Label htmlFor='rule'>Rule</Label>
 									<Textarea id='rule' name='rule' defaultValue={rule.rule} className='min-h-32' />
-									<FormError value={updateState?.errors.rule} />
+									<FormError value={state?.errors.rule} />
 								</div>
 							</div>
 						</CardContent>
@@ -71,7 +71,7 @@ export default function EditRuleClient({ rule }: { rule: Tables<'rules'> }) {
 				<Button variant='outline' size='sm' type='reset'>
 					Discard
 				</Button>
-				<ActionButton formAction={updateAction} size='sm'>
+				<ActionButton formAction={action} size='sm'>
 					Save Rule
 				</ActionButton>
 			</div>

@@ -24,8 +24,7 @@ const placeholder = {
 
 export default function EditListingClient({ images, listing }: { images: SignedImage[] | null; listing: Tables<'listings'> }) {
 	const useUpdateListing = updateListing.bind(null, listing.id)
-	const [updateState, updateAction] = useFormState(useUpdateListing, null)
-
+	const [state, action] = useFormState(useUpdateListing, null)
 	const useGenerateData = generateListingData.bind(null, listing.id)
 	const useDeleteListing = deleteListing.bind(null, listing.id)
 
@@ -42,7 +41,7 @@ export default function EditListingClient({ images, listing }: { images: SignedI
 					<Button variant='outline' size='sm' type='reset'>
 						Discard
 					</Button>
-					<ActionButton formAction={updateAction} size='sm'>
+					<ActionButton formAction={action} size='sm'>
 						Save Listing
 					</ActionButton>
 				</div>
@@ -58,12 +57,12 @@ export default function EditListingClient({ images, listing }: { images: SignedI
 								<div className='grid gap-3'>
 									<Label htmlFor='title'>Title</Label>
 									<Input id='title' name='title' placeholder={placeholder.title} defaultValue={listing.title ?? ''} />
-									<FormError value={updateState?.errors.title} />
+									<FormError value={state?.errors.title} />
 								</div>
 								<div className='grid gap-3'>
 									<Label htmlFor='price'>Price</Label>
 									<Input id='price' name='price' placeholder={placeholder.price} defaultValue={listing.price ?? ''} />
-									<FormError value={updateState?.errors.price} />
+									<FormError value={state?.errors.price} />
 								</div>
 								<div className='grid gap-3'>
 									<Label htmlFor='description'>Description</Label>
@@ -74,7 +73,7 @@ export default function EditListingClient({ images, listing }: { images: SignedI
 										defaultValue={listing.description ?? ''}
 										className='min-h-32'
 									/>
-									<FormError value={updateState?.errors.description} />
+									<FormError value={state?.errors.description} />
 								</div>
 							</div>
 						</CardContent>
@@ -130,7 +129,7 @@ export default function EditListingClient({ images, listing }: { images: SignedI
 				<Button variant='outline' size='sm' type='reset'>
 					Discard
 				</Button>
-				<ActionButton formAction={updateAction} size='sm'>
+				<ActionButton formAction={action} size='sm'>
 					Save Listing
 				</ActionButton>
 			</div>
