@@ -12,10 +12,8 @@ import { Tables } from '@/db_types'
 import { useFormState } from 'react-dom'
 
 export default function EditRuleClient({ rule }: { rule: Tables<'rules'> }) {
-	const useUpdateRule = updateRule.bind(null, rule.id)
-	const [state, action] = useFormState(useUpdateRule, null)
-	// TODO: Pass these params as an object
-	const useDeleteRule = deleteRule.bind(null, rule.id)
+	const [state, action] = useFormState(updateRule.bind(null, { ruleId: rule.id }), null)
+	const useDeleteRule = deleteRule.bind(null, { ruleId: rule.id })
 
 	return (
 		<form className='mx-auto grid max-w-[59rem] flex-1 auto-rows-max gap-4 w-full'>

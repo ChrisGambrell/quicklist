@@ -27,7 +27,7 @@ export async function createListing() {
 	redirect(`/listings/${data.id}/edit`)
 }
 
-export async function updateListing(listingId: Tables<'listings'>['id'], _prevState: any, formData: FormData) {
+export async function updateListing({ listingId }: { listingId: Tables<'listings'>['id'] }, _prevState: any, formData: FormData) {
 	const { data, errors } = parseFormData(formData, updateListingSchema)
 	if (errors) return { errors }
 
@@ -39,7 +39,7 @@ export async function updateListing(listingId: Tables<'listings'>['id'], _prevSt
 	redirect(getSuccessRedirect(`/listings/${listingId}/edit`, 'Listing updated'))
 }
 
-export async function deleteListing(listingId: Tables<'listings'>['id']) {
+export async function deleteListing({ listingId }: { listingId: Tables<'listings'>['id'] }) {
 	const supabase = createClient()
 
 	const { error } = await supabase.from('listings').delete().eq('id', listingId)
@@ -48,7 +48,7 @@ export async function deleteListing(listingId: Tables<'listings'>['id']) {
 	redirect(getSuccessRedirect('/listings', 'Listing deleted'))
 }
 
-export async function generateListingData(listingId: Tables<'listings'>['id']) {
+export async function generateListingData({ listingId }: { listingId: Tables<'listings'>['id'] }) {
 	const supabase = createClient()
 
 	const { data: listing, error: listingError } = await supabase.from('listings').select().eq('id', listingId).maybeSingle()
@@ -107,7 +107,7 @@ export async function generateListingData(listingId: Tables<'listings'>['id']) {
 	}
 }
 
-export async function deleteImage(listingId: Tables<'listings'>['id'], path: string | null) {
+export async function deleteImage({ listingId }: { listingId: Tables<'listings'>['id'] }, path: string | null) {
 	if (!path) redirect(getErrorRedirect(`/listings/${listingId}/edit`, 'No path provided'))
 
 	const supabase = createClient()

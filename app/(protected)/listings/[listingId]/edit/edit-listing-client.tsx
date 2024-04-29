@@ -24,10 +24,10 @@ const placeholder = {
 }
 
 export default function EditListingClient({ images, listing }: { images: SignedImage[] | null; listing: Tables<'listings'> }) {
-	const useUpdateListing = updateListing.bind(null, listing.id)
+	const useUpdateListing = updateListing.bind(null, { listingId: listing.id })
 	const [state, action] = useFormState(useUpdateListing, null)
-	const useGenerateData = generateListingData.bind(null, listing.id)
-	const useDeleteListing = deleteListing.bind(null, listing.id)
+	const useGenerateData = generateListingData.bind(null, { listingId: listing.id })
+	const useDeleteListing = deleteListing.bind(null, { listingId: listing.id })
 
 	return (
 		<form className='mx-auto grid max-w-[59rem] flex-1 auto-rows-max gap-4 w-full'>
@@ -146,7 +146,7 @@ function ListingImage({
 	listingId: Tables<'listings'>['id']
 	variant: 'primary' | 'secondary'
 }) {
-	const useDeleteImage = deleteImage.bind(null, listingId, image?.path ?? null)
+	const useDeleteImage = deleteImage.bind(null, { listingId }, image?.path ?? null)
 
 	const sizeMap: Record<'primary' | 'secondary', number> = {
 		primary: 84,

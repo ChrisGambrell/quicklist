@@ -22,7 +22,7 @@ export async function createRule(_prevState: any, formData: FormData) {
 	redirect(getSuccessRedirect('/rules', 'Rule created'))
 }
 
-export async function updateRule(ruleId: Tables<'rules'>['id'], _prevState: any, formData: FormData) {
+export async function updateRule({ ruleId }: { ruleId: Tables<'rules'>['id'] }, _prevState: any, formData: FormData) {
 	const { data, errors } = parseFormData(formData, updateRuleSchema)
 	if (errors) return { errors }
 
@@ -34,7 +34,7 @@ export async function updateRule(ruleId: Tables<'rules'>['id'], _prevState: any,
 	redirect(getSuccessRedirect(`/rules/${ruleId}/edit`, 'Rule updated'))
 }
 
-export async function deleteRule(ruleId: Tables<'rules'>['id']) {
+export async function deleteRule({ ruleId }: { ruleId: Tables<'rules'>['id'] }) {
 	const supabase = createClient()
 
 	const { error } = await supabase.from('rules').delete().eq('id', ruleId)

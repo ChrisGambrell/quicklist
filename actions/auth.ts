@@ -50,7 +50,7 @@ export async function signUp(_prevState: any, formData: FormData) {
 	redirect(getSuccessRedirect('/sign-up', 'Account created successfully. Check your email for verification.'))
 }
 
-export async function sendPasswordReset(prevState: any, formData: FormData) {
+export async function sendPasswordReset(_prevState: any, formData: FormData) {
 	const { data, errors } = parseFormData(formData, passwordResetSchema)
 	if (errors) return { errors }
 
