@@ -18,22 +18,32 @@ export default async function RulesPage() {
 					</div>
 				</CardHeader>
 				<CardContent>
-					<Table>
-						<TableHeader>
-							<TableRow>
-								<TableHead>Rule</TableHead>
-								<TableHead className='hidden md:table-cell'>Created at</TableHead>
-								<TableHead>
-									<span className='sr-only'>Actions</span>
-								</TableHead>
-							</TableRow>
-						</TableHeader>
-						<TableBody>
-							{rules?.map((rule) => (
-								<Rule key={rule.id} rule={rule} />
-							))}
-						</TableBody>
-					</Table>
+					{rules?.length ? (
+						<Table>
+							<TableHeader>
+								<TableRow>
+									<TableHead>Rule</TableHead>
+									<TableHead className='hidden md:table-cell'>Created at</TableHead>
+									<TableHead>
+										<span className='sr-only'>Actions</span>
+									</TableHead>
+								</TableRow>
+							</TableHeader>
+							<TableBody>
+								{rules?.map((rule) => (
+									<Rule key={rule.id} rule={rule} />
+								))}
+							</TableBody>
+						</Table>
+					) : (
+						<div className='flex items-center justify-center rounded-lg border border-dashed shadow-sm p-12'>
+							<div className='flex flex-col items-center gap-1 text-center'>
+								<h3 className='text-2xl font-bold tracking-tight'>You have no rules</h3>
+								<p className='text-sm text-muted-foreground mb-4'>Start by adding a rule.</p>
+								<AddRuleButton />
+							</div>
+						</div>
+					)}
 				</CardContent>
 			</Card>
 		</>

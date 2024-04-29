@@ -18,26 +18,36 @@ export default async function ListingsPage() {
 					</div>
 				</CardHeader>
 				<CardContent>
-					<Table>
-						<TableHeader>
-							<TableRow>
-								<TableHead className='hidden w-[100px] sm:table-cell'>
-									<span className='sr-only'>Image</span>
-								</TableHead>
-								<TableHead>Title</TableHead>
-								<TableHead className='hidden md:table-cell'>Price</TableHead>
-								<TableHead className='hidden md:table-cell'>Created at</TableHead>
-								<TableHead>
-									<span className='sr-only'>Actions</span>
-								</TableHead>
-							</TableRow>
-						</TableHeader>
-						<TableBody>
-							{listings?.map((listing) => (
-								<Listing key={listing.id} listing={listing} />
-							))}
-						</TableBody>
-					</Table>
+					{listings?.length ? (
+						<Table>
+							<TableHeader>
+								<TableRow>
+									<TableHead className='hidden w-[100px] sm:table-cell'>
+										<span className='sr-only'>Image</span>
+									</TableHead>
+									<TableHead>Title</TableHead>
+									<TableHead className='hidden md:table-cell'>Price</TableHead>
+									<TableHead className='hidden md:table-cell'>Created at</TableHead>
+									<TableHead>
+										<span className='sr-only'>Actions</span>
+									</TableHead>
+								</TableRow>
+							</TableHeader>
+							<TableBody>
+								{listings?.map((listing) => (
+									<Listing key={listing.id} listing={listing} />
+								))}
+							</TableBody>
+						</Table>
+					) : (
+						<div className='flex items-center justify-center rounded-lg border border-dashed shadow-sm p-12'>
+							<div className='flex flex-col items-center gap-1 text-center'>
+								<h3 className='text-2xl font-bold tracking-tight'>You have no listingss</h3>
+								<p className='text-sm text-muted-foreground mb-4'>Start by adding a listing.</p>
+								<AddListingButton />
+							</div>
+						</div>
+					)}
 				</CardContent>
 			</Card>
 		</>
