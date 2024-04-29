@@ -7,6 +7,7 @@ import ListingActions from './listing-actions'
 
 export async function Listing({ listing }: { listing: Tables<'listings'> }) {
 	const images = await getListingImages({ listingId: listing.id })
+	console.log(images?.map((image) => image.signedUrl))
 
 	return (
 		<TableRow>
