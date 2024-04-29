@@ -24,7 +24,7 @@ export default function SignInPage() {
 				<form className='grid gap-4'>
 					<div className='grid gap-2'>
 						<Label htmlFor='email'>Email</Label>
-						<Input id='email' name='email' type='email' placeholder='m@example.com' />
+						<Input id='email' name='email' type='email' placeholder='me@example.com' />
 						<FormError value={state?.errors.email} />
 					</div>
 					<div className='grid gap-2'>

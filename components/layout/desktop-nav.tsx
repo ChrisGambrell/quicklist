@@ -1,5 +1,5 @@
 import { Tables } from '@/db_types'
-import { HomeIcon, Package2Icon, ScaleIcon } from 'lucide-react'
+import { HomeIcon, Package2Icon, ScaleIcon, SettingsIcon } from 'lucide-react'
 import Link from 'next/link'
 import NavLink from './nav-link'
 import UserMenu from './user-menu'
@@ -7,6 +7,7 @@ import UserMenu from './user-menu'
 export const links = [
 	{ href: '/listings', icon: <HomeIcon className='w-5 h-5' />, label: 'Dashboard' },
 	{ href: '/rules', icon: <ScaleIcon className='w-5 h-5' />, label: 'Rules' },
+	{ href: '/settings', icon: <SettingsIcon className='w-5 h-5' />, label: 'Settings' },
 ]
 
 export default function DesktopNav({ user }: { user: Tables<'users'> }) {
