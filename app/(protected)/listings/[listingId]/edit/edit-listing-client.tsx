@@ -87,7 +87,6 @@ export default function EditListingClient({ images, listing }: { images: SignedI
 							<CardDescription>Click on an image to remove it.</CardDescription>
 						</CardHeader>
 						<CardContent>
-							{/* BUG: Can still click to delete empty primary image */}
 							<div className='grid gap-2'>
 								<ListingImage image={images?.[0]} listingId={listing.id} variant='primary' />
 								<div className='grid grid-cols-3 gap-2'>
@@ -155,11 +154,11 @@ function ListingImage({
 	}
 
 	return (
-		<button formAction={useDeleteImage}>
+		<button disabled={variant === 'primary' || !image} formAction={useDeleteImage}>
 			<Image
 				src={image?.signedUrl ?? PLACEHOLDER_IMAGE}
 				alt='Listing image'
-				className={cn('aspect-square w-full rounded-md object-cover', { 'cursor-pointer': variant === 'secondary' })}
+				className='aspect-square w-full rounded-md object-cover'
 				height={sizeMap[variant]}
 				width={sizeMap[variant]}
 			/>
