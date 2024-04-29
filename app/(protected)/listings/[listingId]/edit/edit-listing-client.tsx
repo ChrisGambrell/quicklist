@@ -13,6 +13,7 @@ import { Tables } from '@/db_types'
 import { cn } from '@/lib/utils'
 import { PLACEHOLDER_IMAGE } from '@/utils/constants'
 import { SignedImage } from '@/utils/types'
+import Image from 'next/image'
 import { useFormState } from 'react-dom'
 import UploadImages from './upload-images'
 
@@ -154,12 +155,11 @@ function ListingImage({
 	}
 
 	return (
-		// {/* // TODO: Replace with Image component */}
 		<button formAction={useDeleteImage}>
-			<img
-				className={cn('aspect-square w-full rounded-md object-cover', { 'cursor-pointer': variant === 'secondary' })}
+			<Image
 				src={image?.signedUrl ?? PLACEHOLDER_IMAGE}
 				alt='Listing image'
+				className={cn('aspect-square w-full rounded-md object-cover', { 'cursor-pointer': variant === 'secondary' })}
 				height={sizeMap[variant]}
 				width={sizeMap[variant]}
 			/>

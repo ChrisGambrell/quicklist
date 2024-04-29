@@ -2,6 +2,7 @@ import { TableCell, TableRow } from '@/components/ui/table'
 import { Tables } from '@/db_types'
 import { getListingImages } from '@/utils/_helpers'
 import { PLACEHOLDER_IMAGE } from '@/utils/constants'
+import Image from 'next/image'
 import ListingActions from './listing-actions'
 
 export async function Listing({ listing }: { listing: Tables<'listings'> }) {
@@ -10,13 +11,12 @@ export async function Listing({ listing }: { listing: Tables<'listings'> }) {
 	return (
 		<TableRow>
 			<TableCell className='hidden sm:table-cell min-w-[100px]'>
-				{/* TODO: Use Image and make sure urls are configured */}
-				<img
-					className='aspect-square rounded-md object-cover'
+				<Image
 					src={images && images.length > 0 ? images[0].signedUrl : PLACEHOLDER_IMAGE}
-					alt='Product image'
-					height='64'
-					width='64'
+					alt='Listing image'
+					className='aspect-square rounded-md object-cover'
+					height={64}
+					width={64}
 				/>
 			</TableCell>
 			<TableCell className='font-medium w-[99%]'>

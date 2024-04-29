@@ -8,6 +8,7 @@ import {
 	DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { Tables } from '@/db_types'
+import Image from 'next/image'
 import Link from 'next/link'
 import SignOutButton from './sign-out-button'
 
@@ -16,13 +17,12 @@ export default function UserMenu({ user }: { user: Tables<'users'> }) {
 		<DropdownMenu>
 			<DropdownMenuTrigger asChild>
 				<Button variant='outline' size='icon' className='overflow-hidden rounded-full'>
-					{/* TODO: Use Image component */}
-					<img
+					<Image
 						src={user.avatar_url ?? 'https://ui.shadcn.com/_next/image?url=%2Fplaceholder-user.jpg&w=96&q=75'}
+						alt='User avatar'
+						className='overflow-hidden rounded-full'
 						width={36}
 						height={36}
-						alt='Avatar'
-						className='overflow-hidden rounded-full'
 					/>
 				</Button>
 			</DropdownMenuTrigger>
