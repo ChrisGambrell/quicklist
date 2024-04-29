@@ -5,6 +5,7 @@ import { env } from '@/env'
 import { getAuth, getListingImages } from '@/utils/_helpers'
 import { getErrorRedirect, getSuccessRedirect, parseFormData } from '@/utils/helpers'
 import { createClient } from '@/utils/supabase/server'
+import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
 import OpenAI from 'openai'
 import { z } from 'zod'
@@ -49,44 +50,46 @@ export async function deleteListing({ listingId }: { listingId: Tables<'listings
 }
 
 export async function generateListingData({ listingId }: { listingId: Tables<'listings'>['id'] }) {
-	const supabase = createClient()
-
-	const { data: listing, error: listingError } = await supabase.from('listings').select().eq('id', listingId).maybeSingle()
-	if (listingError || !listing) redirect(getErrorRedirect(`/listings/${listingId}/edit`, listingError?.message ?? 'Listing not found'))
-
-	const images = await getListingImages({ listingId: listing.id })
-	if (!images || images.length === 0) redirect(getErrorRedirect(`/listings/${listingId}/edit`, 'No images found'))
-
-	const { data: rules, error: rulesError } = await supabase.from('rules').select()
-	if (rulesError) redirect(getErrorRedirect(`/listings/${listingId}/edit`, rulesError.message))
-	const rulesText = rules.map(({ rule }) => rule).join('; ')
-
-	const openai = new OpenAI({ apiKey: env.OPENAI_KEY })
-
-	const urls = images.map((image) => image.signedUrl.replace('http://127.0.0.1:54321', env.NEXT_PUBLIC_NGROK_URL ?? ''))
-	const messages = urls.map((url) => ({ type: 'image_url', image_url: { url } } as OpenAI.Chat.Completions.ChatCompletionContentPart))
-
-	const format = `{"title": "[title]", "description": "[description]", "price": [price]}`
-
-	const res = await openai.chat.completions.create({
-		model: 'gpt-4-vision-preview',
-		messages: [
-			{
-				role: 'user',
-				content: [
-					{
-						type: 'text',
-						text: `Describe this item for an eBay listing in the following format: \'${format}\'" with these rules: '${rulesText}'`,
-					},
-					...messages,
-				],
-			},
-		],
-	})
-	if (res.choices.length === 0 || !res.choices[0].message.content)
-		redirect(getErrorRedirect(`/listings/${listingId}/edit`, 'No response from OpenAI'))
-
 	try {
+		const supabase = createClient()
+
+		const { data: listing, error: listingError } = await supabase.from('listings').select().eq('id', listingId).maybeSingle()
+		if (listingError || !listing)
+			redirect(getErrorRedirect(`/listings/${listingId}/edit`, listingError?.message ?? 'Listing not found'))
+
+		const images = await getListingImages({ listingId: listing.id })
+		if (!images || images.length === 0) redirect(getErrorRedirect(`/listings/${listingId}/edit`, 'No images found'))
+
+		const { data: rules, error: rulesError } = await supabase.from('rules').select()
+		if (rulesError) redirect(getErrorRedirect(`/listings/${listingId}/edit`, rulesError.message))
+		const rulesText = rules.map(({ rule }) => rule).join('; ')
+
+		const openai = new OpenAI({ apiKey: env.OPENAI_KEY })
+
+		const urls = images.map((image) => image.signedUrl.replace('http://127.0.0.1:54321', env.NEXT_PUBLIC_NGROK_URL ?? ''))
+		const messages = urls.map((url) => ({ type: 'image_url', image_url: { url } } as OpenAI.Chat.Completions.ChatCompletionContentPart))
+
+		const format = `{"title": "[title]", "description": "[description]", "price": [price]}`
+
+		const res = await openai.chat.completions.create({
+			model: 'gpt-4-vision-preview',
+			messages: [
+				{
+					role: 'user',
+					content: [
+						{
+							type: 'text',
+							text: `Describe this item for an eBay listing in the following format: \'${format}\'" with these rules: '${rulesText}'`,
+						},
+						...messages,
+					],
+				},
+			],
+		})
+
+		if (res.choices.length === 0 || !res.choices[0].message.content)
+			redirect(getErrorRedirect(`/listings/${listingId}/edit`, 'No response from OpenAI'))
+
 		const resJson = JSON.parse(`{${res.choices[0].message.content.replace(/.*{/s, '').replace(/}.*/s, '').trim()}}`)
 		const { title, description, price } = resJson
 
@@ -100,10 +103,13 @@ export async function generateListingData({ listingId }: { listingId: Tables<'li
 			.eq('id', listingId)
 		if (updateError) redirect(getErrorRedirect(`/listings/${listingId}/edit`, updateError.message))
 
-		// TODO: Title, price, anc description are not revalidating after generating
+		// BUG: Title, price, anc description are not revalidating after generating
 		redirect(getSuccessRedirect(`/listings/${listingId}/edit`, 'Listing data generated'))
 	} catch (error) {
-		redirect(getErrorRedirect(`/listings/${listingId}/edit`, 'Something went wrong. Please try again'))
+		// BUG: For some reason this always goes off
+		// redirect(getErrorRedirect(`/listings/${listingId}/edit`, 'Something went wrong. Please try again'))
+		revalidatePath('/', 'layout')
+		redirect(`/listings/${listingId}/edit`)
 	}
 }
 
