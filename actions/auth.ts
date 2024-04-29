@@ -3,7 +3,6 @@
 import { getErrorRedirect, getSuccessRedirect, getURL, parseFormData } from '@/utils/helpers'
 import { createClient } from '@/utils/supabase/server'
 import { Provider } from '@supabase/supabase-js'
-import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
 import { z } from 'zod'
 
@@ -26,7 +25,6 @@ export async function signInWithPassword(_prevState: any, formData: FormData) {
 export async function signInWithOAuth(provider: Provider) {
 	const supabase = createClient()
 
-	// TODO: When cancelling the OAuth flow, the user is redirected to /auth/confirm with an error message that should be handled by toaster http://127.0.0.1:3000/sign-in#error=access_denied&error_description=The+user+has+denied+your+application+access.
 	const { data, error } = await supabase.auth.signInWithOAuth({
 		provider,
 		options: { redirectTo: getURL('/auth/callback') },

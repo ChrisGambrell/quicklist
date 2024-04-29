@@ -30,7 +30,6 @@ export default function SignUpPage() {
 						<Input id='email' name='email' type='email' placeholder='me@example.com' />
 						<FormError value={state?.errors.email} />
 					</div>
-					{/* TODO: Confirm password? */}
 					<div className='grid gap-2'>
 						<Label htmlFor='password'>Password</Label>
 						<Input id='password' name='password' type='password' />
