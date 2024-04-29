@@ -1,8 +1,12 @@
-import AddListingButton from '@/app/(protected)/listings/add-listing-button'
+import { createListing } from '@/actions/listing'
 import { Listing } from '@/app/(protected)/listings/listing'
+import ActionButton from '@/components/action-button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Table, TableBody, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { createClient } from '@/utils/supabase/server'
+import { PlusCircleIcon } from 'lucide-react'
+
+// TODO: Need to make each row clickable for listings and rules
 
 export default async function ListingsPage() {
 	const supabase = createClient()
@@ -14,7 +18,12 @@ export default async function ListingsPage() {
 				<CardHeader>
 					<div className='flex items-start justify-between'>
 						<CardTitle>Listings</CardTitle>
-						<AddListingButton />
+						<form action={createListing}>
+							<ActionButton size='sm' className='h-8 gap-1'>
+								<PlusCircleIcon className='w-3.5 h-3.5' />
+								Add Listing
+							</ActionButton>
+						</form>
 					</div>
 				</CardHeader>
 				<CardContent>
@@ -43,8 +52,10 @@ export default async function ListingsPage() {
 						<div className='flex items-center justify-center rounded-lg border border-dashed shadow-sm p-12'>
 							<div className='flex flex-col items-center gap-1 text-center'>
 								<h3 className='text-2xl font-bold tracking-tight'>You have no listingss</h3>
-								<p className='text-sm text-muted-foreground mb-4'>Start by adding a listing.</p>
-								<AddListingButton />
+								<p className='text-sm text-muted-foreground'>Start by adding a listing.</p>
+								<form action={createListing} className='mt-4'>
+									<ActionButton>Add Listing</ActionButton>
+								</form>
 							</div>
 						</div>
 					)}

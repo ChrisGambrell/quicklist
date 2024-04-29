@@ -5,6 +5,7 @@ export async function getAuth() {
 	const supabase = createClient()
 
 	const { data: auth, error: authError } = await supabase.auth.getUser()
+	// TODO: Search for all "redirect('" and make sure there's a message attached to it
 	if (authError || !auth.user) redirect('/sign-in')
 
 	const { data: user, error: userError } = await supabase.from('users').select().eq('id', auth.user.id).maybeSingle()

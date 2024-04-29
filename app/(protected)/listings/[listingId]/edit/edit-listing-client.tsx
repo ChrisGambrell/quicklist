@@ -3,7 +3,7 @@
 import { deleteImage, deleteListing, generateListingData, updateListing } from '@/actions/listing'
 import ActionButton from '@/components/action-button'
 import BackButton from '@/components/back-button'
-import { FormError, useErrorToaster } from '@/components/form'
+import { FormError } from '@/components/form-error'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
@@ -25,15 +25,9 @@ const placeholder = {
 export default function EditListingClient({ images, listing }: { images: SignedImage[] | null; listing: Tables<'listings'> }) {
 	const useUpdateListing = updateListing.bind(null, listing.id)
 	const [updateState, updateAction] = useFormState(useUpdateListing, null)
-	useErrorToaster(updateState?.errors?._global)
 
 	const useGenerateData = generateListingData.bind(null, listing.id)
-	const [generateState, generateAction] = useFormState(useGenerateData, null)
-	useErrorToaster(generateState?.errors?._global)
-
 	const useDeleteListing = deleteListing.bind(null, listing.id)
-	const [deleteState, deleteAction] = useFormState(useDeleteListing, null)
-	useErrorToaster(deleteState?.errors?._global)
 
 	return (
 		<form className='mx-auto grid max-w-[59rem] flex-1 auto-rows-max gap-4 w-full'>
@@ -64,12 +58,12 @@ export default function EditListingClient({ images, listing }: { images: SignedI
 								<div className='grid gap-3'>
 									<Label htmlFor='title'>Title</Label>
 									<Input id='title' name='title' placeholder={placeholder.title} defaultValue={listing.title ?? ''} />
-									<FormError errors={updateState?.errors} id='title' />
+									<FormError state={updateState} id='title' />
 								</div>
 								<div className='grid gap-3'>
 									<Label htmlFor='price'>Price</Label>
 									<Input id='price' name='price' placeholder={placeholder.price} defaultValue={listing.price ?? ''} />
-									<FormError errors={updateState?.errors} id='price' />
+									<FormError state={updateState} id='price' />
 								</div>
 								<div className='grid gap-3'>
 									<Label htmlFor='description'>Description</Label>
@@ -80,7 +74,7 @@ export default function EditListingClient({ images, listing }: { images: SignedI
 										defaultValue={listing.description ?? ''}
 										className='min-h-32'
 									/>
-									<FormError errors={updateState?.errors} id='description' />
+									<FormError state={updateState} id='description' />
 								</div>
 							</div>
 						</CardContent>
@@ -93,11 +87,14 @@ export default function EditListingClient({ images, listing }: { images: SignedI
 							<CardDescription>Click on an image to remove it.</CardDescription>
 						</CardHeader>
 						<CardContent>
+							{/* BUG: Can still click to delete empty primary image */}
 							<div className='grid gap-2'>
-								<ListingImage image={images?.[0]} variant='primary' />
+								<ListingImage image={images?.[0]} listingId={listing.id} variant='primary' />
 								<div className='grid grid-cols-3 gap-2'>
 									{images &&
-										images.map((image) => <ListingImage key={image.signedUrl} image={image} variant='secondary' />)}
+										images.map((image) => (
+											<ListingImage key={image.signedUrl} image={image} listingId={listing.id} variant='secondary' />
+										))}
 									<UploadImages listingId={listing.id} />
 								</div>
 							</div>
@@ -110,7 +107,7 @@ export default function EditListingClient({ images, listing }: { images: SignedI
 							<CardDescription>Generate the listing&apos;s data based on its details and images.</CardDescription>
 						</CardHeader>
 						<CardContent>
-							<ActionButton className='w-full' formAction={generateAction} size='sm' variant='secondary'>
+							<ActionButton className='w-full' formAction={useGenerateData} size='sm' variant='secondary'>
 								Generate
 							</ActionButton>
 						</CardContent>
@@ -122,7 +119,7 @@ export default function EditListingClient({ images, listing }: { images: SignedI
 							<CardDescription>This cannot be reversed.</CardDescription>
 						</CardHeader>
 						<CardContent>
-							<ActionButton className='w-full' formAction={deleteAction} size='sm' variant='destructive'>
+							<ActionButton className='w-full' formAction={useDeleteListing} size='sm' variant='destructive'>
 								Delete Listing
 							</ActionButton>
 						</CardContent>
@@ -141,8 +138,16 @@ export default function EditListingClient({ images, listing }: { images: SignedI
 	)
 }
 
-function ListingImage({ image, variant }: { image?: SignedImage; variant: 'primary' | 'secondary' }) {
-	const useDeleteImage = deleteImage.bind(null, image?.path ?? null)
+function ListingImage({
+	image,
+	listingId,
+	variant,
+}: {
+	image?: SignedImage
+	listingId: Tables<'listings'>['id']
+	variant: 'primary' | 'secondary'
+}) {
+	const useDeleteImage = deleteImage.bind(null, listingId, image?.path ?? null)
 
 	const sizeMap: Record<'primary' | 'secondary', number> = {
 		primary: 84,

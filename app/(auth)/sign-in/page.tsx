@@ -2,7 +2,7 @@
 
 import { signInWithOAuth, signInWithPassword } from '@/actions/auth'
 import ActionButton from '@/components/action-button'
-import { FormError, useErrorToaster } from '@/components/form'
+import { FormError } from '@/components/form-error'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -11,15 +11,8 @@ import { useFormState } from 'react-dom'
 
 export default function SignInPage() {
 	const [passwordState, passwordAction] = useFormState(signInWithPassword, null)
-	useErrorToaster(passwordState?.errors?._global)
-
 	const useSignInWithGithub = signInWithOAuth.bind(null, 'github')
-	const [githubState, githubAction] = useFormState(useSignInWithGithub, null)
-	useErrorToaster(githubState?.errors?._global)
-
 	const useSignInWithGoogle = signInWithOAuth.bind(null, 'google')
-	const [googleState, googleAction] = useFormState(useSignInWithGoogle, null)
-	useErrorToaster(googleState?.errors?._global)
 
 	return (
 		<Card className='mx-auto max-w-sm border-0 shadow-none sm:border sm:shadow-sm sm:my-20'>
@@ -32,7 +25,7 @@ export default function SignInPage() {
 					<div className='grid gap-2'>
 						<Label htmlFor='email'>Email</Label>
 						<Input id='email' name='email' type='email' placeholder='m@example.com' />
-						<FormError errors={passwordState?.errors} id='email' />
+						<FormError state={passwordState} id='email' />
 					</div>
 					<div className='grid gap-2'>
 						<div className='flex items-center'>
@@ -42,15 +35,15 @@ export default function SignInPage() {
 							</Link>
 						</div>
 						<Input id='password' name='password' type='password' />
-						<FormError errors={passwordState?.errors} id='password' />
+						<FormError state={passwordState} id='password' />
 					</div>
 					<ActionButton formAction={passwordAction} type='submit' className='w-full'>
 						Sign in
 					</ActionButton>
-					<ActionButton formAction={googleAction} variant='outline' className='w-full'>
+					<ActionButton formAction={useSignInWithGoogle} variant='outline' className='w-full'>
 						Sign in with Google
 					</ActionButton>
-					<ActionButton formAction={githubAction} variant='outline' className='w-full'>
+					<ActionButton formAction={useSignInWithGithub} variant='outline' className='w-full'>
 						Sign in with Github
 					</ActionButton>
 				</form>

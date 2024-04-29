@@ -3,7 +3,7 @@
 import { deleteRule, updateRule } from '@/actions/rule'
 import ActionButton from '@/components/action-button'
 import BackButton from '@/components/back-button'
-import { FormError, useErrorToaster } from '@/components/form'
+import { FormError } from '@/components/form-error'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Label } from '@/components/ui/label'
@@ -14,11 +14,8 @@ import { useFormState } from 'react-dom'
 export default function EditRuleClient({ rule }: { rule: Tables<'rules'> }) {
 	const useUpdateRule = updateRule.bind(null, rule.id)
 	const [updateState, updateAction] = useFormState(useUpdateRule, null)
-	useErrorToaster(updateState?.errors?._global)
-
+	// TODO: Pass these params as an object
 	const useDeleteRule = deleteRule.bind(null, rule.id)
-	const [deleteState, deleteAction] = useFormState(useDeleteRule, null)
-	useErrorToaster(deleteState?.errors?._global)
 
 	return (
 		<form className='mx-auto grid max-w-[59rem] flex-1 auto-rows-max gap-4 w-full'>
@@ -50,7 +47,7 @@ export default function EditRuleClient({ rule }: { rule: Tables<'rules'> }) {
 								<div className='grid gap-3'>
 									<Label htmlFor='rule'>Rule</Label>
 									<Textarea id='rule' name='rule' defaultValue={rule.rule} className='min-h-32' />
-									<FormError errors={updateState?.errors} id='rule' />
+									<FormError state={updateState} id='rule' />
 								</div>
 							</div>
 						</CardContent>
@@ -63,7 +60,7 @@ export default function EditRuleClient({ rule }: { rule: Tables<'rules'> }) {
 							<CardDescription>This cannot be reversed.</CardDescription>
 						</CardHeader>
 						<CardContent>
-							<ActionButton className='w-full' formAction={deleteAction} size='sm' variant='destructive'>
+							<ActionButton className='w-full' formAction={useDeleteRule} size='sm' variant='destructive'>
 								Delete Rule
 							</ActionButton>
 						</CardContent>

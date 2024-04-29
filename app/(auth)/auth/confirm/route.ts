@@ -1,6 +1,7 @@
 import { type EmailOtpType } from '@supabase/supabase-js'
 import { NextResponse, type NextRequest } from 'next/server'
 
+import { getSuccessRedirect } from '@/utils/helpers'
 import { createClient } from '@/utils/supabase/server'
 
 export async function GET(request: NextRequest) {
@@ -23,7 +24,7 @@ export async function GET(request: NextRequest) {
 		})
 		if (!error) {
 			redirectTo.searchParams.delete('next')
-			return NextResponse.redirect(redirectTo)
+			return NextResponse.redirect(getSuccessRedirect(redirectTo.toString(), 'You are now signed in.'))
 		}
 	}
 

@@ -2,7 +2,7 @@
 
 import { createRule } from '@/actions/rule'
 import ActionButton from '@/components/action-button'
-import { FormError, useErrorToaster, useSuccessTrigger } from '@/components/form'
+import { FormError } from '@/components/form-error'
 import { Button } from '@/components/ui/button'
 import {
 	Dialog,
@@ -16,19 +16,14 @@ import {
 } from '@/components/ui/dialog'
 import { Input } from '@/components/ui/input'
 import { PlusCircleIcon } from 'lucide-react'
-import { useState } from 'react'
 import { useFormState } from 'react-dom'
 
 // BUG: After adding a rule, the trigger does not open the dialog back up
 export default function AddRuleButton() {
-	const [open, setOpen] = useState(false)
-
 	const [state, action] = useFormState(createRule, null)
-	useErrorToaster(state?.errors?._global)
-	useSuccessTrigger(state?.successTrigger, () => setOpen(false))
 
 	return (
-		<Dialog open={open} onOpenChange={setOpen}>
+		<Dialog>
 			<DialogTrigger asChild>
 				<Button size='sm' className='h-8 gap-1'>
 					<PlusCircleIcon className='h-3.5 w-3.5' />
@@ -44,7 +39,7 @@ export default function AddRuleButton() {
 
 					<div className='grid gap-2'>
 						<Input name='rule' placeholder='Rule' />
-						<FormError errors={state?.errors} id='rule' />
+						<FormError state={state} id='rule' />
 					</div>
 
 					<DialogFooter className='sm:justify-start'>

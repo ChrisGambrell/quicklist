@@ -2,18 +2,15 @@
 
 import { signUp } from '@/actions/auth'
 import ActionButton from '@/components/action-button'
-import { FormError, useErrorToaster, useSuccessTrigger } from '@/components/form'
+import { FormError } from '@/components/form-error'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import Link from 'next/link'
 import { useFormState } from 'react-dom'
-import toast from 'react-hot-toast'
 
 export default function SignUpPage() {
 	const [state, action] = useFormState(signUp, null)
-	useErrorToaster(state?.errors?._global)
-	useSuccessTrigger(state?.successTrigger, () => toast.success('Account created successfully. Check your email for verification.'))
 
 	return (
 		<Card className='mx-auto max-w-sm border-0 shadow-none sm:border sm:shadow-sm sm:my-20'>
@@ -26,26 +23,22 @@ export default function SignUpPage() {
 					<div className='grid gap-2'>
 						<Label htmlFor='name'>Name</Label>
 						<Input id='name' name='name' placeholder='Your name' />
-						<FormError errors={state?.errors} id='name' />
+						<FormError state={state} id='name' />
 					</div>
 					<div className='grid gap-2'>
 						<Label htmlFor='email'>Email</Label>
 						<Input id='email' name='email' type='email' placeholder='m@example.com' />
-						<FormError errors={state?.errors} id='email' />
+						<FormError state={state} id='email' />
 					</div>
 					{/* TODO: Confirm password? */}
 					<div className='grid gap-2'>
 						<Label htmlFor='password'>Password</Label>
 						<Input id='password' name='password' type='password' />
-						<FormError errors={state?.errors} id='password' />
+						<FormError state={state} id='password' />
 					</div>
 					<ActionButton type='submit' className='w-full'>
 						Sign up
 					</ActionButton>
-					{/* TODO: log in with google */}
-					{/* <Button variant='outline' className='w-full'>
-						Login with Google
-					</Button> */}
 				</form>
 				<div className='mt-4 text-center text-sm'>
 					Already have an account?{' '}

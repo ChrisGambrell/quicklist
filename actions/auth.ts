@@ -1,8 +1,7 @@
 'use server'
 
-import { getURL } from '@/utils/helpers'
+import { getErrorRedirect, getSuccessRedirect, getURL, parseFormData } from '@/utils/helpers'
 import { createClient } from '@/utils/supabase/server'
-import { ActionReturn } from '@/utils/types'
 import { Provider } from '@supabase/supabase-js'
 import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
@@ -12,22 +11,20 @@ const signInWithPasswordSchema = z.object({ email: z.string().email(), password:
 const signUpSchema = z.object({ name: z.string().min(1), email: z.string().email(), password: z.string() })
 const passwordResetSchema = z.object({ email: z.string().email() })
 
-export async function signInWithPassword(_prevState: any, formData: FormData): Promise<ActionReturn<typeof signInWithPasswordSchema>> {
-	const data = Object.fromEntries(formData)
-
-	const parsed = signInWithPasswordSchema.safeParse(data)
-	if (!parsed.success) return { errors: parsed.error.flatten().fieldErrors }
+export async function signInWithPassword(_prevState: any, formData: FormData) {
+	const { data, errors } = parseFormData(formData, signInWithPasswordSchema)
+	if (errors) return { errors }
 
 	const supabase = createClient()
 
-	const { error } = await supabase.auth.signInWithPassword(parsed.data)
-	if (error) return { errors: { _global: [error.message] } }
+	const { error } = await supabase.auth.signInWithPassword(data)
+	if (error) redirect(getErrorRedirect('/sign-in', error.message))
 
 	revalidatePath('/', 'layout')
 	redirect('/')
 }
 
-export async function signInWithOAuth(provider: Provider): Promise<ActionReturn<undefined>> {
+export async function signInWithOAuth(provider: Provider) {
 	const supabase = createClient()
 
 	// TODO: When cancelling the OAuth flow, the user is redirected to /auth/confirm with an error message that should be handled by toaster http://127.0.0.1:3000/sign-in#error=access_denied&error_description=The+user+has+denied+your+application+access.
@@ -35,41 +32,35 @@ export async function signInWithOAuth(provider: Provider): Promise<ActionReturn<
 		provider,
 		options: { redirectTo: getURL('/auth/callback') },
 	})
-	if (error || !data) return { errors: { _global: [error?.message || 'An unknown error occured'] } }
+	if (error || !data) redirect(getErrorRedirect('/sign-in', error?.message ?? 'An unknown error occured'))
 
 	redirect(data.url)
-
-	// http://127.0.0.1:54321/auth/v1/verify?token=pkce_f70a94ee6ea9994c53f590335206d4c164e895fb75164b557a46eaac&type=recovery&redirect_to=http://127.0.0.1:3000/auth/reset
 }
 
-export async function signUp(prevState: any, formData: FormData): Promise<ActionReturn<typeof signUpSchema>> {
-	const data = Object.fromEntries(formData)
-
-	const parsed = signUpSchema.safeParse(data)
-	if (!parsed.success) return { errors: parsed.error.flatten().fieldErrors }
+export async function signUp(_prevState: any, formData: FormData) {
+	const { data, errors } = parseFormData(formData, signUpSchema)
+	if (errors) return { errors }
 
 	const supabase = createClient()
 
 	const { error } = await supabase.auth.signUp({
-		email: parsed.data.email,
-		password: parsed.data.password,
-		options: { data: { full_name: parsed.data.name } },
+		email: data.email,
+		password: data.password,
+		options: { data: { full_name: data.name } },
 	})
-	if (error) return { errors: { _global: [error.message] } }
+	if (error) redirect(getErrorRedirect('/sign-up', error.message))
 
-	return { successTrigger: true }
+	redirect(getSuccessRedirect('/sign-up', 'Account created successfully. Check your email for verification.'))
 }
 
-export async function sendPasswordReset(prevState: any, formData: FormData): Promise<ActionReturn<typeof passwordResetSchema>> {
-	const data = Object.fromEntries(formData)
-
-	const parsed = passwordResetSchema.safeParse(data)
-	if (!parsed.success) return { errors: parsed.error.flatten().fieldErrors }
+export async function sendPasswordReset(prevState: any, formData: FormData) {
+	const { data, errors } = parseFormData(formData, passwordResetSchema)
+	if (errors) return { errors }
 
 	const supabase = createClient()
 
-	const { error } = await supabase.auth.resetPasswordForEmail(parsed.data.email, { redirectTo: getURL('/auth/reset') })
-	if (error) return { errors: { _global: [error.message] } }
+	const { error } = await supabase.auth.resetPasswordForEmail(data.email, { redirectTo: getURL('/auth/reset') })
+	if (error) redirect(getErrorRedirect('/forgot', error.message))
 
-	return { successTrigger: true }
+	redirect(getSuccessRedirect('/forgot', 'Check your email for next steps.'))
 }

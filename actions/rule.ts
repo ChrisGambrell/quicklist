@@ -1,50 +1,45 @@
 'use server'
 
 import { getAuth } from '@/utils/_helpers'
+import { getErrorRedirect, getSuccessRedirect, parseFormData } from '@/utils/helpers'
 import { createClient } from '@/utils/supabase/server'
-import { ActionReturn } from '@/utils/types'
-import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
 import { z } from 'zod'
 
 const createRuleSchema = z.object({ rule: z.string().min(1) })
 const updateRuleSchema = z.object({ rule: z.string().min(1) })
 
-export async function createRule(prevState: any, formData: FormData): Promise<ActionReturn<typeof createRuleSchema>> {
-	const data = Object.fromEntries(formData)
+// TODO: Make sure ActionReturn is not used anymore
 
-	const parsed = createRuleSchema.safeParse(data)
-	if (!parsed.success) return { errors: parsed.error.flatten().fieldErrors }
+export async function createRule(_prevState: any, formData: FormData) {
+	const { data, errors } = parseFormData(formData, createRuleSchema)
+	if (errors) return { errors }
 
 	const { auth, supabase } = await getAuth()
 
-	const { error } = await supabase.from('rules').insert({ user_id: auth.id, ...parsed.data })
-	if (error) return { errors: { _global: [error.message] } }
+	const { error } = await supabase.from('rules').insert({ user_id: auth.id, ...data })
+	if (error) redirect(getErrorRedirect('/rules', error.message))
 
-	revalidatePath('/rules', 'layout')
-	return { successTrigger: true }
+	redirect(getSuccessRedirect('/rules', 'Rule created'))
 }
 
-export async function updateRule(id: string, prevState: any, formData: FormData): Promise<ActionReturn<typeof updateRuleSchema>> {
-	const data = Object.fromEntries(formData)
-
-	const parsed = updateRuleSchema.safeParse(data)
-	if (!parsed.success) return { errors: parsed.error.flatten().fieldErrors }
+export async function updateRule(id: string, _prevState: any, formData: FormData) {
+	const { data, errors } = parseFormData(formData, updateRuleSchema)
+	if (errors) return { errors }
 
 	const { supabase } = await getAuth()
 
-	const { error } = await supabase.from('rules').update(parsed.data).eq('id', id)
-	if (error) return { errors: { _global: [error.message] } }
+	const { error } = await supabase.from('rules').update(data).eq('id', id)
+	if (error) redirect(getErrorRedirect(`/rules/${id}/edit`, error.message))
 
-	revalidatePath('/rules', 'layout')
-	return { successTrigger: true }
+	redirect(getSuccessRedirect(`/rules/${id}/edit`, 'Rule updated'))
 }
 
-export async function deleteRule(ruleId: string): Promise<ActionReturn<undefined>> {
+export async function deleteRule(ruleId: string) {
 	const supabase = createClient()
 
 	const { error } = await supabase.from('rules').delete().eq('id', ruleId)
-	if (error) return { errors: { _global: [error.message] } }
+	if (error) redirect(getErrorRedirect(`/rules/${ruleId}/edit`, error.message))
 
-	redirect('/rules')
+	redirect(getSuccessRedirect('/rules', 'Rule deleted'))
 }

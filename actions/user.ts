@@ -1,47 +1,37 @@
 'use server'
 
 import { getAuth } from '@/utils/_helpers'
+import { getErrorRedirect, getSuccessRedirect, parseFormData } from '@/utils/helpers'
 import { createClient } from '@/utils/supabase/server'
-import { ActionReturn } from '@/utils/types'
-import { revalidatePath } from 'next/cache'
+import { redirect } from 'next/navigation'
 import { z } from 'zod'
 
 const updateNameSchema = z.object({ full_name: z.string().transform((arg) => (!arg.trim() ? null : arg)) })
 const updatePasswordSchema = z.object({ password: z.string().min(8).optional(), confirm_password: z.string().optional() })
 
-export async function updateName(prevState: any, formData: FormData): Promise<ActionReturn<typeof updateNameSchema>> {
-	const data = Object.fromEntries(formData)
+export async function updateName(formData: FormData) {
+	const { data, errors } = parseFormData(formData, updateNameSchema)
+	if (errors) return { errors }
 
-	const parsed = updateNameSchema.safeParse(data)
-	if (!parsed.success) return { errors: parsed.error.flatten().fieldErrors }
+	// TODO: Search for if (!user) or getauth and make sure I'm not checking because I don't need to
+	const { auth, supabase } = await getAuth()
 
-	const { user, supabase } = await getAuth()
-	if (!user) return { errors: { _global: ['Not authorized'] } }
+	const { error } = await supabase.from('users').update(data).eq('id', auth.id)
+	if (error) redirect(getErrorRedirect('/settings', error.message))
 
-	const { error } = await supabase
-		.from('users')
-		.update({ ...parsed.data })
-		.eq('id', user.id)
-	if (error) return { errors: { _global: [error.message] } }
-
-	revalidatePath('/settings', 'layout')
-	return { successTrigger: true }
+	redirect(getSuccessRedirect('/settings', 'Name updated'))
 }
 
-export async function updatePassword(prevState: any, formData: FormData): Promise<ActionReturn<typeof updatePasswordSchema>> {
-	const data = Object.fromEntries(formData)
+export async function updatePassword(_prevState: any, formData: FormData) {
+	const { data, errors } = parseFormData(formData, updatePasswordSchema)
+	if (errors) return { errors }
 
-	const parsed = updatePasswordSchema.safeParse(data)
-	if (!parsed.success) return { errors: parsed.error.flatten().fieldErrors }
-
-	if (!!parsed.data.password && parsed.data.password !== parsed.data.confirm_password)
-		return { errors: { confirm_password: ['Passwords do not match'] } }
+	if (!!data.password && data.password !== data.confirm_password) return { errors: { confirm_password: ['Passwords do not match'] } }
 
 	const supabase = createClient()
 
-	const { error } = await supabase.auth.updateUser({ password: parsed.data.password })
-	if (error) return { errors: { _global: [error.message] } }
+	const { error } = await supabase.auth.updateUser({ password: data.password })
+	if (error) redirect(getErrorRedirect('/settings/password', error.message))
 
-	revalidatePath('/settings', 'layout')
-	return { successTrigger: true }
+	redirect(getSuccessRedirect('/settings/password', 'Password updated'))
 }

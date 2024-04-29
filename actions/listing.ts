@@ -1,9 +1,9 @@
 'use server'
 
+import { Tables } from '@/db_types'
 import { getAuth, getListingImages } from '@/utils/_helpers'
+import { getErrorRedirect, getSuccessRedirect, parseFormData } from '@/utils/helpers'
 import { createClient } from '@/utils/supabase/server'
-import { ActionReturn } from '@/utils/types'
-import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
 import OpenAI from 'openai'
 import { z } from 'zod'
@@ -17,53 +17,51 @@ const updateListingSchema = z.object({
 		.pipe(z.coerce.number().nullable()),
 })
 
+// TODO: Search for 'return redirect' and replace with 'redirect'
+
 export async function createListing() {
 	const { auth, supabase } = await getAuth()
 
 	const { data, error } = await supabase.from('listings').insert({ user_id: auth.id }).select().single()
-	if (error || !data) return { errors: { _global: [error?.message ?? 'An unexpected error occurred'] } }
+	if (error || !data) redirect(getErrorRedirect('/listings', error.message ?? 'An unexpected error occurred'))
 
 	redirect(`/listings/${data.id}/edit`)
 }
 
-export async function updateListing(
-	listingId: string,
-	prevState: any,
-	formData: FormData
-): Promise<ActionReturn<typeof updateListingSchema>> {
-	const data = Object.fromEntries(formData)
+// TODO: Search for fromEntries and replace with the parseFormData function
 
-	const parsed = updateListingSchema.safeParse(data)
-	if (!parsed.success) return { errors: parsed.error.flatten().fieldErrors }
+export async function updateListing(listingId: string, _prevState: any, formData: FormData) {
+	const { data, errors } = parseFormData(formData, updateListingSchema)
+	if (errors) return { errors }
 
 	const supabase = createClient()
 
-	const { error } = await supabase.from('listings').update(parsed.data).eq('id', listingId)
-	if (error) return { errors: { _global: [error.message] } }
+	const { error } = await supabase.from('listings').update(data).eq('id', listingId)
+	if (error) redirect(getErrorRedirect(`/listings/${listingId}/edit`, error.message))
 
-	revalidatePath('/listings', 'layout')
+	redirect(getSuccessRedirect(`/listings/${listingId}/edit`, 'Listing updated'))
 }
 
-export async function deleteListing(listingId: string): Promise<ActionReturn<undefined>> {
+export async function deleteListing(listingId: string) {
 	const supabase = createClient()
 
 	const { error } = await supabase.from('listings').delete().eq('id', listingId)
-	if (error) return { errors: { _global: [error.message] } }
+	if (error) redirect(getErrorRedirect(`/listings/${listingId}/edit`, error.message))
 
-	redirect('/listings')
+	redirect(getSuccessRedirect('/listings', 'Listing deleted'))
 }
 
-export async function generateListingData(listingId: string): Promise<ActionReturn<undefined>> {
+export async function generateListingData(listingId: string) {
 	const supabase = createClient()
 
 	const { data: listing, error: listingError } = await supabase.from('listings').select().eq('id', listingId).maybeSingle()
-	if (listingError || !listing) return { errors: { _global: [listingError?.message ?? 'Listing not found'] } }
+	if (listingError || !listing) redirect(getErrorRedirect(`/listings/${listingId}/edit`, listingError?.message ?? 'Listing not found'))
 
 	const images = await getListingImages({ listingId: listing.id })
-	if (!images || images.length === 0) return { errors: { _global: ['No images found'] } }
+	if (!images || images.length === 0) redirect(getErrorRedirect(`/listings/${listingId}/edit`, 'No images found'))
 
 	const { data: rules, error: rulesError } = await supabase.from('rules').select()
-	if (rulesError) return { errors: { _global: [rulesError.message] } }
+	if (rulesError) redirect(getErrorRedirect(`/listings/${listingId}/edit`, rulesError.message))
 	const rulesText = rules.map(({ rule }) => rule).join('; ')
 
 	const openai = new OpenAI({ apiKey: process.env.NEXT_PUBLIC_OPENAI_KEY })
@@ -88,7 +86,8 @@ export async function generateListingData(listingId: string): Promise<ActionRetu
 			},
 		],
 	})
-	if (res.choices.length === 0 || !res.choices[0].message.content) return { errors: { _global: ['No response from OpenAI'] } }
+	if (res.choices.length === 0 || !res.choices[0].message.content)
+		redirect(getErrorRedirect(`/listings/${listingId}/edit`, 'No response from OpenAI'))
 
 	const resJson = JSON.parse(`{${res.choices[0].message.content.replace(/.*{/s, '').replace(/}.*/s, '').trim()}}`)
 	const { title, description, price } = resJson
@@ -101,20 +100,20 @@ export async function generateListingData(listingId: string): Promise<ActionRetu
 			price: price ?? null,
 		})
 		.eq('id', listingId)
-	if (updateError) return { errors: { _global: [updateError.message] } }
+	if (updateError) redirect(getErrorRedirect(`/listings/${listingId}/edit`, updateError.message))
 
 	// BUG: Does not revalidate listing description
-	revalidatePath('/listings', 'layout')
-	return { successTrigger: true }
+	redirect(getSuccessRedirect(`/listings/${listingId}/edit`, 'Listing data generated'))
 }
 
-export async function deleteImage(path: string | null) {
-	if (!path) return { errors: { _global: ['No path provided'] } }
+// TODO: Look to make sure listingId is always inferred from type
+export async function deleteImage(listingId: Tables<'listings'>['id'], path: string | null) {
+	if (!path) redirect(getErrorRedirect(`/listings/${listingId}/edit`, 'No path provided'))
 
 	const supabase = createClient()
 
 	const { error } = await supabase.storage.from('listings').remove([path])
-	if (error) return { errors: { _global: [error.message] } }
+	if (error) redirect(getErrorRedirect(`/listings/${listingId}/edit`, error.message))
 
-	revalidatePath('/listings', 'layout')
+	redirect(getSuccessRedirect(`/listings/${listingId}/edit`, 'Image deleted'))
 }
