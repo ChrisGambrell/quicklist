@@ -10,8 +10,6 @@ import { z } from 'zod'
 const createRuleSchema = z.object({ rule: z.string().min(1) })
 const updateRuleSchema = z.object({ rule: z.string().min(1) })
 
-// TODO: Make sure ActionReturn is not used anymore
-
 export async function createRule(_prevState: any, formData: FormData) {
 	const { data, errors } = parseFormData(formData, createRuleSchema)
 	if (errors) return { errors }

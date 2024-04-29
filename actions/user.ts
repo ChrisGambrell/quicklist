@@ -13,7 +13,6 @@ export async function updateName(formData: FormData) {
 	const { data, errors } = parseFormData(formData, updateNameSchema)
 	if (errors) return { errors }
 
-	// TODO: Search for if (!user) or getauth and make sure I'm not checking because I don't need to
 	const { auth, supabase } = await getAuth()
 
 	const { error } = await supabase.from('users').update(data).eq('id', auth.id)

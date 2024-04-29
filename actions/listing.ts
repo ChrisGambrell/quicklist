@@ -105,7 +105,6 @@ export async function generateListingData(listingId: Tables<'listings'>['id']) {
 	redirect(getSuccessRedirect(`/listings/${listingId}/edit`, 'Listing data generated'))
 }
 
-// TODO: Look to make sure listingId is always inferred from type
 export async function deleteImage(listingId: Tables<'listings'>['id'], path: string | null) {
 	if (!path) redirect(getErrorRedirect(`/listings/${listingId}/edit`, 'No path provided'))
 
