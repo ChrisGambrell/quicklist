@@ -24,8 +24,7 @@ const placeholder = {
 }
 
 export default function EditListingClient({ images, listing }: { images: SignedImage[] | null; listing: Tables<'listings'> }) {
-	const useUpdateListing = updateListing.bind(null, { listingId: listing.id })
-	const [state, action] = useFormState(useUpdateListing, null)
+	const [state, action] = useFormState(updateListing.bind(null, { listingId: listing.id }), null)
 	const useGenerateData = generateListingData.bind(null, { listingId: listing.id })
 	const useDeleteListing = deleteListing.bind(null, { listingId: listing.id })
 

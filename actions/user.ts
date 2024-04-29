@@ -7,6 +7,7 @@ import { redirect } from 'next/navigation'
 import { z } from 'zod'
 
 const updateNameSchema = z.object({ full_name: z.string().transform((arg) => (!arg.trim() ? null : arg)) })
+const updateAvatarSchema = z.object({ avatar: z.instanceof(File) })
 const updatePasswordSchema = z.object({ password: z.string().min(8).optional(), confirm_password: z.string().optional() })
 
 export async function updateName(formData: FormData) {
@@ -19,6 +20,28 @@ export async function updateName(formData: FormData) {
 	if (error) redirect(getErrorRedirect('/settings', error.message))
 
 	redirect(getSuccessRedirect('/settings', 'Name updated'))
+}
+
+export async function updateAvatar(formData: FormData) {
+	const { data, errors } = parseFormData(formData, updateAvatarSchema)
+	if (errors) return { errors }
+	else if (data.avatar.size === 0) redirect(getErrorRedirect('/settings', 'File must not be empty'))
+
+	const { user, supabase } = await getAuth()
+
+	const file = data.avatar
+	const fileExt = file.name.split('.').pop()
+	const filePath = `${user.id}/${new Date().getTime()}-${Math.random()}.${fileExt}`
+
+	const { error: uploadError } = await supabase.storage.from('avatars').upload(filePath, file)
+	if (uploadError) redirect(getErrorRedirect('/settings', uploadError.message))
+
+	const { data: uploadedAvatar } = await supabase.storage.from('avatars').getPublicUrl(filePath)
+
+	const { error: updateUserError } = await supabase.from('users').update({ avatar_url: uploadedAvatar.publicUrl }).eq('id', user.id)
+	if (updateUserError) redirect(getErrorRedirect('/settings', updateUserError.message))
+
+	redirect(getSuccessRedirect('/settings', 'Avatar updated'))
 }
 
 export async function updatePassword(_prevState: any, formData: FormData) {
