@@ -1,6 +1,7 @@
 'use server'
 
 import { Tables } from '@/db_types'
+import { env } from '@/env'
 import { getAuth, getListingImages } from '@/utils/_helpers'
 import { getErrorRedirect, getSuccessRedirect, parseFormData } from '@/utils/helpers'
 import { createClient } from '@/utils/supabase/server'
@@ -64,9 +65,9 @@ export async function generateListingData(listingId: string) {
 	if (rulesError) redirect(getErrorRedirect(`/listings/${listingId}/edit`, rulesError.message))
 	const rulesText = rules.map(({ rule }) => rule).join('; ')
 
-	const openai = new OpenAI({ apiKey: process.env.NEXT_PUBLIC_OPENAI_KEY })
+	const openai = new OpenAI({ apiKey: env.OPENAI_KEY })
 
-	const urls = images.map((image) => image.signedUrl.replace('http://127.0.0.1:54321', process.env.NEXT_PUBLIC_NGROK_URL ?? ''))
+	const urls = images.map((image) => image.signedUrl.replace('http://127.0.0.1:54321', env.NEXT_PUBLIC_NGROK_URL ?? ''))
 	const messages = urls.map((url) => ({ type: 'image_url', image_url: { url } } as OpenAI.Chat.Completions.ChatCompletionContentPart))
 
 	const format = `{"title": "[title]", "description": "[description]", "price": [price]}`
@@ -89,6 +90,7 @@ export async function generateListingData(listingId: string) {
 	if (res.choices.length === 0 || !res.choices[0].message.content)
 		redirect(getErrorRedirect(`/listings/${listingId}/edit`, 'No response from OpenAI'))
 
+	// BUG: Sometimes parsing fails with invalid JSON syntax... need to rerun if this happens
 	const resJson = JSON.parse(`{${res.choices[0].message.content.replace(/.*{/s, '').replace(/}.*/s, '').trim()}}`)
 	const { title, description, price } = resJson
 

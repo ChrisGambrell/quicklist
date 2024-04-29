@@ -1,12 +1,8 @@
-import { ZodObject, ZodObjectDef, ZodTypeAny, z } from 'zod'
+import { env } from '@/env'
+import { ZodTypeAny, z } from 'zod'
 
 export const getURL = (path: string = '') => {
-	let url =
-		process.env.NEXT_PUBLIC_SITE_URL && process.env.NEXT_PUBLIC_SITE_URL.trim() !== ''
-			? process.env.NEXT_PUBLIC_SITE_URL
-			: process.env.NEXT_PUBLIC_VERCEL_URL && process.env.NEXT_PUBLIC_VERCEL_URL.trim() !== ''
-			? process.env.NEXT_PUBLIC_VERCEL_URL
-			: 'http://localhost:3000'
+	let url = env.NEXT_PUBLIC_SITE_URL
 
 	// Trim the URL and remove trailing slash
 	url = url.replace(/\/+$/, '')
