@@ -86,22 +86,25 @@ export async function generateListingData(listingId: Tables<'listings'>['id']) {
 	if (res.choices.length === 0 || !res.choices[0].message.content)
 		redirect(getErrorRedirect(`/listings/${listingId}/edit`, 'No response from OpenAI'))
 
-	// BUG: Sometimes parsing fails with invalid JSON syntax... need to rerun if this happens
-	const resJson = JSON.parse(`{${res.choices[0].message.content.replace(/.*{/s, '').replace(/}.*/s, '').trim()}}`)
-	const { title, description, price } = resJson
+	try {
+		const resJson = JSON.parse(`{${res.choices[0].message.content.replace(/.*{/s, '').replace(/}.*/s, '').trim()}}`)
+		const { title, description, price } = resJson
 
-	const { error: updateError } = await supabase
-		.from('listings')
-		.update({
-			title: title?.trim() ?? null,
-			description: description?.trim() ?? null,
-			price: price ?? null,
-		})
-		.eq('id', listingId)
-	if (updateError) redirect(getErrorRedirect(`/listings/${listingId}/edit`, updateError.message))
+		const { error: updateError } = await supabase
+			.from('listings')
+			.update({
+				title: title?.trim() ?? null,
+				description: description?.trim() ?? null,
+				price: price ?? null,
+			})
+			.eq('id', listingId)
+		if (updateError) redirect(getErrorRedirect(`/listings/${listingId}/edit`, updateError.message))
 
-	// TODO: Title, price, anc description are not revalidating after generating
-	redirect(getSuccessRedirect(`/listings/${listingId}/edit`, 'Listing data generated'))
+		// TODO: Title, price, anc description are not revalidating after generating
+		redirect(getSuccessRedirect(`/listings/${listingId}/edit`, 'Listing data generated'))
+	} catch (error) {
+		redirect(getErrorRedirect(`/listings/${listingId}/edit`, 'Something went wrong. Please try again'))
+	}
 }
 
 export async function deleteImage(listingId: Tables<'listings'>['id'], path: string | null) {
