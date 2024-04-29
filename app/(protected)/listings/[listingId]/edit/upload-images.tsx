@@ -1,12 +1,13 @@
 'use client'
 
+import { Tables } from '@/db_types'
 import { createClient } from '@/utils/supabase/client'
 import { Loader2Icon, UploadIcon } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { ChangeEvent, useState } from 'react'
 import toast from 'react-hot-toast'
 
-export default function UploadImages({ listingId }: { listingId: string }) {
+export default function UploadImages({ listingId }: { listingId: Tables<'listings'>['id'] }) {
 	const router = useRouter()
 	const [pending, setPending] = useState(false)
 

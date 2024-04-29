@@ -1,3 +1,4 @@
+import { Tables } from '@/db_types'
 import { redirect } from 'next/navigation'
 import { getErrorRedirect } from './helpers'
 import { createClient } from './supabase/server'
@@ -15,7 +16,7 @@ export async function getAuth() {
 	return { auth: auth.user, user, supabase }
 }
 
-export async function getListingImages({ listingId }: { listingId: string }) {
+export async function getListingImages({ listingId }: { listingId: Tables<'listings'>['id'] }) {
 	const supabase = createClient()
 
 	const { data: files } = await supabase.storage.from('listings').list(listingId)

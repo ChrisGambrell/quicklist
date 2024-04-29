@@ -5,6 +5,7 @@ import { env } from '@/env'
 import { getAuth, getListingImages } from '@/utils/_helpers'
 import { getErrorRedirect, getSuccessRedirect, parseFormData } from '@/utils/helpers'
 import { createClient } from '@/utils/supabase/server'
+import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
 import OpenAI from 'openai'
 import { z } from 'zod'
@@ -27,9 +28,7 @@ export async function createListing() {
 	redirect(`/listings/${data.id}/edit`)
 }
 
-// TODO: Search for fromEntries and replace with the parseFormData function
-
-export async function updateListing(listingId: string, _prevState: any, formData: FormData) {
+export async function updateListing(listingId: Tables<'listings'>['id'], _prevState: any, formData: FormData) {
 	const { data, errors } = parseFormData(formData, updateListingSchema)
 	if (errors) return { errors }
 
@@ -41,7 +40,7 @@ export async function updateListing(listingId: string, _prevState: any, formData
 	redirect(getSuccessRedirect(`/listings/${listingId}/edit`, 'Listing updated'))
 }
 
-export async function deleteListing(listingId: string) {
+export async function deleteListing(listingId: Tables<'listings'>['id']) {
 	const supabase = createClient()
 
 	const { error } = await supabase.from('listings').delete().eq('id', listingId)
@@ -50,7 +49,7 @@ export async function deleteListing(listingId: string) {
 	redirect(getSuccessRedirect('/listings', 'Listing deleted'))
 }
 
-export async function generateListingData(listingId: string) {
+export async function generateListingData(listingId: Tables<'listings'>['id']) {
 	const supabase = createClient()
 
 	const { data: listing, error: listingError } = await supabase.from('listings').select().eq('id', listingId).maybeSingle()
@@ -102,7 +101,7 @@ export async function generateListingData(listingId: string) {
 		.eq('id', listingId)
 	if (updateError) redirect(getErrorRedirect(`/listings/${listingId}/edit`, updateError.message))
 
-	// BUG: Does not revalidate listing description
+	// TODO: Title, price, anc description are not revalidating after generating
 	redirect(getSuccessRedirect(`/listings/${listingId}/edit`, 'Listing data generated'))
 }
 

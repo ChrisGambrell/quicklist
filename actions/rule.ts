@@ -1,5 +1,6 @@
 'use server'
 
+import { Tables } from '@/db_types'
 import { getAuth } from '@/utils/_helpers'
 import { getErrorRedirect, getSuccessRedirect, parseFormData } from '@/utils/helpers'
 import { createClient } from '@/utils/supabase/server'
@@ -23,19 +24,19 @@ export async function createRule(_prevState: any, formData: FormData) {
 	redirect(getSuccessRedirect('/rules', 'Rule created'))
 }
 
-export async function updateRule(id: string, _prevState: any, formData: FormData) {
+export async function updateRule(ruleId: Tables<'rules'>['id'], _prevState: any, formData: FormData) {
 	const { data, errors } = parseFormData(formData, updateRuleSchema)
 	if (errors) return { errors }
 
 	const { supabase } = await getAuth()
 
-	const { error } = await supabase.from('rules').update(data).eq('id', id)
-	if (error) redirect(getErrorRedirect(`/rules/${id}/edit`, error.message))
+	const { error } = await supabase.from('rules').update(data).eq('id', ruleId)
+	if (error) redirect(getErrorRedirect(`/rules/${ruleId}/edit`, error.message))
 
-	redirect(getSuccessRedirect(`/rules/${id}/edit`, 'Rule updated'))
+	redirect(getSuccessRedirect(`/rules/${ruleId}/edit`, 'Rule updated'))
 }
 
-export async function deleteRule(ruleId: string) {
+export async function deleteRule(ruleId: Tables<'rules'>['id']) {
 	const supabase = createClient()
 
 	const { error } = await supabase.from('rules').delete().eq('id', ruleId)
