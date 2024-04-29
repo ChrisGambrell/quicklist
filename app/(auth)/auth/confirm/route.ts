@@ -24,7 +24,7 @@ export async function GET(request: NextRequest) {
 		})
 		if (!error) {
 			redirectTo.searchParams.delete('next')
-			return NextResponse.redirect(getSuccessRedirect(redirectTo.toString(), 'You are now signed in.'))
+			return NextResponse.redirect(getSuccessRedirect(redirectTo.toString(), 'Your account is not confirmed'))
 		}
 	}
 

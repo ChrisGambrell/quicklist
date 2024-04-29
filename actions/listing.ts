@@ -18,8 +18,6 @@ const updateListingSchema = z.object({
 		.pipe(z.coerce.number().nullable()),
 })
 
-// TODO: Search for 'return redirect' and replace with 'redirect'
-
 export async function createListing() {
 	const { auth, supabase } = await getAuth()
 

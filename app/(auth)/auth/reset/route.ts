@@ -1,6 +1,7 @@
+import { getErrorRedirect } from '@/utils/helpers'
 import { createClient } from '@/utils/supabase/server'
 import { redirect } from 'next/navigation'
-import { NextRequest } from 'next/server'
+import { NextRequest, NextResponse } from 'next/server'
 
 export async function GET(request: NextRequest) {
 	const requestUrl = new URL(request.url)
@@ -10,9 +11,7 @@ export async function GET(request: NextRequest) {
 		const supabase = createClient()
 
 		const { error } = await supabase.auth.exchangeCodeForSession(code)
-		// TODO: Global toaster for server and client
-		// if (error) return getErrorRedirect('/login', 'Uh oh!', `An error occurred: ${error.message}`)
-		if (error) throw error.message
+		if (error) return NextResponse.redirect(getErrorRedirect('/sign-in', error.message))
 	}
 
 	redirect('/settings/password')
