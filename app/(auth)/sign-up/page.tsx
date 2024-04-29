@@ -23,18 +23,18 @@ export default function SignUpPage() {
 					<div className='grid gap-2'>
 						<Label htmlFor='name'>Name</Label>
 						<Input id='name' name='name' placeholder='Your name' />
-						<FormError state={state} id='name' />
+						<FormError value={state?.errors.name} />
 					</div>
 					<div className='grid gap-2'>
 						<Label htmlFor='email'>Email</Label>
 						<Input id='email' name='email' type='email' placeholder='m@example.com' />
-						<FormError state={state} id='email' />
+						<FormError value={state?.errors.email} />
 					</div>
 					{/* TODO: Confirm password? */}
 					<div className='grid gap-2'>
 						<Label htmlFor='password'>Password</Label>
 						<Input id='password' name='password' type='password' />
-						<FormError state={state} id='password' />
+						<FormError value={state?.errors.password} />
 					</div>
 					<ActionButton type='submit' className='w-full'>
 						Sign up

@@ -20,11 +20,11 @@ export default function PasswordForm() {
 				<CardContent className='grid gap-4'>
 					<div className='grid gap-2'>
 						<Input name='password' placeholder='Password' type='password' />
-						<FormError state={state} id='password' />
+						<FormError value={state?.errors.password} />
 					</div>
 					<div className='grid gap-2'>
 						<Input name='confirm_password' placeholder='Confirm Password' type='password' />
-						<FormError state={state} id='confirm_password' />
+						<FormError value={state?.errors.confirm_password} />
 					</div>
 				</CardContent>
 				<CardFooter className='border-t px-6 py-4'>

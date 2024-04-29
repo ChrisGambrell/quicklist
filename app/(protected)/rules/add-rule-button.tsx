@@ -39,7 +39,7 @@ export default function AddRuleButton() {
 
 					<div className='grid gap-2'>
 						<Input name='rule' placeholder='Rule' />
-						<FormError state={state} id='rule' />
+						<FormError value={state?.errors.rule} />
 					</div>
 
 					<DialogFooter className='sm:justify-start'>

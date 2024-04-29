@@ -58,12 +58,12 @@ export default function EditListingClient({ images, listing }: { images: SignedI
 								<div className='grid gap-3'>
 									<Label htmlFor='title'>Title</Label>
 									<Input id='title' name='title' placeholder={placeholder.title} defaultValue={listing.title ?? ''} />
-									<FormError state={updateState} id='title' />
+									<FormError value={updateState?.errors.title} />
 								</div>
 								<div className='grid gap-3'>
 									<Label htmlFor='price'>Price</Label>
 									<Input id='price' name='price' placeholder={placeholder.price} defaultValue={listing.price ?? ''} />
-									<FormError state={updateState} id='price' />
+									<FormError value={updateState?.errors.price} />
 								</div>
 								<div className='grid gap-3'>
 									<Label htmlFor='description'>Description</Label>
@@ -74,7 +74,7 @@ export default function EditListingClient({ images, listing }: { images: SignedI
 										defaultValue={listing.description ?? ''}
 										className='min-h-32'
 									/>
-									<FormError state={updateState} id='description' />
+									<FormError value={updateState?.errors.description} />
 								</div>
 							</div>
 						</CardContent>

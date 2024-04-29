@@ -47,7 +47,7 @@ export default function EditRuleClient({ rule }: { rule: Tables<'rules'> }) {
 								<div className='grid gap-3'>
 									<Label htmlFor='rule'>Rule</Label>
 									<Textarea id='rule' name='rule' defaultValue={rule.rule} className='min-h-32' />
-									<FormError state={updateState} id='rule' />
+									<FormError value={updateState?.errors.rule} />
 								</div>
 							</div>
 						</CardContent>

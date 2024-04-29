@@ -25,7 +25,7 @@ export default function SignInPage() {
 					<div className='grid gap-2'>
 						<Label htmlFor='email'>Email</Label>
 						<Input id='email' name='email' type='email' placeholder='m@example.com' />
-						<FormError state={passwordState} id='email' />
+						<FormError value={passwordState?.errors.email} />
 					</div>
 					<div className='grid gap-2'>
 						<div className='flex items-center'>
@@ -35,7 +35,7 @@ export default function SignInPage() {
 							</Link>
 						</div>
 						<Input id='password' name='password' type='password' />
-						<FormError state={passwordState} id='password' />
+						<FormError value={passwordState?.errors.password} />
 					</div>
 					<ActionButton formAction={passwordAction} type='submit' className='w-full'>
 						Sign in

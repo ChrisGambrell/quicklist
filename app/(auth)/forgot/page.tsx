@@ -23,7 +23,7 @@ export default function ForgotPasswordPage() {
 					<div className='grid gap-2'>
 						<Label htmlFor='email'>Email</Label>
 						<Input id='email' name='email' type='email' placeholder='m@example.com' />
-						<FormError state={state} id='email' />
+						<FormError value={state?.errors.email} />
 					</div>
 					<ActionButton type='submit' className='w-full'>
 						Send reset
