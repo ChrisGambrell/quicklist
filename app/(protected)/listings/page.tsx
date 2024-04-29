@@ -6,8 +6,6 @@ import { Table, TableBody, TableHead, TableHeader, TableRow } from '@/components
 import { createClient } from '@/utils/supabase/server'
 import { PlusCircleIcon } from 'lucide-react'
 
-// TODO: Need to make each row clickable for listings and rules
-
 export default async function ListingsPage() {
 	const supabase = createClient()
 	const { data: listings } = await supabase.from('listings').select().order('created_at', { ascending: true })

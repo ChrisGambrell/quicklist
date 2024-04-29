@@ -11,7 +11,6 @@ export default function UploadImages({ listingId }: { listingId: Tables<'listing
 	const router = useRouter()
 	const [pending, setPending] = useState(false)
 
-	// FIXME: Check to see if I need to validate owner of listing before uploading images
 	async function uploadImages(event: ChangeEvent<HTMLInputElement>) {
 		setPending(true)
 

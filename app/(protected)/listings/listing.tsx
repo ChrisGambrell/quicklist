@@ -3,6 +3,7 @@ import { Tables } from '@/db_types'
 import { getListingImages } from '@/utils/_helpers'
 import { PLACEHOLDER_IMAGE } from '@/utils/constants'
 import Image from 'next/image'
+import Link from 'next/link'
 import ListingActions from './listing-actions'
 
 export async function Listing({ listing }: { listing: Tables<'listings'> }) {
@@ -20,7 +21,9 @@ export async function Listing({ listing }: { listing: Tables<'listings'> }) {
 				/>
 			</TableCell>
 			<TableCell className='font-medium w-[99%]'>
-				<div className='line-clamp-1'>{listing.title ?? '-'}</div>
+				<Link className='line-clamp-1 hover:underline' href={`/listings/${listing.id}/edit`}>
+					{listing.title ?? '-'}
+				</Link>
 			</TableCell>
 			<TableCell className='hidden md:table-cell whitespace-nowrap'>{listing.price !== null ? `$${listing.price}` : '-'}</TableCell>
 			<TableCell className='hidden md:table-cell whitespace-nowrap'>{new Date(listing.created_at).toDateString()}</TableCell>
