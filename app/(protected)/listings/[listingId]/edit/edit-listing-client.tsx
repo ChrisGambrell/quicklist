@@ -3,6 +3,7 @@
 import { deleteImage, deleteListing, generateListingData, updateListing } from '@/actions/listing'
 import ActionButton from '@/components/action-button'
 import BackButton from '@/components/back-button'
+import CopyButton from '@/components/copy-button'
 import { FormError } from '@/components/form-error'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
@@ -13,6 +14,7 @@ import { Tables } from '@/db_types'
 import { cn } from '@/lib/utils'
 import { PLACEHOLDER_IMAGE } from '@/utils/constants'
 import { SignedImage } from '@/utils/types'
+import { CopyIcon } from 'lucide-react'
 import Image from 'next/image'
 import { useFormState } from 'react-dom'
 import UploadImages from './upload-images'
@@ -56,23 +58,29 @@ export default function EditListingClient({ images, listing }: { images: SignedI
 							<div className='grid gap-6'>
 								<div className='grid gap-3'>
 									<Label htmlFor='title'>Title</Label>
-									<Input id='title' name='title' placeholder={placeholder.title} defaultValue={listing.title ?? ''} />
+									<CopyButton value={listing.title ?? ''}>
+										<Input id='title' name='title' placeholder={placeholder.title} defaultValue={listing.title ?? ''} />
+									</CopyButton>
 									<FormError value={state?.errors.title} />
 								</div>
 								<div className='grid gap-3'>
 									<Label htmlFor='price'>Price</Label>
-									<Input id='price' name='price' placeholder={placeholder.price} defaultValue={listing.price ?? ''} />
+									<CopyButton value={listing.price?.toString() ?? ''}>
+										<Input id='price' name='price' placeholder={placeholder.price} defaultValue={listing.price ?? ''} />
+									</CopyButton>
 									<FormError value={state?.errors.price} />
 								</div>
 								<div className='grid gap-3'>
 									<Label htmlFor='description'>Description</Label>
-									<Textarea
-										id='description'
-										name='description'
-										placeholder={placeholder.description}
-										defaultValue={listing.description ?? ''}
-										className='min-h-32'
-									/>
+									<CopyButton value={listing.description ?? ''}>
+										<Textarea
+											id='description'
+											name='description'
+											placeholder={placeholder.description}
+											defaultValue={listing.description ?? ''}
+											className='min-h-32'
+										/>
+									</CopyButton>
 									<FormError value={state?.errors.description} />
 								</div>
 							</div>
