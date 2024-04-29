@@ -9,7 +9,7 @@
 		"lint": "next lint",
 		"ngrok:listen": "ngrok http 54321",
 		"supabase:restart": "npx supabase stop && npx supabase start",
-		"supabase:gen-types": "npx supabase gen types typescript --local > ./db_types.ts",
+		"supabase:gen-types": "npx supabase gen types typescript --local --schema=storage,public > ./db_types.ts",
 		"supabase:up": "npx supabase migration up && npm run supabase:gen-types"
 	},
 	"dependencies": {
