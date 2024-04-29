@@ -18,7 +18,6 @@ import { Input } from '@/components/ui/input'
 import { PlusCircleIcon } from 'lucide-react'
 import { useFormState } from 'react-dom'
 
-// BUG: After adding a rule, the trigger does not open the dialog back up
 export default function AddRuleButton() {
 	const [state, action] = useFormState(createRule, null)
 
