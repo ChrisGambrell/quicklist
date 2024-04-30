@@ -12,6 +12,7 @@ export default function SettingsLayout({ children }: { children: ReactNode }) {
 					<NavLink exact href='/settings'>
 						Profile
 					</NavLink>
+					<NavLink href='/settings/subscription'>Subscription</NavLink>
 					<NavLink href='/settings/password'>Password</NavLink>
 				</nav>
 				<div className='grid gap-6'>{children}</div>

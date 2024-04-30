@@ -27,9 +27,11 @@ export default function MobileNav({ user }: { user: Tables<'users'> }) {
 						</Link>
 						<UserMenu user={user} />
 					</div>
-					{links.map((link) => (
-						<MobileNavLink key={link.href} {...link} />
-					))}
+					{links
+						.filter((link) => !link.admin || user.is_admin)
+						.map((link) => (
+							<MobileNavLink key={link.href} {...link} />
+						))}
 				</nav>
 			</SheetContent>
 		</Sheet>

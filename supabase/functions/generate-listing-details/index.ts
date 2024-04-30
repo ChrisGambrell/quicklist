@@ -31,7 +31,8 @@ Deno.serve(async (req) => {
 
 	const openai = new OpenAI({ apiKey: Deno.env.get('OPENAI_KEY')! })
 
-	const urls = images.map((image) => image.signedUrl.replace('http://kong:8000', 'https://6839-174-102-5-87.ngrok-free.app'))
+	// TODO: Need to have .env be pointed to .env.local so that it can use NGROK_URL and OPENAI_KEY
+	const urls = images.map((image) => image.signedUrl.replace('http://kong:8000', 'https://3583-174-102-5-87.ngrok-free.app'))
 	const messages = urls.map((url) => ({ type: 'image_url', image_url: { url } } as OpenAI.Chat.Completions.ChatCompletionContentPart))
 
 	const format = `{"title": "[title]", "description": "[description]", "price": [price]}`

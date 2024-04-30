@@ -1,5 +1,5 @@
 import { Tables } from '@/db_types'
-import { HomeIcon, Package2Icon, ScaleIcon, SettingsIcon } from 'lucide-react'
+import { HomeIcon, Package2Icon, ScaleIcon, SettingsIcon, UsersIcon } from 'lucide-react'
 import Link from 'next/link'
 import NavLink from './nav-link'
 import UserMenu from './user-menu'
@@ -7,6 +7,7 @@ import UserMenu from './user-menu'
 export const links = [
 	{ href: '/listings', icon: <HomeIcon className='w-5 h-5' />, label: 'Dashboard' },
 	{ href: '/rules', icon: <ScaleIcon className='w-5 h-5' />, label: 'Rules' },
+	{ admin: true, href: '/users', icon: <UsersIcon className='w-5 h-5' />, label: 'Users' },
 	{ href: '/settings', icon: <SettingsIcon className='w-5 h-5' />, label: 'Settings' },
 ]
 
@@ -20,9 +21,11 @@ export default function DesktopNav({ user }: { user: Tables<'users'> }) {
 					<Package2Icon className='h-4 w-4 transition-all group-hover:scale-110' />
 					<span className='sr-only'>eBay Lister</span>
 				</Link>
-				{links.map((link) => (
-					<NavLink key={link.href} {...link} />
-				))}
+				{links
+					.filter((link) => !link.admin || user.is_admin)
+					.map((link) => (
+						<NavLink key={link.href} {...link} />
+					))}
 			</nav>
 			<nav className='mt-auto flex flex-col items-center gap-4 px-2 sm:py-5'>
 				<UserMenu user={user} />
