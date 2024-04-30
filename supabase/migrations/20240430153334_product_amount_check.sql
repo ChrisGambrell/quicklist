@@ -1,13 +1,13 @@
 create or replace function public.handle_new_listing()
     returns trigger as $$
     declare
-        subscription subscriptions%ROWTYPE;
+        subscription public.subscriptions%ROWTYPE;
         number_of_listings int;
         listings_allowed int;
     begin
         -- active subscription
         select * into subscription
-        from subscriptions
+        from public.subscriptions
         where user_id = auth.uid() and status = 'active';
 
         if(subscription is null) then
@@ -15,7 +15,7 @@ create or replace function public.handle_new_listing()
 
             -- count existing listings
             select count(*) into number_of_listings
-            from listings
+            from public.listings
             where user_id = auth.uid();
 
             -- check if user has reached the limit
@@ -28,15 +28,15 @@ create or replace function public.handle_new_listing()
 
         -- count existing listings
         select count(*) into number_of_listings
-        from listings
+        from public.listings
         where user_id = auth.uid() and created_at between subscription.current_period_start and subscription.current_period_end;
 
         -- check if user has reached the limit
         select listing_amount into listings_allowed
-        from product_amounts
+        from public.product_amounts
         where product_amounts.id = (
             select prices.product_id
-            from prices
+            from public.prices
             where prices.id = subscription.price_id
         );
 
@@ -55,13 +55,13 @@ create trigger on_insert_listing
 create or replace function public.handle_new_rule()
     returns trigger as $$
     declare
-        subscription subscriptions%ROWTYPE;
+        subscription public.subscriptions%ROWTYPE;
         number_of_rules int;
         rules_allowed int;
     begin
         -- active subscription
         select * into subscription
-        from subscriptions
+        from public.subscriptions
         where user_id = auth.uid() and status = 'active';
 
         if(subscription is null) then
@@ -69,7 +69,7 @@ create or replace function public.handle_new_rule()
 
             -- count existing rules
             select count(*) into number_of_rules
-            from rules
+            from public.rules
             where user_id = auth.uid();
 
             -- check if user has reached the limit
@@ -82,15 +82,15 @@ create or replace function public.handle_new_rule()
 
         -- count existing rules
         select count(*) into number_of_rules
-        from rules
+        from public.rules
         where user_id = auth.uid();
 
         -- check if user has reached the limit
         select rule_amount into rules_allowed
-        from product_amounts
+        from public.product_amounts
         where product_amounts.id = (
             select prices.product_id
-            from prices
+            from public.prices
             where prices.id = subscription.price_id
         );
 

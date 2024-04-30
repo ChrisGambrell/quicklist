@@ -1,5 +1,5 @@
-create table product_amounts (
-  id text references products not null,
+create table public.product_amounts (
+  id text references public.products not null primary key,
   created_at timestamptz not null default timezone('utc'::text, now()),
   updated_at timestamptz not null default timezone('utc'::text, now()),
   listing_amount integer not null,
@@ -7,8 +7,8 @@ create table product_amounts (
 );
 
 create trigger on_product_amount_updated
-    before update on product_amounts
+    before update on public.product_amounts
     for each row execute procedure public.set_updated_at();
 
-alter table product_amounts enable row level security;
-    create policy "Allow public read-only access." on product_amounts for select using (true);
+alter table public.product_amounts enable row level security;
+    create policy "Allow public read-only access." on public.product_amounts for select using (true);

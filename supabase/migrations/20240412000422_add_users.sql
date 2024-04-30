@@ -1,14 +1,14 @@
-create table users (
+create table public.users (
   id uuid references auth.users not null primary key,
   created_at timestamptz not null default timezone('utc'::text, now()),
   updated_at timestamptz not null default timezone('utc'::text, now()),
   full_name text,
-  email text unique not null,
+  email text not null,
   avatar_url text
 );
 
 create trigger on_user_updated
-    before update on users
+    before update on public.users
     for each row execute procedure public.set_updated_at();
 
 create function public.handle_new_user() 
