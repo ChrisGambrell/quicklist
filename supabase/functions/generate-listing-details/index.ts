@@ -53,6 +53,10 @@ Deno.serve(async (req) => {
 		],
 	})
 
+	// BUG: Always returns 2xx error code even when there is an error
+	// BUG: Only allow 20MB or below for uploaded images
+	// BUG: Clicked image to expand to see info, but deleted image
+
 	if (res.choices.length === 0 || !res.choices[0].message.content)
 		return Response.json({ error: 'No response from OpenAI' }, { status: 500 })
 
