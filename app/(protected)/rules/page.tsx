@@ -2,11 +2,11 @@ import AddRuleButton from '@/app/(protected)/rules/add-rule-button'
 import Rule from '@/app/(protected)/rules/rule'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Table, TableBody, TableHead, TableHeader, TableRow } from '@/components/ui/table'
-import { createClient } from '@/utils/supabase/server'
+import { getAuth } from '@/utils/_helpers'
 
 export default async function RulesPage() {
-	const supabase = createClient()
-	const { data: rules } = await supabase.from('rules').select().order('created_at', { ascending: true })
+	const { user, supabase } = await getAuth()
+	const { data: rules } = await supabase.from('rules').select().eq('user_id', user.id).order('created_at', { ascending: true })
 
 	return (
 		<>

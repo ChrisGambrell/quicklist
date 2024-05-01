@@ -3,12 +3,12 @@ import { Listing } from '@/app/(protected)/listings/listing'
 import ActionButton from '@/components/action-button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Table, TableBody, TableHead, TableHeader, TableRow } from '@/components/ui/table'
-import { createClient } from '@/utils/supabase/server'
+import { getAuth } from '@/utils/_helpers'
 import { PlusCircleIcon } from 'lucide-react'
 
 export default async function ListingsPage() {
-	const supabase = createClient()
-	const { data: listings } = await supabase.from('listings').select().order('created_at', { ascending: true })
+	const { user, supabase } = await getAuth()
+	const { data: listings } = await supabase.from('listings').select().eq('user_id', user.id).order('created_at', { ascending: true })
 
 	return (
 		<>
