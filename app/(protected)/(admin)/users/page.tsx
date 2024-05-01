@@ -11,6 +11,12 @@ export default async function UsersPage() {
 	const { data: users } = await supabase.from('users').select().order('created_at', { ascending: false })
 	const { data: listings } = await supabase.from('listings').select()
 	const { data: rules } = await supabase.from('rules').select()
+	const { data: subscriptions } = await supabase
+		.from('subscriptions')
+		.select('*, price:prices(*, product:products(*, amount:product_amounts(*)))')
+		.eq('status', 'active')
+		.eq('prices.active', true)
+		.eq('prices.products.active', true)
 
 	return (
 		<>
@@ -26,9 +32,10 @@ export default async function UsersPage() {
 									<span className='sr-only'>Avatar</span>
 								</TableHead>
 								<TableHead>Name</TableHead>
+								<TableHead>Plan</TableHead>
 								<TableHead>Listings</TableHead>
-								<TableHead>Rules</TableHead>
-								<TableHead className='hidden md:table-cell'>Email address</TableHead>
+								<TableHead className='hidden md:table-cell'>Rules</TableHead>
+								<TableHead className='hidden lg:table-cell'>Email address</TableHead>
 								<TableHead className='hidden md:table-cell'>Created at</TableHead>
 							</TableRow>
 						</TableHeader>
@@ -47,9 +54,14 @@ export default async function UsersPage() {
 									<TableCell className={cn(user.is_admin ? 'font-black' : 'font-medium')}>
 										{user.full_name ?? '-'}
 									</TableCell>
+									<TableCell>
+										{subscriptions?.find((s) => s.user_id === user.id)?.price?.product?.name ?? 'Free'}
+									</TableCell>
 									<TableCell>{listings?.filter((l) => l.user_id === user.id).length ?? '-'}</TableCell>
-									<TableCell>{rules?.filter((r) => r.user_id === user.id).length ?? '-'}</TableCell>
-									<TableCell className='hidden md:table-cell'>{user.email}</TableCell>
+									<TableCell className='hidden md:table-cell'>
+										{rules?.filter((r) => r.user_id === user.id).length ?? '-'}
+									</TableCell>
+									<TableCell className='hidden lg:table-cell'>{user.email}</TableCell>
 									<TableCell className='hidden md:table-cell'>{new Date(user.created_at).toDateString()}</TableCell>
 								</TableRow>
 							))}
