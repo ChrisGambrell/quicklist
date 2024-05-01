@@ -2,6 +2,7 @@ import { Tables } from '@/db_types'
 import { redirect } from 'next/navigation'
 import { getErrorRedirect } from './helpers'
 import { createClient } from './supabase/server'
+import { SubscriptionWithPriceWithProductWithAmount } from './types'
 
 export async function getAuth() {
 	const supabase = createClient()
@@ -12,7 +13,18 @@ export async function getAuth() {
 	const { data: user, error: userError } = await supabase.from('users').select().eq('id', auth.user.id).maybeSingle()
 	if (userError || !user) redirect(getErrorRedirect('/sign-in', userError?.message ?? "FATAL: User's profile not found."))
 
-	return { auth: auth.user, user, supabase }
+	const { data: subscription, error: subscriptionError } = await supabase
+		.from('subscriptions')
+		.select('*, price:prices(*, product:products(*, amount:product_amounts(*)))')
+		.eq('user_id', user.id)
+		.eq('status', 'active')
+		.eq('prices.active', true)
+		.eq('prices.products.active', true)
+		.returns<SubscriptionWithPriceWithProductWithAmount>()
+		.maybeSingle()
+	if (subscriptionError) redirect(getErrorRedirect('/sign-in', subscriptionError.message))
+
+	return { auth: auth.user, user, subscription, supabase }
 }
 
 export async function getListingImages({ listingId }: { listingId: Tables<'listings'>['id'] }) {
