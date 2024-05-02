@@ -2,10 +2,10 @@
 
 'use server'
 
-import { getURL } from '@cgambrell/utils'
+import { getErrorRedirect, getURL } from '@cgambrell/utils'
 import Stripe from 'stripe'
 import { getAuth } from '../_helpers'
-import { calculateTrialEndUnixTimestamp, getErrorRedirect } from '../helpers'
+import { calculateTrialEndUnixTimestamp } from '../helpers'
 import { createOrRetrieveCustomer } from '../supabase/admin'
 import { CheckoutResponse, Price } from '../types'
 import { stripe } from './config'

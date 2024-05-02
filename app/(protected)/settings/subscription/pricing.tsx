@@ -2,10 +2,10 @@
 
 import { Button } from '@/components/ui/button'
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { getErrorRedirect } from '@/utils/helpers'
 import { getStripe } from '@/utils/stripe/client'
 import { checkoutWithStripe } from '@/utils/stripe/server'
 import { BillingInterval, Price, ProductWithPrices } from '@/utils/types'
+import { getErrorRedirect } from '@cgambrell/utils'
 import { Loader2Icon } from 'lucide-react'
 import { usePathname, useRouter } from 'next/navigation'
 import { useState } from 'react'

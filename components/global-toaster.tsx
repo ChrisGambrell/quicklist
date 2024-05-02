@@ -10,17 +10,16 @@ export default function GlobalToaster() {
 	const searchParams = useSearchParams()
 
 	useEffect(() => {
-		const success = searchParams.get('success')
-		const success_description = searchParams.get('success_description')
+		const message = searchParams.get('message')
 		const error = searchParams.get('error')
-		const error_description = searchParams.get('error_description')
+		const success = searchParams.get('success')
 
-		if (!success && !error) return
-		const toastType = success ? toast.success : toast.error
-		toastType(success ? success_description : error_description)
+		if (!message && !error && !success) return
+		const toastType = message ? toast : success ? toast.success : toast.error
+		toastType(message ? message : success ? success : error)
 
 		const newSearchParams = new URLSearchParams(searchParams.toString())
-		const paramsToRemove = ['success', 'success_description', 'error', 'error_description']
+		const paramsToRemove = ['message', 'error', 'success']
 		paramsToRemove.forEach((param) => newSearchParams.delete(param))
 		const redirectPath = `${pathname}?${newSearchParams.toString()}`
 		router.replace(redirectPath, { scroll: false })

@@ -1,13 +1,11 @@
 'use server'
 
 import { Tables } from '@/db_types'
-import { env } from '@/env'
-import { getAuth, getListingImages } from '@/utils/_helpers'
-import { getErrorRedirect, getSuccessRedirect, parseFormData } from '@/utils/helpers'
+import { getAuth } from '@/utils/_helpers'
+import { parseFormData } from '@/utils/helpers'
 import { createClient } from '@/utils/supabase/server'
-import { revalidatePath } from 'next/cache'
+import { getErrorRedirect, getSuccessRedirect } from '@cgambrell/utils'
 import { redirect } from 'next/navigation'
-import OpenAI from 'openai'
 import { z } from 'zod'
 
 const updateListingSchema = z.object({

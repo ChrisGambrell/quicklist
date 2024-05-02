@@ -1,5 +1,5 @@
-import { getErrorRedirect } from '@/utils/helpers'
 import { createClient } from '@/utils/supabase/server'
+import { getErrorRedirect } from '@cgambrell/utils'
 import { redirect } from 'next/navigation'
 import { NextRequest, NextResponse } from 'next/server'
 

@@ -1,6 +1,6 @@
 import { Tables } from '@/db_types'
+import { getErrorRedirect } from '@cgambrell/utils'
 import { redirect } from 'next/navigation'
-import { getErrorRedirect } from './helpers'
 import { createClient } from './supabase/server'
 import { SubscriptionWithPriceWithProductWithAmount } from './types'
 
