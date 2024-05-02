@@ -1,18 +1,4 @@
-import { env } from '@/env'
 import { ZodTypeAny, z } from 'zod'
-
-export const getURL = (path: string = '') => {
-	let url = env.NEXT_PUBLIC_SITE_URL
-
-	// Trim the URL and remove trailing slash
-	url = url.replace(/\/+$/, '')
-	// Include https when not localhost
-	url = url.includes('http') ? url : `https://${url}`
-	// Ensure path starts without a slash to avoid duble slashes
-	path = path.replace(/^\/+/, '')
-
-	return path ? `${url}/${path}` : url
-}
 
 export const toDateTime = (secs: number) => {
 	var t = new Date(+0)
