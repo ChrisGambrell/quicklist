@@ -1,5 +1,3 @@
-// TODO: Review this file
-
 'use server'
 
 import { getErrorRedirect, getURL } from '@cgambrell/utils'

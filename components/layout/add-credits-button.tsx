@@ -1,4 +1,3 @@
-// TODO: Can this be a server component?
 'use client'
 
 import { getStripe } from '@/utils/stripe/client'

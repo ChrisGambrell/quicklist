@@ -45,7 +45,6 @@ create function public.handle_delete_listing_image()
     end;
     $$ language plpgsql security definer;
 
--- //TODO: Format triggers to look like this
 create trigger on_storage_listing_image_deleted
     after delete on storage.objects for each row 
     when (old.bucket_id = 'listing_images')

@@ -1,4 +1,3 @@
-// TODO: Review this file
 import { env } from '@/env'
 import { stripe } from '@/utils/stripe/config'
 import {

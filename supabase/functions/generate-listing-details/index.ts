@@ -61,9 +61,6 @@ Deno.serve(async (req) => {
 		],
 	})
 
-	// FIXME: Only allow 20MB or below for uploaded images
-	// TODO: Clicked image to expand to see info, but deleted image
-
 	if (res.choices.length === 0 || !res.choices[0].message.content)
 		return Response.json({ error: 'No response from OpenAI' }, { status: 500 })
 

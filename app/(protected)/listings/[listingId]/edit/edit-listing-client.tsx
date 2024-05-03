@@ -188,7 +188,7 @@ export default function EditListingClient({ listing }: { listing: ListingWithGen
 	)
 }
 
-// TODO: View, make primary, delete overlay
+// TODO:  delete overlay
 function ListingImage({ image, variant }: { image: TListingImage; variant: 'primary' | 'secondary' }) {
 	const useDeleteImage = deleteImage.bind(null, { listingId: image.listing_id, path: image.image_path })
 

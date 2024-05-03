@@ -1,5 +1,3 @@
-// TODO: Review this file
-
 import { Database, TablesInsert } from '@/db_types'
 import { env } from '@/env'
 import { toDateTime } from '@/utils/helpers'
@@ -84,9 +82,7 @@ const deletePriceRecord = async (price: Stripe.Price) => {
 
 const upsertCustomerToSupabase = async (uuid: string, customerId: string) => {
 	const { error: upsertError } = await supabaseAdmin.from('customers').upsert([{ id: uuid, stripe_customer_id: customerId }])
-
 	if (upsertError) throw new Error(`Supabase customer record creation failed: ${upsertError.message}`)
-
 	return customerId
 }
 
