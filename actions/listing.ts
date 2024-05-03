@@ -1,9 +1,9 @@
 'use server'
 
-import { Tables } from '@/db_types'
 import { getAuth } from '@/utils/_helpers'
 import { parseFormData } from '@/utils/helpers'
 import { createClient } from '@/utils/supabase/server'
+import { Listing, ListingImage } from '@/utils/types'
 import { getErrorRedirect, getSuccessRedirect } from '@cgambrell/utils'
 import { redirect } from 'next/navigation'
 import { z } from 'zod'
@@ -26,7 +26,7 @@ export async function createListing() {
 	redirect(`/listings/${data.id}/edit`)
 }
 
-export async function updateListing({ listingId }: { listingId: Tables<'listings'>['id'] }, _prevState: any, formData: FormData) {
+export async function updateListing({ listingId }: { listingId: Listing['id'] }, _prevState: any, formData: FormData) {
 	const { data, errors } = parseFormData(formData, updateListingSchema)
 	if (errors) return { errors }
 
@@ -38,7 +38,7 @@ export async function updateListing({ listingId }: { listingId: Tables<'listings
 	redirect(getSuccessRedirect(`/listings/${listingId}/edit`, 'Listing updated'))
 }
 
-export async function deleteListing({ listingId }: { listingId: Tables<'listings'>['id'] }) {
+export async function deleteListing({ listingId }: { listingId: Listing['id'] }) {
 	const supabase = createClient()
 
 	const { error } = await supabase.from('listings').delete().eq('id', listingId)
@@ -47,7 +47,7 @@ export async function deleteListing({ listingId }: { listingId: Tables<'listings
 	redirect(getSuccessRedirect('/listings', 'Listing deleted'))
 }
 
-export async function generateListingData({ listingId }: { listingId: Tables<'listings'>['id'] }) {
+export async function generateListingData({ listingId }: { listingId: Listing['id'] }) {
 	const supabase = createClient()
 
 	const { data, error } = await supabase.functions.invoke('generate-listing-details', { body: { listingId } })
@@ -56,12 +56,10 @@ export async function generateListingData({ listingId }: { listingId: Tables<'li
 	redirect(getSuccessRedirect(`/listings/${listingId}/edit`, 'Listing data generated'))
 }
 
-export async function deleteImage({ listingId }: { listingId: Tables<'listings'>['id'] }, path: string | null) {
-	if (!path) redirect(getErrorRedirect(`/listings/${listingId}/edit`, 'No path provided'))
-
+export async function deleteImage({ listingId, path }: { listingId: Listing['id']; path: ListingImage['image_path'] }) {
 	const supabase = createClient()
 
-	const { error } = await supabase.storage.from('listings').remove([path])
+	const { error } = await supabase.storage.from('listing_images').remove([path])
 	if (error) redirect(getErrorRedirect(`/listings/${listingId}/edit`, error.message))
 
 	redirect(getSuccessRedirect(`/listings/${listingId}/edit`, 'Image deleted'))

@@ -38,6 +38,41 @@ export type Database = {
           },
         ]
       }
+      listing_images: {
+        Row: {
+          created_at: string
+          id: string
+          image_path: string
+          is_primary: boolean
+          listing_id: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          image_path: string
+          is_primary?: boolean
+          listing_id: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          image_path?: string
+          is_primary?: boolean
+          listing_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "listing_images_listing_id_fkey"
+            columns: ["listing_id"]
+            isOneToOne: false
+            referencedRelation: "listings"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       listings: {
         Row: {
           created_at: string

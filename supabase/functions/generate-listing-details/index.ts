@@ -16,10 +16,11 @@ Deno.serve(async (req) => {
 	const { data: listing, error } = await supabase.from('listings').select().eq('id', listingId).maybeSingle()
 	if (error || !listing) return Response.json({ error: error?.message || 'No listing found' }, { status: error ? 500 : 404 })
 
-	const { data: files } = await supabase.storage.from('listings').list(listingId)
+		// TODO: Can just get images from listing instead of storage
+	const { data: files } = await supabase.storage.from('listing_images').list(listingId)
 	if (!files) return Response.json({ error: 'No images found' }, { status: 404 })
 
-	const { data: images } = await supabase.storage.from('listings').createSignedUrls(
+	const { data: images } = await supabase.storage.from('listing_images').createSignedUrls(
 		files.map((file) => `${listingId}/${file.name}`),
 		60 * 60 * 24
 	)
@@ -32,7 +33,7 @@ Deno.serve(async (req) => {
 	const openai = new OpenAI({ apiKey: Deno.env.get('OPENAI_KEY')! })
 
 	// TODO: Need to have .env be pointed to .env.local so that it can use NGROK_URL and OPENAI_KEY
-	const urls = images.map((image) => image.signedUrl.replace('http://kong:8000', 'https://3583-174-102-5-87.ngrok-free.app'))
+	const urls = images.map((image) => image.signedUrl.replace('http://kong:8000', 'https://043c-174-102-5-87.ngrok-free.app'))
 	const messages = urls.map((url) => ({ type: 'image_url', image_url: { url } } as OpenAI.Chat.Completions.ChatCompletionContentPart))
 
 	const format = `{"title": "[title]", "description": "[description]", "price": [price]}`

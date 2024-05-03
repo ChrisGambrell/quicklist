@@ -2,9 +2,9 @@ import { updateName } from '@/actions/user'
 import ActionButton from '@/components/action-button'
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
-import { Tables } from '@/db_types'
+import { User } from '@/utils/types'
 
-export default function NameForm({ user }: { user: Tables<'users'> }) {
+export default function NameForm({ user }: { user: User }) {
 	return (
 		<form action={updateName}>
 			<Card>

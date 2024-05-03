@@ -1,9 +1,9 @@
 import { TableCell, TableRow } from '@/components/ui/table'
-import { Tables } from '@/db_types'
+import { Rule as TRule } from '@/utils/types'
 import Link from 'next/link'
 import RuleActions from './rule-actions'
 
-export default function Rule({ rule }: { rule: Tables<'rules'> }) {
+export default function Rule({ rule }: { rule: TRule }) {
 	return (
 		<TableRow>
 			<TableCell className='font-medium w-[99%]'>

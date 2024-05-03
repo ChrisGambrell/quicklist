@@ -1,19 +1,18 @@
 import { TableCell, TableRow } from '@/components/ui/table'
-import { Tables } from '@/db_types'
-import { getListingImages } from '@/utils/_helpers'
 import { PLACEHOLDER_IMAGE } from '@/utils/constants'
+import { getImageUrl } from '@/utils/helpers'
+import { ListingWithImages } from '@/utils/types'
 import Image from 'next/image'
 import Link from 'next/link'
 import ListingActions from './listing-actions'
 
-export async function Listing({ listing }: { listing: Tables<'listings'> }) {
-	const images = await getListingImages({ listingId: listing.id })
-
+export async function Listing({ listing }: { listing: ListingWithImages }) {
 	return (
 		<TableRow>
 			<TableCell className='hidden sm:table-cell min-w-[100px]'>
 				<Image
-					src={images && images.length > 0 ? images[0].signedUrl : PLACEHOLDER_IMAGE}
+					// TODO: Replace .length > 0 with .length
+					src={listing.images.length > 0 ? getImageUrl(listing.images[0].image_path) : PLACEHOLDER_IMAGE}
 					alt='Listing image'
 					className='aspect-square rounded-md object-cover'
 					height={64}

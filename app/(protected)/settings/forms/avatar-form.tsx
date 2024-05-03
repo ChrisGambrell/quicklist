@@ -2,11 +2,11 @@ import { updateAvatar } from '@/actions/user'
 import ActionButton from '@/components/action-button'
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
-import { Tables } from '@/db_types'
 import { PLACEHOLDER_AVATAR } from '@/utils/constants'
+import { User } from '@/utils/types'
 import Image from 'next/image'
 
-export default function AvatarForm({ user }: { user: Tables<'users'> }) {
+export default function AvatarForm({ user }: { user: User }) {
 	return (
 		<form action={updateAvatar}>
 			<Card>

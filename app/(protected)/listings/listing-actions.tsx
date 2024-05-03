@@ -2,13 +2,13 @@
 
 import { Button } from '@/components/ui/button'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
-import { Tables } from '@/db_types'
 import { createClient } from '@/utils/supabase/client'
+import { Listing } from '@/utils/types'
 import { MoreHorizontalIcon } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import toast from 'react-hot-toast'
 
-export default function ListingActions({ listingId }: { listingId: Tables<'listings'>['id'] }) {
+export default function ListingActions({ listingId }: { listingId: Listing['id'] }) {
 	const router = useRouter()
 
 	async function deleteListing() {

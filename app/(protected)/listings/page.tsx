@@ -8,7 +8,12 @@ import { PlusCircleIcon } from 'lucide-react'
 
 export default async function ListingsPage() {
 	const { user, supabase } = await getAuth()
-	const { data: listings } = await supabase.from('listings').select().eq('user_id', user.id).order('created_at', { ascending: true })
+	const { data: listings } = await supabase
+		.from('listings')
+		.select('*, images:listing_images(*)')
+		.eq('user_id', user.id)
+		.order('created_at', { ascending: false })
+		.order('is_primary', { ascending: false, referencedTable: 'listing_images' })
 
 	return (
 		<>

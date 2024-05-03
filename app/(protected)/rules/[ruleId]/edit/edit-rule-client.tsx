@@ -8,10 +8,10 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
-import { Tables } from '@/db_types'
+import { Rule } from '@/utils/types'
 import { useFormState } from 'react-dom'
 
-export default function EditRuleClient({ rule }: { rule: Tables<'rules'> }) {
+export default function EditRuleClient({ rule }: { rule: Rule }) {
 	const [state, action] = useFormState(updateRule.bind(null, { ruleId: rule.id }), null)
 	const useDeleteRule = deleteRule.bind(null, { ruleId: rule.id })
 

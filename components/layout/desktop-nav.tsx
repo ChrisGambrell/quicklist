@@ -1,4 +1,4 @@
-import { Tables } from '@/db_types'
+import { User } from '@/utils/types'
 import { HomeIcon, Package2Icon, ScaleIcon, SettingsIcon, UsersIcon } from 'lucide-react'
 import Link from 'next/link'
 import NavLink from './nav-link'
@@ -11,7 +11,7 @@ export const links = [
 	{ href: '/settings', icon: <SettingsIcon className='w-5 h-5' />, label: 'Settings' },
 ]
 
-export default function DesktopNav({ user }: { user: Tables<'users'> }) {
+export default function DesktopNav({ user }: { user: User }) {
 	return (
 		<aside className='fixed inset-y-0 left-0 z-10 hidden w-14 flex-col border-r bg-background sm:flex'>
 			<nav className='flex flex-col items-center gap-4 px-2 sm:py-5'>

@@ -1,13 +1,13 @@
 'use client'
 
-import { Tables } from '@/db_types'
 import { createClient } from '@/utils/supabase/client'
+import { Listing } from '@/utils/types'
 import { Loader2Icon, UploadIcon } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { ChangeEvent, useState } from 'react'
 import toast from 'react-hot-toast'
 
-export default function UploadImages({ listingId }: { listingId: Tables<'listings'>['id'] }) {
+export default function UploadImages({ listingId }: { listingId: Listing['id'] }) {
 	const router = useRouter()
 	const [pending, setPending] = useState(false)
 
@@ -25,7 +25,7 @@ export default function UploadImages({ listingId }: { listingId: Tables<'listing
 				const fileExt = file.name.split('.').pop()
 				const filePath = `${listingId}/${new Date().getTime()}-${Math.random()}.${fileExt}`
 
-				const { error } = await supabase.storage.from('listings').upload(filePath, file)
+				const { error } = await supabase.storage.from('listing_images').upload(filePath, file)
 				if (error) throw error.message
 			}
 		} catch (error: any) {

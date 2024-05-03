@@ -13,8 +13,8 @@ import { Textarea } from '@/components/ui/textarea'
 import { Tables } from '@/db_types'
 import { cn } from '@/lib/utils'
 import { PLACEHOLDER_IMAGE } from '@/utils/constants'
-import { SignedImage } from '@/utils/types'
-import { CopyIcon } from 'lucide-react'
+import { getImageUrl } from '@/utils/helpers'
+import { ListingWithImages, ListingImage as TListingImage } from '@/utils/types'
 import Image from 'next/image'
 import { useFormState } from 'react-dom'
 import UploadImages from './upload-images'
@@ -25,7 +25,7 @@ const placeholder = {
 	description: 'Enhance your wardrobe with this timeless navy and white checkered long sleeve shirt...',
 }
 
-export default function EditListingClient({ images, listing }: { images: SignedImage[] | null; listing: Tables<'listings'> }) {
+export default function EditListingClient({ listing }: { listing: ListingWithImages }) {
 	const [state, action] = useFormState(updateListing.bind(null, { listingId: listing.id }), null)
 	const useGenerateData = generateListingData.bind(null, { listingId: listing.id })
 	const useDeleteListing = deleteListing.bind(null, { listingId: listing.id })
@@ -95,12 +95,23 @@ export default function EditListingClient({ images, listing }: { images: SignedI
 						</CardHeader>
 						<CardContent>
 							<div className='grid gap-2'>
-								<ListingImage image={images?.[0]} listingId={listing.id} variant='primary' />
+								{listing.images.length ? (
+									<ListingImage image={listing.images[0]} variant='primary' />
+								) : (
+									<Image
+										src={PLACEHOLDER_IMAGE}
+										alt='Listing image'
+										className='aspect-square w-full rounded-md object-cover'
+										height={300}
+										width={300}
+									/>
+								)}
 								<div className='grid grid-cols-3 gap-2'>
-									{images &&
-										images.map((image) => (
-											<ListingImage key={image.signedUrl} image={image} listingId={listing.id} variant='secondary' />
-										))}
+									{/* TODO: Don't need to check if exists */}
+									{listing.images &&
+										listing.images
+											.slice(1)
+											.map((image) => <ListingImage key={image.id} image={image} variant='secondary' />)}
 									<UploadImages listingId={listing.id} />
 								</div>
 							</div>
@@ -113,7 +124,12 @@ export default function EditListingClient({ images, listing }: { images: SignedI
 							<CardDescription>Generate the listing&apos;s data based on its details and images.</CardDescription>
 						</CardHeader>
 						<CardContent>
-							<ActionButton className='w-full' formAction={useGenerateData} size='sm' variant='secondary'>
+							<ActionButton
+								className='w-full'
+								disabled={!listing.images.length}
+								formAction={useGenerateData}
+								size='sm'
+								variant='secondary'>
 								Generate
 							</ActionButton>
 						</CardContent>
@@ -144,16 +160,9 @@ export default function EditListingClient({ images, listing }: { images: SignedI
 	)
 }
 
-function ListingImage({
-	image,
-	listingId,
-	variant,
-}: {
-	image?: SignedImage
-	listingId: Tables<'listings'>['id']
-	variant: 'primary' | 'secondary'
-}) {
-	const useDeleteImage = deleteImage.bind(null, { listingId }, image?.path ?? null)
+// TODO: View, make primary, delete overlay
+function ListingImage({ image, variant }: { image: TListingImage; variant: 'primary' | 'secondary' }) {
+	const useDeleteImage = deleteImage.bind(null, { listingId: image.listing_id, path: image.image_path })
 
 	const sizeMap: Record<'primary' | 'secondary', number> = {
 		primary: 84,
@@ -161,9 +170,9 @@ function ListingImage({
 	}
 
 	return (
-		<button disabled={variant === 'primary' || !image} formAction={useDeleteImage}>
+		<button formAction={useDeleteImage}>
 			<Image
-				src={image?.signedUrl ?? PLACEHOLDER_IMAGE}
+				src={getImageUrl(image.image_path)}
 				alt='Listing image'
 				className='aspect-square w-full rounded-md object-cover'
 				height={sizeMap[variant]}

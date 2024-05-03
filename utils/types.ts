@@ -1,5 +1,11 @@
 import { Enums, Tables } from '@/db_types'
 import { ReactNode } from 'react'
+export type Listing = Tables<'listings'>
+export type ListingImage = Tables<'listing_images'>
+export type Rule = Tables<'rules'>
+export type User = Tables<'users'>
+
+export type ListingWithImages = Listing & { images: ListingImage[] }
 
 export type BillingInterval = Enums<'pricing_plan_interval'>
 
@@ -24,10 +30,4 @@ export type NavLinkProps = {
 	href: string
 	icon: ReactNode
 	label: string
-}
-
-export type SignedImage = {
-	error: string | null
-	path: string | null
-	signedUrl: string
 }

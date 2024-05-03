@@ -1,13 +1,13 @@
 import { Button } from '@/components/ui/button'
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet'
-import { Tables } from '@/db_types'
+import { User } from '@/utils/types'
 import { Package2Icon, PanelLeftIcon } from 'lucide-react'
 import Link from 'next/link'
 import { links } from './desktop-nav'
 import MobileNavLink from './mobile-nav-link'
 import UserMenu from './user-menu'
 
-export default function MobileNav({ user }: { user: Tables<'users'> }) {
+export default function MobileNav({ user }: { user: User }) {
 	return (
 		<Sheet>
 			<SheetTrigger asChild>
