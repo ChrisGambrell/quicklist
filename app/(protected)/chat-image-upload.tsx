@@ -56,7 +56,7 @@ export default function ChatImageUpload() {
 
 	return (
 		<form className='grid gap-4' onSubmit={upload}>
-			{images.length > 0 && (
+			{images.length && (
 				<div className='grid gap-2'>
 					<Image
 						src={URL.createObjectURL(images[0])}
@@ -106,7 +106,7 @@ export default function ChatImageUpload() {
 				{isLoading && <Loader2Icon className='w-5 h-5 animate-spin mr-2' />}
 				<span>
 					Generate
-					{images.length > 0 ? ` (${requiredCredits(images.length)} credit${requiredCredits(images.length) > 1 ? 's' : ''})` : ''}
+					{images.length ? ` (${requiredCredits(images.length)} credit${requiredCredits(images.length) > 1 ? 's' : ''})` : ''}
 				</span>
 			</Button>
 		</form>

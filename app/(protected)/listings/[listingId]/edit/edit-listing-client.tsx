@@ -154,7 +154,7 @@ export default function EditListingClient({ listing }: { listing: ListingWithGen
 								size='sm'
 								variant='secondary'>
 								Generate
-								{listing.images.length > 0
+								{listing.images.length
 									? ` (${requiredCredits(listing.images.length)} credit${
 											requiredCredits(listing.images.length) > 1 ? 's' : ''
 									  })`

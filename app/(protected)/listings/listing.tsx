@@ -11,8 +11,7 @@ export async function Listing({ listing }: { listing: ListingWithGenerationsAndI
 		<TableRow>
 			<TableCell className='hidden sm:table-cell min-w-[100px]'>
 				<Image
-					// TODO: Replace .length > 0 with .length
-					src={listing.images.length > 0 ? getImageUrl(listing.images[0].image_path) : PLACEHOLDER_IMAGE}
+					src={listing.images.length ? getImageUrl(listing.images[0].image_path) : PLACEHOLDER_IMAGE}
 					alt='Listing image'
 					className='aspect-square rounded-md object-cover'
 					height={64}

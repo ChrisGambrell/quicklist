@@ -7,7 +7,6 @@
 import { createClient } from 'npm:@supabase/supabase-js'
 import OpenAI from 'npm:openai'
 
-// TODO: Need to have .env be pointed to .env.local so that it can use NGROK_URL and OPENAI_KEY
 export const getImageUrl = (path: ListingImage['image_path']) =>
 	`${Deno.env
 		.get('SUPABASE_URL')

@@ -118,7 +118,7 @@ const createOrRetrieveCustomer = async ({ email, uuid }: { email: string; uuid: 
 	} else {
 		// If Stripe ID is missing from Supabase, try to retrieve Stripe customer ID by email
 		const stripeCustomers = await stripe.customers.list({ email: email })
-		stripeCustomerId = stripeCustomers.data.length > 0 ? stripeCustomers.data[0].id : undefined
+		stripeCustomerId = stripeCustomers.data.length ? stripeCustomers.data[0].id : undefined
 	}
 
 	// If still no stripeCustomerId, create a new customer in Stripe
@@ -191,7 +191,6 @@ const manageSubscriptionStatusChange = async (subscriptionId: string, customerId
 		metadata: subscription.metadata,
 		status: subscription.status,
 		price_id: subscription.items.data[0].price.id,
-		//TODO check quantity on subscription
 		// @ts-ignore
 		quantity: subscription.quantity,
 		cancel_at_period_end: subscription.cancel_at_period_end,
