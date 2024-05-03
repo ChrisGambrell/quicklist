@@ -10,12 +10,9 @@ export default async function UsersPage() {
 
 	const { data: users } = await supabase.from('users').select().order('created_at', { ascending: false })
 	const { data: generations } = await supabase.from('generations').select()
-	const { data: subscriptions } = await supabase
-		.from('subscriptions')
-		.select('*, price:prices(*, product:products(*, amount:product_amounts(*)))')
-		.eq('status', 'active')
-		.eq('prices.active', true)
-		.eq('prices.products.active', true)
+	const { data: purchases } = await supabase
+		.from('purchases')
+		.select('*, price:prices(*, product:products(*, product_amount:product_amounts(*)))')
 
 	return (
 		<>
@@ -31,9 +28,8 @@ export default async function UsersPage() {
 									<span className='sr-only'>Avatar</span>
 								</TableHead>
 								<TableHead>Name</TableHead>
-								{/* TODO: Show purchased? */}
-								<TableHead className='hidden md:table-cell'>Generations</TableHead>
-								<TableHead>Credits Used</TableHead>
+								<TableHead>Purchased</TableHead>
+								<TableHead>Used</TableHead>
 								<TableHead className='hidden lg:table-cell'>Email address</TableHead>
 								<TableHead className='hidden md:table-cell'>Created at</TableHead>
 							</TableRow>
@@ -53,8 +49,10 @@ export default async function UsersPage() {
 									<TableCell className={cn(user.is_admin ? 'font-black' : 'font-medium')}>
 										{user.full_name ?? '-'}
 									</TableCell>
-									<TableCell className='hidden md:table-cell'>
-										{generations?.filter((generation) => generation.user_id === user.id).length ?? '-'}
+									<TableCell>
+										{purchases
+											?.filter((purchase) => purchase.user_id === user.id)
+											.reduce((prev, curr) => prev + (curr.price?.product?.product_amount?.credits ?? 0), 0) ?? '-'}
 									</TableCell>
 									<TableCell>
 										{generations
