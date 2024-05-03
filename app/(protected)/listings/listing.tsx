@@ -1,12 +1,12 @@
 import { TableCell, TableRow } from '@/components/ui/table'
 import { PLACEHOLDER_IMAGE } from '@/utils/constants'
 import { getImageUrl } from '@/utils/helpers'
-import { ListingWithImages } from '@/utils/types'
+import { ListingWithGenerationsAndImages } from '@/utils/types'
 import Image from 'next/image'
 import Link from 'next/link'
 import ListingActions from './listing-actions'
 
-export async function Listing({ listing }: { listing: ListingWithImages }) {
+export async function Listing({ listing }: { listing: ListingWithGenerationsAndImages }) {
 	return (
 		<TableRow>
 			<TableCell className='hidden sm:table-cell min-w-[100px]'>

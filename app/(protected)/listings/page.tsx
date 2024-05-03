@@ -10,9 +10,10 @@ export default async function ListingsPage() {
 	const { user, supabase } = await getAuth()
 	const { data: listings } = await supabase
 		.from('listings')
-		.select('*, images:listing_images(*)')
+		.select('*, generations(*), images:listing_images(*)')
 		.eq('user_id', user.id)
 		.order('created_at', { ascending: false })
+		.order('created_at', { ascending: false, referencedTable: 'generations' })
 		.order('is_primary', { ascending: false, referencedTable: 'listing_images' })
 
 	return (

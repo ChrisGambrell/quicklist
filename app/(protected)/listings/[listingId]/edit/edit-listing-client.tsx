@@ -13,7 +13,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { Textarea } from '@/components/ui/textarea'
 import { PLACEHOLDER_IMAGE } from '@/utils/constants'
 import { getImageUrl, requiredCredits } from '@/utils/helpers'
-import { Generation, ListingWithImages, ListingImage as TListingImage } from '@/utils/types'
+import { Generation, ListingWithGenerationsAndImages, ListingImage as TListingImage } from '@/utils/types'
 import Image from 'next/image'
 import { useFormState } from 'react-dom'
 import UploadImages from './upload-images'
@@ -24,7 +24,7 @@ const placeholder = {
 	description: 'Enhance your wardrobe with this timeless navy and white checkered long sleeve shirt...',
 }
 
-export default function EditListingClient({ generations, listing }: { generations: Generation[]; listing: ListingWithImages }) {
+export default function EditListingClient({ listing }: { listing: ListingWithGenerationsAndImages }) {
 	const [state, action] = useFormState(updateListing.bind(null, { listingId: listing.id }), null)
 	const useGenerateData = generateListingData.bind(null, { listingId: listing.id })
 	const useDeleteListing = deleteListing.bind(null, { listingId: listing.id })
@@ -101,7 +101,7 @@ export default function EditListingClient({ generations, listing }: { generation
 									</TableRow>
 								</TableHeader>
 								<TableBody>
-									{generations.map((generation) => (
+									{listing.generations.map((generation) => (
 										<TableRow key={generation.id}>
 											<TableCell>{new Date(generation.created_at).toDateString()}</TableCell>
 											<TableCell>{generation.credits}</TableCell>

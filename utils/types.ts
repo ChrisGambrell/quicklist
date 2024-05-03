@@ -7,7 +7,7 @@ export type ListingImage = Tables<'listing_images'>
 export type Rule = Tables<'rules'>
 export type User = Tables<'users'>
 
-export type ListingWithImages = Listing & { images: ListingImage[] }
+export type ListingWithGenerationsAndImages = Listing & { generations: Generation[]; images: ListingImage[] }
 
 export type Price = Tables<'prices'>
 export type Product = Tables<'products'>
