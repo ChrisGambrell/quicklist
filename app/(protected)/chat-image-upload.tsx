@@ -56,7 +56,7 @@ export default function ChatImageUpload() {
 
 	return (
 		<form className='grid gap-4' onSubmit={upload}>
-			{images.length && (
+			{images.length > 0 && (
 				<div className='grid gap-2'>
 					<Image
 						src={URL.createObjectURL(images[0])}
