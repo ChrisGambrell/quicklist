@@ -6,7 +6,9 @@ export default async function RootPage() {
 		<Card className='w-full mx-auto max-w-sm sm:my-20'>
 			<CardHeader className='text-center'>
 				<CardTitle className='text-2xl'>Generate a listing</CardTitle>
-				<CardDescription>Generate details just based on images!</CardDescription>
+				<CardDescription>
+					Upload images and hit generate to get a clever title and description for what you&apos;re trying to sell!
+				</CardDescription>
 			</CardHeader>
 			<CardContent>
 				<ChatImageUpload />
