@@ -7,14 +7,13 @@ import {
 	DropdownMenuSeparator,
 	DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import { Tables } from '@/db_types'
 import { PLACEHOLDER_AVATAR } from '@/utils/constants'
 import { User } from '@/utils/types'
 import Image from 'next/image'
 import Link from 'next/link'
 import SignOutButton from './sign-out-button'
 
-export default async function UserMenu({ user }: { user: User }) {
+export default function UserMenu({ user }: { user: User }) {
 	return (
 		<DropdownMenu>
 			<DropdownMenuTrigger asChild>

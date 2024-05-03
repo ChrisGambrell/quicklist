@@ -1,4 +1,3 @@
-import { Tables } from '@/db_types'
 import { getErrorRedirect } from '@cgambrell/utils'
 import { redirect } from 'next/navigation'
 import { createClient } from './supabase/server'
@@ -27,16 +26,11 @@ export async function getAuth() {
 	return { auth: auth.user, user, subscription, supabase }
 }
 
-export async function getListingImages({ listingId }: { listingId: Tables<'listings'>['id'] }) {
-	const supabase = createClient()
+export async function getRemainingCredits() {
+	const { supabase } = await getAuth()
 
-	const { data: files } = await supabase.storage.from('listings').list(listingId)
-	if (!files) return null
+	const { data: purchasedCredits } = await supabase.rpc('get_total_credits')
+	const { data: usedCredits } = await supabase.rpc('get_used_credits')
 
-	const { data: images } = await supabase.storage.from('listings').createSignedUrls(
-		files.map((file) => `${listingId}/${file.name}`),
-		60 * 60 * 24
-	)
-
-	return images
+	return (purchasedCredits ?? 0) - (usedCredits ?? 0)
 }

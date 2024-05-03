@@ -1,5 +1,3 @@
-import { Tables } from '@/db_types'
-import { getListingImages } from '@/utils/_helpers'
 import { createClient } from '@/utils/supabase/server'
 import { Listing } from '@/utils/types'
 import { notFound } from 'next/navigation'
@@ -14,7 +12,12 @@ export default async function EditListingPage({ params: { listingId } }: { param
 		.eq('id', listingId)
 		.order('is_primary', { ascending: false, referencedTable: 'listing_images' })
 		.maybeSingle()
+	const { data: generations } = await supabase
+		.from('generations')
+		.select()
+		.eq('listing_id', listingId)
+		.order('created_at', { ascending: false })
 
 	if (!listing) return notFound()
-	return <EditListingClient listing={listing} />
+	return <EditListingClient listing={listing} generations={generations ?? []} />
 }

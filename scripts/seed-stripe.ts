@@ -1,10 +1,10 @@
 import { createClient } from '@supabase/supabase-js'
 import Stripe from 'stripe'
-import { Database, Tables } from '../db_types'
+import { Database, Tables, TablesInsert } from '../db_types'
 
 type OmitDates<T> = Omit<T, 'created_at' | 'updated_at'>
 type Product = OmitDates<Tables<'products'>>
-type ProductAmount = OmitDates<Tables<'product_amounts'>>
+type ProductAmount = TablesInsert<'product_amounts'>
 type Price = OmitDates<Tables<'prices'>>
 
 const TRIAL_PERIOD_DAYS = 0
@@ -12,9 +12,6 @@ const supabaseAdmin = createClient<Database>(process.env.NEXT_PUBLIC_SUPABASE_UR
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, { apiVersion: '2024-04-10' })
 
 const upsertProductRecord = async (product: Stripe.Product) => {
-	if (!product.metadata.listing_amount) throw new Error(`Product metadata listing amount is missing: ${product.id}`)
-	else if (!product.metadata.rule_amount) throw new Error(`Product metadata rule amount is missing: ${product.id}`)
-
 	const productData: Product = {
 		id: product.id,
 		active: product.active,
@@ -26,8 +23,7 @@ const upsertProductRecord = async (product: Stripe.Product) => {
 
 	const amountData: ProductAmount = {
 		id: product.id,
-		listing_amount: +product.metadata.listing_amount,
-		rule_amount: +product.metadata.rule_amount,
+		...(product.metadata.credits ? { credits: +product.metadata.credits } : {}),
 	}
 
 	const { error: upsertError } = await supabaseAdmin.from('products').upsert([productData])

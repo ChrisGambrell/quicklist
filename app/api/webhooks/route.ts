@@ -7,6 +7,7 @@ import {
 	manageSubscriptionStatusChange,
 	upsertPriceRecord,
 	upsertProductRecord,
+	upsertPurchaseRecord,
 } from '@/utils/supabase/admin'
 import Stripe from 'stripe'
 
@@ -70,6 +71,10 @@ export async function POST(req: Request) {
 					if (checkoutSession.mode === 'subscription') {
 						const subscriptionId = checkoutSession.subscription
 						await manageSubscriptionStatusChange(subscriptionId as string, checkoutSession.customer as string, true)
+					} else {
+						const lineItems = await stripe.checkout.sessions.listLineItems(checkoutSession.id)
+						if (lineItems.data.length === 0) throw new Error('No line items found.')
+						await upsertPurchaseRecord(lineItems.data[0], checkoutSession.customer as string)
 					}
 					break
 				default:

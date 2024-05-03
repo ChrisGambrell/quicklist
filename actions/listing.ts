@@ -5,6 +5,8 @@ import { parseFormData } from '@/utils/helpers'
 import { createClient } from '@/utils/supabase/server'
 import { Listing, ListingImage } from '@/utils/types'
 import { getErrorRedirect, getSuccessRedirect } from '@cgambrell/utils'
+import { FunctionsHttpError } from '@supabase/supabase-js'
+import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
 import { z } from 'zod'
 
@@ -51,8 +53,14 @@ export async function generateListingData({ listingId }: { listingId: Listing['i
 	const supabase = createClient()
 
 	const { data, error } = await supabase.functions.invoke('generate-listing-details', { body: { listingId } })
-	if (error || !data) redirect(getErrorRedirect(`/listings/${listingId}/edit`, error?.message ?? 'An unexpected error occurred'))
+	if (error || !data) {
+		let errorMessage = error?.message ?? 'An unexpected error occurred'
+		if (error instanceof FunctionsHttpError) errorMessage = (await error.context.json()).error
+		redirect(getErrorRedirect(`/listings/${listingId}/edit`, errorMessage))
+	}
 
+	revalidatePath('/', 'layout')
+	revalidatePath(`/listings/${listingId}/edit`, 'page')
 	redirect(getSuccessRedirect(`/listings/${listingId}/edit`, 'Listing data generated'))
 }
 

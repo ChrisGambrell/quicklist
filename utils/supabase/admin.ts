@@ -4,22 +4,19 @@ import { Database, TablesInsert } from '@/db_types'
 import { env } from '@/env'
 import { toDateTime } from '@/utils/helpers'
 import { stripe } from '@/utils/stripe/config'
-import { Price as TPrice, Product as TProduct, ProductAmount as TProductAmount } from '@/utils/types'
+import { Price as TPrice, Product as TProduct } from '@/utils/types'
 import { createClient } from '@supabase/supabase-js'
 import Stripe from 'stripe'
 
 type OmitDates<T> = Omit<T, 'created_at' | 'updated_at'>
 type Product = OmitDates<TProduct>
-type ProductAmount = OmitDates<TProductAmount>
+type ProductAmount = TablesInsert<'product_amounts'>
 type Price = OmitDates<TPrice>
 
 const TRIAL_PERIOD_DAYS = 0
 const supabaseAdmin = createClient<Database>(env.NEXT_PUBLIC_SUPABASE_URL, env.SUPABASE_SERVICE_ROLE_KEY)
 
 const upsertProductRecord = async (product: Stripe.Product) => {
-	if (!product.metadata.listing_amount) throw new Error(`Product metadata listing amount is missing: ${product.id}`)
-	else if (!product.metadata.rule_amount) throw new Error(`Product metadata rule amount is missing: ${product.id}`)
-
 	const productData: Product = {
 		id: product.id,
 		active: product.active,
@@ -31,8 +28,7 @@ const upsertProductRecord = async (product: Stripe.Product) => {
 
 	const amountData: ProductAmount = {
 		id: product.id,
-		listing_amount: +product.metadata.listing_amount,
-		rule_amount: +product.metadata.rule_amount,
+		...(product.metadata.credits ? { credits: +product.metadata.credits } : {}),
 	}
 
 	const { error: upsertError } = await supabaseAdmin.from('products').upsert([productData])
@@ -220,6 +216,27 @@ const manageSubscriptionStatusChange = async (subscriptionId: string, customerId
 		await copyBillingDetailsToCustomer(uuid, subscription.default_payment_method as Stripe.PaymentMethod)
 }
 
+const upsertPurchaseRecord = async (lineItem: Stripe.LineItem, customerId: string) => {
+	if (!lineItem.price) throw new Error(`Line item price is missing: ${lineItem.id}`)
+
+	const { data: customerData, error: noCustomerError } = await supabaseAdmin
+		.from('customers')
+		.select('id')
+		.eq('stripe_customer_id', customerId)
+		.single()
+	if (noCustomerError) throw new Error(`Customer lookup failed: ${noCustomerError.message}`)
+
+	const { id: uuid } = customerData!
+	const purchaseData: TablesInsert<'purchases'> = {
+		price_id: lineItem.price?.id,
+		user_id: uuid,
+	}
+
+	const { error: upsertError } = await supabaseAdmin.from('purchases').upsert([purchaseData])
+	if (upsertError) throw new Error(`Purchase insert/update failed: ${upsertError.message}`)
+	console.log(`Inserted/updated purchase for user [${uuid}]`)
+}
+
 export {
 	createOrRetrieveCustomer,
 	deletePriceRecord,
@@ -227,4 +244,5 @@ export {
 	manageSubscriptionStatusChange,
 	upsertPriceRecord,
 	upsertProductRecord,
+	upsertPurchaseRecord,
 }

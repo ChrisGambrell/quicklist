@@ -9,12 +9,11 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { Textarea } from '@/components/ui/textarea'
-import { Tables } from '@/db_types'
-import { cn } from '@/lib/utils'
 import { PLACEHOLDER_IMAGE } from '@/utils/constants'
-import { getImageUrl } from '@/utils/helpers'
-import { ListingWithImages, ListingImage as TListingImage } from '@/utils/types'
+import { getImageUrl, requiredCredits } from '@/utils/helpers'
+import { Generation, ListingWithImages, ListingImage as TListingImage } from '@/utils/types'
 import Image from 'next/image'
 import { useFormState } from 'react-dom'
 import UploadImages from './upload-images'
@@ -25,7 +24,7 @@ const placeholder = {
 	description: 'Enhance your wardrobe with this timeless navy and white checkered long sleeve shirt...',
 }
 
-export default function EditListingClient({ listing }: { listing: ListingWithImages }) {
+export default function EditListingClient({ generations, listing }: { generations: Generation[]; listing: ListingWithImages }) {
 	const [state, action] = useFormState(updateListing.bind(null, { listingId: listing.id }), null)
 	const useGenerateData = generateListingData.bind(null, { listingId: listing.id })
 	const useDeleteListing = deleteListing.bind(null, { listingId: listing.id })
@@ -86,6 +85,32 @@ export default function EditListingClient({ listing }: { listing: ListingWithIma
 							</div>
 						</CardContent>
 					</Card>
+
+					<Card>
+						<CardHeader>
+							<div className='flex items-start justify-between'>
+								<CardTitle>Generations</CardTitle>
+							</div>
+						</CardHeader>
+						<CardContent>
+							<Table>
+								<TableHeader>
+									<TableRow>
+										<TableHead>Created at</TableHead>
+										<TableHead>Credits used</TableHead>
+									</TableRow>
+								</TableHeader>
+								<TableBody>
+									{generations.map((generation) => (
+										<TableRow key={generation.id}>
+											<TableCell>{new Date(generation.created_at).toDateString()}</TableCell>
+											<TableCell>{generation.credits}</TableCell>
+										</TableRow>
+									))}
+								</TableBody>
+							</Table>
+						</CardContent>
+					</Card>
 				</div>
 				<div className='grid auto-rows-max items-start gap-4'>
 					<Card className='overflow-hidden' x-chunk='dashboard-07-chunk-4'>
@@ -107,11 +132,9 @@ export default function EditListingClient({ listing }: { listing: ListingWithIma
 									/>
 								)}
 								<div className='grid grid-cols-3 gap-2'>
-									{/* TODO: Don't need to check if exists */}
-									{listing.images &&
-										listing.images
-											.slice(1)
-											.map((image) => <ListingImage key={image.id} image={image} variant='secondary' />)}
+									{listing.images.slice(1).map((image) => (
+										<ListingImage key={image.id} image={image} variant='secondary' />
+									))}
 									<UploadImages listingId={listing.id} />
 								</div>
 							</div>
@@ -131,6 +154,11 @@ export default function EditListingClient({ listing }: { listing: ListingWithIma
 								size='sm'
 								variant='secondary'>
 								Generate
+								{listing.images.length > 0
+									? ` (${requiredCredits(listing.images.length)} credit${
+											requiredCredits(listing.images.length) > 1 ? 's' : ''
+									  })`
+									: ''}
 							</ActionButton>
 						</CardContent>
 					</Card>

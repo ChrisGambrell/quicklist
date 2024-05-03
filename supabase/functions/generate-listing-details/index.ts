@@ -7,36 +7,44 @@
 import { createClient } from 'npm:@supabase/supabase-js'
 import OpenAI from 'npm:openai'
 
-const supabase = createClient(Deno.env.get('SUPABASE_URL')!, Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!)
+// TODO: Need to have .env be pointed to .env.local so that it can use NGROK_URL and OPENAI_KEY
+export const getImageUrl = (path: ListingImage['image_path']) =>
+	`${Deno.env
+		.get('SUPABASE_URL')
+		.replace('http://kong:8000', 'https://043c-174-102-5-87.ngrok-free.app')}/storage/v1/object/public/listing_images/${path}`
+
+export const requiredCredits = (num: number) => {
+	if (num === 0) return 0
+	if (num < 3) return 1
+	return Math.round(num / 3)
+}
 
 Deno.serve(async (req) => {
 	const { listingId } = await req.json()
 	if (!listingId) return Response.json({ error: 'No listingId provided' }, { status: 400 })
 
-	const { data: listing, error } = await supabase.from('listings').select().eq('id', listingId).maybeSingle()
+	const supabase = createClient(Deno.env.get('SUPABASE_URL')!, Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!, {
+		global: { headers: { Authorization: req.headers.get('Authorization')! } },
+	})
+
+	const { data: listing, error } = await supabase.from('listings').select('*, images:listing_images(*)').eq('id', listingId).maybeSingle()
 	if (error || !listing) return Response.json({ error: error?.message || 'No listing found' }, { status: error ? 500 : 404 })
+	if (!listing.images) return Response.json({ error: 'No images found' }, { status: 404 })
 
-		// TODO: Can just get images from listing instead of storage
-	const { data: files } = await supabase.storage.from('listing_images').list(listingId)
-	if (!files) return Response.json({ error: 'No images found' }, { status: 404 })
-
-	const { data: images } = await supabase.storage.from('listing_images').createSignedUrls(
-		files.map((file) => `${listingId}/${file.name}`),
-		60 * 60 * 24
-	)
-	if (!images || images.length === 0) return Response.json({ error: 'No images found' }, { status: 404 })
+	const credits_to_use = requiredCredits(listing.images.length)
+	const { error: canGenerateError } = await supabase.rpc('can_generate', { credits_to_use })
+	if (canGenerateError) return Response.json({ error: canGenerateError.message }, { status: 500 })
 
 	const { data: rules, error: rulesError } = await supabase.from('rules').select().eq('user_id', listing.user_id)
 	if (rulesError) return Response.json({ error: rulesError.message }, { status: 500 })
 	const rulesText = rules.map(({ rule }) => rule).join('; ')
 
 	const openai = new OpenAI({ apiKey: Deno.env.get('OPENAI_KEY')! })
-
-	// TODO: Need to have .env be pointed to .env.local so that it can use NGROK_URL and OPENAI_KEY
-	const urls = images.map((image) => image.signedUrl.replace('http://kong:8000', 'https://043c-174-102-5-87.ngrok-free.app'))
-	const messages = urls.map((url) => ({ type: 'image_url', image_url: { url } } as OpenAI.Chat.Completions.ChatCompletionContentPart))
-
-	const format = `{"title": "[title]", "description": "[description]", "price": [price]}`
+	const messages = listing.images.map(
+		(image) =>
+			({ type: 'image_url', image_url: { url: getImageUrl(image.image_path) } } as OpenAI.Chat.Completions.ChatCompletionContentPart)
+	)
+	const format = `{"title": "[title:string]", "description": "[description:string]", "price": [price:float]}`
 
 	const res = await openai.chat.completions.create({
 		model: 'gpt-4-vision-preview',
@@ -46,7 +54,7 @@ Deno.serve(async (req) => {
 				content: [
 					{
 						type: 'text',
-						text: `Describe this item for an eBay listing in the following format: \'${format}\'" with these rules: '${rulesText}'`,
+						text: `Describe this item for an online marketplace listing in the following format: \'${format}\'" with these rules: '${rulesText}'`,
 					},
 					...messages,
 				],
@@ -54,15 +62,20 @@ Deno.serve(async (req) => {
 		],
 	})
 
-	// BUG: Always returns 2xx error code even when there is an error
-	// BUG: Only allow 20MB or below for uploaded images
-	// BUG: Clicked image to expand to see info, but deleted image
+	// FIXME: Only allow 20MB or below for uploaded images
+	// TODO: Clicked image to expand to see info, but deleted image
 
 	if (res.choices.length === 0 || !res.choices[0].message.content)
 		return Response.json({ error: 'No response from OpenAI' }, { status: 500 })
 
+	console.log(`{${res.choices[0].message.content.replace(/.*{/s, '').replace(/}.*/s, '').trim()}}`)
 	const resJson = JSON.parse(`{${res.choices[0].message.content.replace(/.*{/s, '').replace(/}.*/s, '').trim()}}`)
 	const { title, description, price } = resJson
+
+	const { error: insertGenerationError } = await supabase
+		.from('generations')
+		.insert({ listing_id: listingId, user_id: listing.user_id, credits: credits_to_use, data: resJson })
+	if (insertGenerationError) return Response.json({ error: insertGenerationError.message }, { status: 500 })
 
 	const { data: updatedListing, error: updateError } = await supabase
 		.from('listings')

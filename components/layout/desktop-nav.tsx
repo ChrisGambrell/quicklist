@@ -1,13 +1,14 @@
 import { User } from '@/utils/types'
-import { HomeIcon, Package2Icon, ScaleIcon, SettingsIcon, UsersIcon } from 'lucide-react'
+import { HistoryIcon, MessageCircleIcon, Package2Icon, ScaleIcon, SettingsIcon, UsersIcon } from 'lucide-react'
 import Link from 'next/link'
 import NavLink from './nav-link'
 import UserMenu from './user-menu'
 
 export const links = [
-	{ href: '/listings', icon: <HomeIcon className='w-5 h-5' />, label: 'Dashboard' },
+	{ href: '/', exact: true, icon: <MessageCircleIcon className='w-5 h-5' />, label: 'Chat' },
+	{ href: '/listings', icon: <HistoryIcon className='w-5 h-5' />, label: 'Listings' },
 	{ href: '/rules', icon: <ScaleIcon className='w-5 h-5' />, label: 'Rules' },
-	{ admin: true, href: '/users', icon: <UsersIcon className='w-5 h-5' />, label: 'Users' },
+	{ href: '/users', admin: true, icon: <UsersIcon className='w-5 h-5' />, label: 'Users' },
 	{ href: '/settings', icon: <SettingsIcon className='w-5 h-5' />, label: 'Settings' },
 ]
 

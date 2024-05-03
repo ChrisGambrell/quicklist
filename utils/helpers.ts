@@ -5,6 +5,12 @@ import { ListingImage } from './types'
 export const getImageUrl = (path: ListingImage['image_path']) =>
 	`${env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/listing_images/${path}`
 
+export function requiredCredits(num: number) {
+	if (num === 0) return 0
+	if (num < 3) return 1
+	return Math.round(num / 3)
+}
+
 export const toDateTime = (secs: number) => {
 	var t = new Date(+0)
 	t.setSeconds(secs)

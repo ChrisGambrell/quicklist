@@ -38,6 +38,51 @@ export type Database = {
           },
         ]
       }
+      generations: {
+        Row: {
+          created_at: string
+          credits: number
+          data: Json | null
+          id: string
+          listing_id: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          credits: number
+          data?: Json | null
+          id?: string
+          listing_id: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          credits?: number
+          data?: Json | null
+          id?: string
+          listing_id?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "generations_listing_id_fkey"
+            columns: ["listing_id"]
+            isOneToOne: false
+            referencedRelation: "listings"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "generations_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       listing_images: {
         Row: {
           created_at: string
@@ -164,6 +209,7 @@ export type Database = {
       product_amounts: {
         Row: {
           created_at: string
+          credits: number
           id: string
           listing_amount: number
           rule_amount: number
@@ -171,13 +217,15 @@ export type Database = {
         }
         Insert: {
           created_at?: string
+          credits?: number
           id: string
-          listing_amount: number
-          rule_amount: number
+          listing_amount?: number
+          rule_amount?: number
           updated_at?: string
         }
         Update: {
           created_at?: string
+          credits?: number
           id?: string
           listing_amount?: number
           rule_amount?: number
@@ -225,6 +273,45 @@ export type Database = {
           updated_at?: string
         }
         Relationships: []
+      }
+      purchases: {
+        Row: {
+          created_at: string
+          id: string
+          price_id: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          price_id: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          price_id?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "purchases_price_id_fkey"
+            columns: ["price_id"]
+            isOneToOne: false
+            referencedRelation: "prices"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "purchases_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       rules: {
         Row: {
@@ -382,7 +469,26 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      can_generate: {
+        Args: {
+          credits_to_use: number
+        }
+        Returns: boolean
+      }
+      get_total_credits: {
+        Args: Record<PropertyKey, never>
+        Returns: number
+      }
+      get_used_credits: {
+        Args: Record<PropertyKey, never>
+        Returns: number
+      }
+      is_admin: {
+        Args: {
+          _user_id: string
+        }
+        Returns: boolean
+      }
     }
     Enums: {
       pricing_plan_interval: "day" | "week" | "month" | "year"
