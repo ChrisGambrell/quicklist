@@ -9,8 +9,7 @@ export default async function UsersPage() {
 	const supabase = createClient()
 
 	const { data: users } = await supabase.from('users').select().order('created_at', { ascending: false })
-	const { data: listings } = await supabase.from('listings').select()
-	const { data: rules } = await supabase.from('rules').select()
+	const { data: generations } = await supabase.from('generations').select()
 	const { data: subscriptions } = await supabase
 		.from('subscriptions')
 		.select('*, price:prices(*, product:products(*, amount:product_amounts(*)))')
@@ -32,9 +31,9 @@ export default async function UsersPage() {
 									<span className='sr-only'>Avatar</span>
 								</TableHead>
 								<TableHead>Name</TableHead>
-								<TableHead>Plan</TableHead>
-								<TableHead>Listings</TableHead>
-								<TableHead className='hidden md:table-cell'>Rules</TableHead>
+								{/* TODO: Show purchased? */}
+								<TableHead className='hidden md:table-cell'>Generations</TableHead>
+								<TableHead>Credits Used</TableHead>
 								<TableHead className='hidden lg:table-cell'>Email address</TableHead>
 								<TableHead className='hidden md:table-cell'>Created at</TableHead>
 							</TableRow>
@@ -54,12 +53,13 @@ export default async function UsersPage() {
 									<TableCell className={cn(user.is_admin ? 'font-black' : 'font-medium')}>
 										{user.full_name ?? '-'}
 									</TableCell>
-									<TableCell>
-										{subscriptions?.find((s) => s.user_id === user.id)?.price?.product?.name ?? 'Free'}
-									</TableCell>
-									<TableCell>{listings?.filter((l) => l.user_id === user.id).length ?? '-'}</TableCell>
 									<TableCell className='hidden md:table-cell'>
-										{rules?.filter((r) => r.user_id === user.id).length ?? '-'}
+										{generations?.filter((generation) => generation.user_id === user.id).length ?? '-'}
+									</TableCell>
+									<TableCell>
+										{generations
+											?.filter((generation) => generation.user_id === user.id)
+											.reduce((prev, curr) => prev + curr.credits, 0) ?? '-'}
 									</TableCell>
 									<TableCell className='hidden lg:table-cell'>{user.email}</TableCell>
 									<TableCell className='hidden md:table-cell'>{new Date(user.created_at).toDateString()}</TableCell>
