@@ -11,8 +11,8 @@ create table purchases (
 );
 
 create trigger on_purchase_updated
-    before update on public.purchases
-    for each row execute procedure public.set_updated_at();
+    before update on public.purchases for each row
+    execute procedure public.set_updated_at();
 
 alter table purchases enable row level security;
     create policy "Can view own; Admin all" on purchases for select using (auth.uid() = user_id or is_admin(auth.uid()));
@@ -28,8 +28,8 @@ create table generations (
 );
 
 create trigger on_generation_updated
-    before update on public.generations
-    for each row execute procedure public.set_updated_at();
+    before update on public.generations for each row
+    execute procedure public.set_updated_at();
 
 alter table generations enable row level security;
     create policy "Can view own; Admin all" on generations for select using (auth.uid() = user_id or is_admin(auth.uid()));

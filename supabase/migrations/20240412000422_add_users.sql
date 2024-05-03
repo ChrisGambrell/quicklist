@@ -8,8 +8,8 @@ create table public.users (
 );
 
 create trigger on_user_updated
-    before update on public.users
-    for each row execute procedure public.set_updated_at();
+    before update on public.users for each row
+    execute procedure public.set_updated_at();
 
 create function public.handle_new_user() 
     returns trigger as $$
@@ -21,5 +21,5 @@ create function public.handle_new_user()
     $$ language plpgsql security definer;
 
 create trigger on_auth_user_created
-    after insert on auth.users
-    for each row execute procedure public.handle_new_user();
+    after insert on auth.users for each row
+    execute procedure public.handle_new_user();

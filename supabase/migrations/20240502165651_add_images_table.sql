@@ -31,7 +31,6 @@ create function public.handle_new_listing_image()
     end;
     $$ language plpgsql security definer;
 
--- //TODO: Format triggers to look like this
 create trigger on_storage_listing_image_created
     after insert on storage.objects for each row 
     when (new.bucket_id = 'listing_images')

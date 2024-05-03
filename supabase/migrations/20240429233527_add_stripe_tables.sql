@@ -9,8 +9,8 @@ create table public.customers (
 );
 
 create trigger on_customer_updated
-    before update on public.customers
-    for each row execute procedure public.set_updated_at();
+    before update on public.customers for each row
+    execute procedure public.set_updated_at();
 
 alter table public.customers enable row level security;
 
@@ -26,8 +26,8 @@ create table public.products (
 );
 
 create trigger on_product_updated
-    before update on public.products
-    for each row execute procedure public.set_updated_at();
+    before update on public.products for each row
+    execute procedure public.set_updated_at();
 
 alter table public.products enable row level security;
     create policy "Allow public read-only access." on public.products for select using (true);
@@ -49,8 +49,8 @@ create table public.prices (
 );
 
 create trigger on_price_updated
-    before update on public.prices
-    for each row execute procedure public.set_updated_at();
+    before update on public.prices for each row
+    execute procedure public.set_updated_at();
 
 alter table public.prices enable row level security;
     create policy "Allow public read-only access." on public.prices for select using (true);
@@ -77,8 +77,8 @@ create table public.subscriptions (
 );
 
 create trigger on_subscription_updated
-    before update on public.subscriptions
-    for each row execute procedure public.set_updated_at();
+    before update on public.subscriptions for each row
+    execute procedure public.set_updated_at();
 
 alter table public.subscriptions enable row level security;
     create policy "Can only view own subs data." on public.subscriptions for select using (auth.uid() = user_id);

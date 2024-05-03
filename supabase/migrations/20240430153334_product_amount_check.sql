@@ -49,8 +49,8 @@ create or replace function public.handle_new_listing()
     $$ language plpgsql security definer;
 
 create trigger on_insert_listing
-    before insert on public.listings
-    for each row execute procedure public.handle_new_listing();
+    before insert on public.listings for each row
+    execute procedure public.handle_new_listing();
 
 create or replace function public.handle_new_rule()
     returns trigger as $$
@@ -103,5 +103,5 @@ create or replace function public.handle_new_rule()
     $$ language plpgsql security definer;
 
 create trigger on_insert_rule
-    before insert on public.rules
-    for each row execute procedure public.handle_new_rule();
+    before insert on public.rules for each row
+    execute procedure public.handle_new_rule();
