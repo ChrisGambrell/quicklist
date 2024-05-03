@@ -11,7 +11,7 @@ import OpenAI from 'npm:openai'
 export const getImageUrl = (path: ListingImage['image_path']) =>
 	`${Deno.env
 		.get('SUPABASE_URL')
-		.replace('http://kong:8000', 'https://043c-174-102-5-87.ngrok-free.app')}/storage/v1/object/public/listing_images/${path}`
+		.replace('http://kong:8000', Deno.env.get('NGROK_URL') ?? '')}/storage/v1/object/public/listing_images/${path}`
 
 export const requiredCredits = (num: number) => {
 	if (num === 0) return 0
