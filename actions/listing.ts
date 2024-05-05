@@ -63,7 +63,7 @@ export async function generateListingData({ listingId }: { listingId: Listing['i
 		redirect(getErrorRedirect(`/listings/${listingId}/edit`, errorMessage))
 	}
 
-	revalidatePath(`/listings/${listingId}/edit`, 'layout')
+	revalidatePath(`/listings/${listingId}/edit`, 'page')
 	redirect(getSuccessRedirect(`/listings/${listingId}/edit`, 'Listing data generated'))
 }
 
