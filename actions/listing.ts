@@ -4,20 +4,11 @@ import { getAuth } from '@/utils/_helpers'
 import { parseFormData } from '@/utils/helpers'
 import { createClient } from '@/utils/supabase/server'
 import { Listing, ListingImage } from '@/utils/types'
+import { updateListingSchema } from '@/validators/listing'
 import { getErrorRedirect, getSuccessRedirect } from '@cgambrell/utils'
 import { FunctionsHttpError } from '@supabase/supabase-js'
 import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
-import { z } from 'zod'
-
-const updateListingSchema = z.object({
-	title: z.string().transform((arg) => (!arg.trim() ? null : arg)),
-	description: z.string().transform((arg) => (!arg.trim() ? null : arg)),
-	price: z
-		.string()
-		.transform((arg) => (!arg.trim() ? null : arg))
-		.pipe(z.coerce.number().nullable()),
-})
 
 export async function createListing() {
 	const { auth, supabase } = await getAuth()
@@ -29,7 +20,7 @@ export async function createListing() {
 	redirect(`/listings/${data.id}/edit`)
 }
 
-export async function updateListing({ listingId }: { listingId: Listing['id'] }, _prevState: any, formData: FormData) {
+export async function updateListing({ listingId }: { listingId: Listing['id'] }, formData: FormData) {
 	const { data, errors } = parseFormData(formData, updateListingSchema)
 	if (errors) return { errors }
 
