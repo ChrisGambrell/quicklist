@@ -7,10 +7,7 @@
 import { createClient } from 'npm:@supabase/supabase-js'
 import OpenAI from 'npm:openai'
 
-export const getImageUrl = (path: ListingImage['image_path']) =>
-	`${Deno.env
-		.get('SUPABASE_URL')
-		.replace('http://kong:8000', Deno.env.get('NGROK_URL') ?? '')}/storage/v1/object/public/listing_images/${path}`
+export const getImageUrl = (path: ListingImage['image_path']) => path.replace('http://kong:8000', Deno.env.get('NGROK_URL') ?? '')
 
 export const requiredCredits = (num: number) => {
 	if (num === 0) return 0
@@ -28,9 +25,14 @@ Deno.serve(async (req) => {
 
 	const { data: listing, error } = await supabase.from('listings').select('*, images:listing_images(*)').eq('id', listingId).maybeSingle()
 	if (error || !listing) return Response.json({ error: error?.message || 'No listing found' }, { status: error ? 500 : 404 })
-	if (!listing.images) return Response.json({ error: 'No images found' }, { status: 404 })
 
-	const credits_to_use = requiredCredits(listing.images.length)
+	const { data: images } = await supabase.storage.from('listing_images').createSignedUrls(
+		listing.images.map(({ image_path }) => image_path),
+		60 * 60
+	)
+	if (!images || images.length === 0) return Response.json({ error: 'No images found' }, { status: 404 })
+
+	const credits_to_use = requiredCredits(images.length)
 	const { error: canGenerateError } = await supabase.rpc('can_generate', { credits_to_use })
 	if (canGenerateError) return Response.json({ error: canGenerateError.message }, { status: 500 })
 
@@ -39,9 +41,9 @@ Deno.serve(async (req) => {
 	const rulesText = rules.map(({ rule }) => rule).join('; ')
 
 	const openai = new OpenAI({ apiKey: Deno.env.get('OPENAI_KEY')! })
-	const messages = listing.images.map(
-		(image) =>
-			({ type: 'image_url', image_url: { url: getImageUrl(image.image_path) } } as OpenAI.Chat.Completions.ChatCompletionContentPart)
+	const messages = images.map(
+		({ signedUrl }) =>
+			({ type: 'image_url', image_url: { url: getImageUrl(signedUrl) } } as OpenAI.Chat.Completions.ChatCompletionContentPart)
 	)
 	const format = `{"title": "[title:string]", "description": "[description:string]", "price": [price:float]}`
 

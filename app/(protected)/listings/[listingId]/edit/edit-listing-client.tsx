@@ -13,7 +13,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { Textarea } from '@/components/ui/textarea'
 import { PLACEHOLDER_IMAGE } from '@/utils/constants'
 import { getImageUrl, requiredCredits } from '@/utils/helpers'
-import { Generation, ListingWithGenerationsAndImages, ListingImage as TListingImage } from '@/utils/types'
+import { ListingWithGenerationsAndImages, ListingImage as TListingImage } from '@/utils/types'
 import Image from 'next/image'
 import { useFormState } from 'react-dom'
 import UploadImages from './upload-images'
