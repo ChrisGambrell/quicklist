@@ -55,7 +55,7 @@ Deno.serve(async (req) => {
 				content: [
 					{
 						type: 'text',
-						text: `[no prose]\n[returns json]\nDescribe this item for an online marketplace listing in the following format: \'${format}\'" with these rules: '${rulesText}'`,
+						text: `[no prose]\n[output only json]\nDescribe this item for an online marketplace listing in the following format: \'${format}\'" with these rules: '${rulesText}'`,
 					},
 					...messages,
 				],

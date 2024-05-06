@@ -1,6 +1,8 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import ChatImageUpload from './chat-image-upload'
 
+export const maxDuration = 300
+
 export default async function RootPage() {
 	return (
 		<Card className='w-full mx-auto max-w-sm sm:my-20'>

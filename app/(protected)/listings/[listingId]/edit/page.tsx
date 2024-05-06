@@ -3,6 +3,8 @@ import { Listing } from '@/utils/types'
 import { notFound } from 'next/navigation'
 import EditListingClient from './edit-listing-client'
 
+export const maxDuration = 300
+
 export default async function EditListingPage({ params: { listingId } }: { params: { listingId: Listing['id'] } }) {
 	const supabase = createClient()
 	const { data: listing } = await supabase

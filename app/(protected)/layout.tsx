@@ -4,8 +4,6 @@ import PricingDropdown from '@/components/layout/pricing-dropdown'
 import { getAuth, getRemainingCredits } from '@/utils/_helpers'
 import { ReactNode } from 'react'
 
-export const maxDuration = 300
-
 export default async function ProtectedLayout({ children }: { children: ReactNode }) {
 	const { user } = await getAuth()
 	const remainingCredits = await getRemainingCredits()
