@@ -1,5 +1,11 @@
+import { Metadata } from 'next'
 import { ReactNode } from 'react'
 import NavLink from './nav-link'
+
+export const metadata: Metadata = {
+	title: 'QuickList - Settings',
+	description: 'User settings and profile information',
+}
 
 export default function SettingsLayout({ children }: { children: ReactNode }) {
 	return (

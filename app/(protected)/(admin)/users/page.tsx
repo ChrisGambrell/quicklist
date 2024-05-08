@@ -3,7 +3,13 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { cn } from '@/lib/utils'
 import { PLACEHOLDER_AVATAR } from '@/utils/constants'
 import { createClient } from '@/utils/supabase/server'
+import { Metadata } from 'next'
 import Image from 'next/image'
+
+export const metadata: Metadata = {
+	title: 'QuickList - Users',
+	description: 'List of users and their purchases and credits',
+}
 
 export default async function UsersPage() {
 	const supabase = createClient()

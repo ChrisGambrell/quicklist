@@ -5,6 +5,12 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Table, TableBody, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { getAuth } from '@/utils/_helpers'
 import { PlusCircleIcon } from 'lucide-react'
+import { Metadata } from 'next'
+
+export const metadata: Metadata = {
+	title: 'QuickList - Listings',
+	description: 'List of listings and their images and generations',
+}
 
 export default async function ListingsPage() {
 	const { user, supabase } = await getAuth()

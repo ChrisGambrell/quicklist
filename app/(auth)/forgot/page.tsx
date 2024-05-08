@@ -9,7 +9,7 @@ import { Label } from '@/components/ui/label'
 import Link from 'next/link'
 import { useFormState } from 'react-dom'
 
-export default function ForgotPasswordPage() {
+export default function ForgotPasswordCPage() {
 	const [state, action] = useFormState(sendPasswordReset, null)
 
 	return (

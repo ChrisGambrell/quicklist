@@ -3,6 +3,12 @@ import Rule from '@/app/(protected)/rules/rule'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Table, TableBody, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { getAuth } from '@/utils/_helpers'
+import { Metadata } from 'next'
+
+export const metadata: Metadata = {
+	title: 'QuickList - Rules',
+	description: 'List of rules',
+}
 
 export default async function RulesPage() {
 	const { user, supabase } = await getAuth()

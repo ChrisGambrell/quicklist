@@ -1,7 +1,13 @@
 import { createClient } from '@/utils/supabase/server'
 import { Listing } from '@/utils/types'
+import { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import EditListingClient from './edit-listing-client'
+
+export const metadata: Metadata = {
+	title: 'QuickList - Edit Listing',
+	description: 'Edit a listing and its images and generations',
+}
 
 export const maxDuration = 300
 
