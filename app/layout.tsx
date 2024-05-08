@@ -7,8 +7,8 @@ import './globals.css'
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
-	title: 'eBay Lister',
-	description: 'A tool to help generate eBay listings',
+	title: 'QuickList',
+	description: 'A tool to help generate e-commerce listings quickly',
 }
 
 export default function RootLayout({
