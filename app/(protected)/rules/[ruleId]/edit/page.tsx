@@ -20,7 +20,7 @@ export default async function EditRulePage({ params: { ruleId } }: { params: { r
 		<div className='mx-auto grid max-w-[59rem] flex-1 auto-rows-max gap-4 w-full'>
 			<div className='flex items-center gap-4 overflow-hidden'>
 				<div className='flex-shrink-0'>
-					<BackButton />
+					<BackButton href='/rules' />
 				</div>
 				<h1 className='flex-1 whitespace-nowrap text-xl font-semibold tracking-tight truncate'>{rule.rule}</h1>
 			</div>

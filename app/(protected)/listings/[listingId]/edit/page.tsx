@@ -32,7 +32,7 @@ export default async function EditListingPage({ params: { listingId } }: { param
 		<div className='mx-auto grid max-w-[59rem] flex-1 auto-rows-max gap-4 w-full'>
 			<div className='flex items-center gap-4 overflow-hidden'>
 				<div className='flex-shrink-0'>
-					<BackButton />
+					<BackButton href='/listings' />
 				</div>
 				<h1 className='flex-1 whitespace-nowrap text-xl font-semibold tracking-tight truncate'>{listing.title}</h1>
 			</div>
