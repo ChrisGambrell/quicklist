@@ -19,15 +19,17 @@ export default async function UsersPage() {
 		.returns<UserWithGenerationsAndPurchases[]>()
 
 	return (
-		<DataTable
-			columns={columns}
-			data={users ?? []}
-			defaultState={{
-				sorting: [
-					{ id: 'purchased', desc: true },
-					{ id: 'used', desc: true },
-				],
-			}}
-		/>
+		<div className='container'>
+			<DataTable
+				columns={columns}
+				data={users ?? []}
+				defaultState={{
+					sorting: [
+						{ id: 'purchased', desc: true },
+						{ id: 'used', desc: true },
+					],
+				}}
+			/>
+		</div>
 	)
 }
