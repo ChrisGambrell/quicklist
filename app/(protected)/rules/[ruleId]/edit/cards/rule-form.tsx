@@ -1,0 +1,43 @@
+'use client'
+
+import { updateRule } from '@/actions/rule'
+import ActionButton from '@/components/action-button'
+import { FormError } from '@/components/form-error'
+import { Button } from '@/components/ui/button'
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
+import { Label } from '@/components/ui/label'
+import { Textarea } from '@/components/ui/textarea'
+import { Rule } from '@/utils/types'
+import { useFormState } from 'react-dom'
+
+export default function RuleForm({ rule }: { rule: Rule }) {
+	const [state, action] = useFormState(updateRule.bind(null, { ruleId: rule.id }), null)
+
+	return (
+		<form action={action}>
+			<Card>
+				<CardHeader>
+					<CardTitle>Rule Details</CardTitle>
+					<CardDescription>A rule is followed when generating listing details automatically.</CardDescription>
+				</CardHeader>
+				<CardContent>
+					<div className='grid gap-6'>
+						<div className='grid gap-3'>
+							<Label htmlFor='rule'>Rule</Label>
+							<Textarea id='rule' name='rule' defaultValue={rule.rule} className='min-h-32' />
+							<FormError value={state?.errors.rule} />
+						</div>
+					</div>
+				</CardContent>
+				<CardFooter>
+					<div className='ml-auto flex gap-2'>
+						<Button variant='outline' size='sm' type='reset'>
+							Discard
+						</Button>
+						<ActionButton size='sm'>Save Listing</ActionButton>
+					</div>
+				</CardFooter>
+			</Card>
+		</form>
+	)
+}
