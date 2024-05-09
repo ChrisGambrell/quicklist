@@ -1,51 +1,28 @@
-'use client'
+import feature from '@/assets/feature.png'
+import NoAuthLayout from '@/components/noauth-layout'
+import Image from 'next/image'
+import PasswordSignUp from './forms/password-sign-up'
 
-import { signUp } from '@/actions/auth'
-import ActionButton from '@/components/action-button'
-import { FormError } from '@/components/form-error'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
-import Link from 'next/link'
-import { useFormState } from 'react-dom'
-
-export default function SignUpPage() {
-	const [state, action] = useFormState(signUp, null)
-
+export default function Component() {
 	return (
-		<Card className='mx-auto max-w-sm border-0 shadow-none sm:border sm:shadow-sm sm:my-20'>
-			<CardHeader>
-				<CardTitle className='text-2xl'>Sign Up</CardTitle>
-				<CardDescription>Enter your information to sign up</CardDescription>
-			</CardHeader>
-			<CardContent>
-				<form className='grid gap-4' action={action}>
-					<div className='grid gap-2'>
-						<Label htmlFor='name'>Name</Label>
-						<Input id='name' name='name' placeholder='Your name' />
-						<FormError value={state?.errors.name} />
+		<NoAuthLayout action={{ href: '/sign-in', label: 'Sign In' }}>
+			<div className='mx-auto grid w-full max-w-[900px] grid-cols-1 items-center gap-12 rounded-xl bg-white p-8 shadow-lg dark:bg-gray-950 md:grid-cols-2 border'>
+				<div className='space-y-4'>
+					<div className='space-y-2'>
+						<h1 className='text-3xl font-bold'>Sign Up</h1>
+						<p className='text-gray-500 dark:text-gray-400'>Enter your information to create an account.</p>
 					</div>
-					<div className='grid gap-2'>
-						<Label htmlFor='email'>Email</Label>
-						<Input id='email' name='email' type='email' placeholder='me@example.com' />
-						<FormError value={state?.errors.email} />
-					</div>
-					<div className='grid gap-2'>
-						<Label htmlFor='password'>Password</Label>
-						<Input id='password' name='password' type='password' />
-						<FormError value={state?.errors.password} />
-					</div>
-					<ActionButton type='submit' className='w-full'>
-						Sign up
-					</ActionButton>
-				</form>
-				<div className='mt-4 text-center text-sm'>
-					Already have an account?{' '}
-					<Link href='/sign-in' className='underline'>
-						Sign in
-					</Link>
+					<PasswordSignUp />
 				</div>
-			</CardContent>
-		</Card>
+
+				<Image
+					src={feature}
+					alt='Authentication'
+					className='mx-auto aspect-square overflow-hidden rounded-xl object-cover'
+					height={550}
+					width={550}
+				/>
+			</div>
+		</NoAuthLayout>
 	)
 }

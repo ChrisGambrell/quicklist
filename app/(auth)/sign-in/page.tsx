@@ -1,59 +1,44 @@
-'use client'
+import feature from '@/assets/feature.png'
+import NoAuthLayout from '@/components/noauth-layout'
+import Image from 'next/image'
+import GitHubSignIn from './forms/github-sign-in'
+import GoogleSignIn from './forms/google-sign-in'
+import PasswordSignIn from './forms/password-sign-in'
 
-import { signInWithOAuth, signInWithPassword } from '@/actions/auth'
-import ActionButton from '@/components/action-button'
-import { FormError } from '@/components/form-error'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
-import Link from 'next/link'
-import { useFormState } from 'react-dom'
-
-export default function SignInPage() {
-	const [state, action] = useFormState(signInWithPassword, null)
-	const useSignInWithGithub = signInWithOAuth.bind(null, 'github')
-	const useSignInWithGoogle = signInWithOAuth.bind(null, 'google')
-
+export default function Component() {
 	return (
-		<Card className='mx-auto max-w-sm border-0 shadow-none sm:border sm:shadow-sm sm:my-20'>
-			<CardHeader>
-				<CardTitle className='text-2xl'>Sign In</CardTitle>
-				<CardDescription>Enter your email below to sign in to your account</CardDescription>
-			</CardHeader>
-			<CardContent>
-				<form className='grid gap-4'>
-					<div className='grid gap-2'>
-						<Label htmlFor='email'>Email</Label>
-						<Input id='email' name='email' type='email' placeholder='me@example.com' />
-						<FormError value={state?.errors.email} />
+		<NoAuthLayout action={{ href: '/sign-up', label: 'Sign Up' }}>
+			<div className='mx-auto grid w-full max-w-[900px] grid-cols-1 items-center gap-12 rounded-xl bg-white p-8 shadow-lg dark:bg-gray-950 md:grid-cols-2 border'>
+				<div className='space-y-4'>
+					<div className='space-y-2'>
+						<h1 className='text-3xl font-bold'>Sign In</h1>
+						<p className='text-gray-500 dark:text-gray-400'>Enter your email below to sign in to your account.</p>
 					</div>
-					<div className='grid gap-2'>
-						<div className='flex items-center'>
-							<Label htmlFor='password'>Password</Label>
-							<Link href='/forgot' className='ml-auto inline-block text-sm underline'>
-								Forgot your password?
-							</Link>
+
+					<div className='space-y-4'>
+						<PasswordSignIn />
+
+						<div className='flex items-center gap-2'>
+							<div className='h-px flex-1 bg-gray-200 dark:bg-gray-800' />
+							<span className='text-gray-500 dark:text-gray-400'>or</span>
+							<div className='h-px flex-1 bg-gray-200 dark:bg-gray-800' />
 						</div>
-						<Input id='password' name='password' type='password' />
-						<FormError value={state?.errors.password} />
+
+						<div className='flex flex-col gap-2'>
+							<GoogleSignIn />
+							<GitHubSignIn />
+						</div>
 					</div>
-					<ActionButton formAction={action} type='submit' className='w-full'>
-						Sign in
-					</ActionButton>
-					<ActionButton formAction={useSignInWithGoogle} variant='outline' className='w-full'>
-						Sign in with Google
-					</ActionButton>
-					<ActionButton formAction={useSignInWithGithub} variant='outline' className='w-full'>
-						Sign in with Github
-					</ActionButton>
-				</form>
-				<div className='mt-4 text-center text-sm'>
-					Don&apos;t have an account?{' '}
-					<Link href='/sign-up' className='underline'>
-						Sign up
-					</Link>
 				</div>
-			</CardContent>
-		</Card>
+
+				<Image
+					src={feature}
+					alt='Authentication'
+					className='mx-auto aspect-square overflow-hidden rounded-xl object-cover'
+					height={550}
+					width={550}
+				/>
+			</div>
+		</NoAuthLayout>
 	)
 }
