@@ -21,7 +21,6 @@ const placeholder = {
 	description: 'Enhance your wardrobe with this timeless navy and white checkered long sleeve shirt...',
 }
 
-// BUG: For this and rule, on success back button doesn't work
 export default function ListingForm({ listing }: { listing: ListingWithGenerationsAndImages }) {
 	const useUpdateListing = updateListing.bind(null, { listingId: listing.id })
 	const form = useForm<z.infer<typeof updateListingSchema>>({ defaultValues: { ...listing }, resolver: zodResolver(updateListingSchema) })
