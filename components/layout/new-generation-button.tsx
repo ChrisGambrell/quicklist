@@ -9,7 +9,7 @@ export default function NewGenerationButton() {
 
 	if (pathname === '/listings') return null
 	return (
-		<Link className={buttonVariants({ className: 'h-9', size: 'sm' })} href='/'>
+		<Link className={buttonVariants({ className: 'h-9', size: 'sm' })} href='/listings'>
 			New<span className='ml-1 hidden sm:block'>Generation</span>
 		</Link>
 	)
