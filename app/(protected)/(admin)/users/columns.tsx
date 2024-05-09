@@ -25,6 +25,7 @@ export const columns: ColumnDef<UserWithGenerationsAndPurchases>[] = [
 		accessorKey: 'full_name',
 		header: ({ column }) => <ColumnHeader column={column} title='Name' />,
 		// FIXME: Pass row to className meta so I can determine isAdmin ? 'font-black' : 'font-medium'
+		meta: { cellClassName: (row: UserWithGenerationsAndPurchases) => (row.is_admin ? 'font-black' : 'font-medium') },
 	},
 	{
 		id: 'purchased',

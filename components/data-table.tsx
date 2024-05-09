@@ -2,7 +2,17 @@
 
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { cn } from '@/lib/utils'
-import { ColumnDef, SortingState, TableState, flexRender, getCoreRowModel, getSortedRowModel, useReactTable } from '@tanstack/react-table'
+import {
+	ColumnDef,
+	ColumnMeta,
+	Row,
+	SortingState,
+	TableState,
+	flexRender,
+	getCoreRowModel,
+	getSortedRowModel,
+	useReactTable,
+} from '@tanstack/react-table'
 import { useState } from 'react'
 
 interface DataTableProps<TData, TValue> {
@@ -12,6 +22,11 @@ interface DataTableProps<TData, TValue> {
 }
 
 export function DataTable<TData, TValue>({ columns, data, defaultState }: DataTableProps<TData, TValue>) {
+	function getCellClassNames(columnMeta: ColumnMeta<TData, unknown> | undefined, row: Row<TData>) {
+		if (typeof (columnMeta as any)?.cellClassName === 'function') return (columnMeta as any)?.cellClassName(row.original)
+		return (columnMeta as any)?.cellClassName
+	}
+
 	const [sorting, setSorting] = useState<SortingState>(defaultState?.sorting ?? [])
 
 	const table = useReactTable({
@@ -52,7 +67,7 @@ export function DataTable<TData, TValue>({ columns, data, defaultState }: DataTa
 									key={cell.id}
 									className={cn(
 										(cell.column.columnDef.meta as any)?.className,
-										(cell.column.columnDef.meta as any)?.cellClassName
+										getCellClassNames(cell.column.columnDef.meta, row)
 									)}>
 									{flexRender(cell.column.columnDef.cell, cell.getContext())}
 								</TableCell>
