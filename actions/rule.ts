@@ -5,22 +5,20 @@ import { parseFormData } from '@/utils/helpers'
 import { createClient } from '@/utils/supabase/server'
 import { Rule } from '@/utils/types'
 import { getErrorRedirect, getSuccessRedirect } from '@cgambrell/utils'
+import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
 import { z } from 'zod'
 
-const createRuleSchema = z.object({ rule: z.string().min(1) })
-const updateRuleSchema = z.object({ rule: z.string().min(1) })
+const updateRuleSchema = z.object({ rule: z.string().transform((arg) => (!arg.trim() ? null : arg)) })
 
-export async function createRule(_prevState: any, formData: FormData) {
-	const { data, errors } = parseFormData(formData, createRuleSchema)
-	if (errors) return { errors }
-
+export async function createRule() {
 	const { auth, supabase } = await getAuth()
 
-	const { error } = await supabase.from('rules').insert({ user_id: auth.id, ...data })
-	if (error) redirect(getErrorRedirect('/rules', error.message))
+	const { data, error } = await supabase.from('rules').insert({ user_id: auth.id }).select().single()
+	if (error || !data) redirect(getErrorRedirect('/rules', error.message ?? 'An unexpected error occurred'))
 
-	redirect(getSuccessRedirect('/rules', 'Rule created'))
+	revalidatePath('/rules', 'layout')
+	redirect(`/rules/${data.id}/edit`)
 }
 
 export async function updateRule({ ruleId }: { ruleId: Rule['id'] }, _prevState: any, formData: FormData) {

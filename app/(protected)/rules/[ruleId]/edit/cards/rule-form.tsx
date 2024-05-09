@@ -5,6 +5,7 @@ import ActionButton from '@/components/action-button'
 import { FormError } from '@/components/form-error'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
+import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import { Rule } from '@/utils/types'
@@ -24,7 +25,7 @@ export default function RuleForm({ rule }: { rule: Rule }) {
 					<div className='grid gap-6'>
 						<div className='grid gap-3'>
 							<Label htmlFor='rule'>Rule</Label>
-							<Textarea id='rule' name='rule' defaultValue={rule.rule} className='min-h-32' />
+							<Input id='rule' name='rule' defaultValue={rule.rule ?? ''} />
 							<FormError value={state?.errors.rule} />
 						</div>
 					</div>

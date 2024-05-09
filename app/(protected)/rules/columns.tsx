@@ -17,7 +17,7 @@ export const columns: ColumnDef<Rule>[] = [
 		header: ({ column }) => <ColumnHeader column={column} title='Rule' />,
 		cell: ({ getValue, row }) => (
 			<Link className='line-clamp-1 hover:underline' href={`/rules/${row.original.id}/edit`}>
-				{getValue<Rule['rule']>()}
+				{getValue<Rule['rule']>() ?? '-'}
 			</Link>
 		),
 		meta: { cellClassName: 'font-medium w-[99%] break-all' },

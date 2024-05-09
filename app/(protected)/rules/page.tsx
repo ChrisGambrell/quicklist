@@ -1,4 +1,4 @@
-import AddRuleButton from '@/app/(protected)/rules/add-rule-button'
+import { createRule } from '@/actions/rule'
 import ActionButton from '@/components/action-button'
 import { DataTable } from '@/components/data-table'
 import { getAuth } from '@/utils/_helpers'
@@ -17,13 +17,7 @@ export default async function RulesPage() {
 
 	return (
 		<div className='container grid gap-4'>
-			{/* BUG: Should create a new rule then link to empty rule */}
-			<form action='' className='flex justify-end'>
-				<ActionButton className='gap-1' size='sm'>
-					<PlusCircleIcon className='w-3.5 h-3.5' />
-					Add Rule
-				</ActionButton>
-			</form>
+			<AddRuleButton />
 
 			{rules?.length ? (
 				<DataTable columns={columns} data={rules} defaultState={{ sorting: [{ id: 'created_at', desc: true }] }} />
@@ -37,5 +31,16 @@ export default async function RulesPage() {
 				</div>
 			)}
 		</div>
+	)
+}
+
+function AddRuleButton() {
+	return (
+		<form action={createRule} className='flex justify-end'>
+			<ActionButton className='gap-1' size='sm'>
+				<PlusCircleIcon className='w-3.5 h-3.5' />
+				Add Rule
+			</ActionButton>
+		</form>
 	)
 }
