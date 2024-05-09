@@ -1,5 +1,5 @@
 import { deleteImage } from '@/actions/listing'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 import { PLACEHOLDER_IMAGE } from '@/utils/constants'
 import { getImageUrl } from '@/utils/helpers'
 import { ListingWithGenerationsAndImages, ListingImage as TListingImage } from '@/utils/types'
@@ -14,7 +14,7 @@ export default function ListingImages({ listing }: { listing: ListingWithGenerat
 				<CardDescription>Click on an image to remove it.</CardDescription>
 			</CardHeader>
 			<CardContent>
-				<div className='grid gap-2'>
+				<form className='grid gap-2'>
 					{listing.images.length ? (
 						<ListingImage image={listing.images[0]} variant='primary' />
 					) : (
@@ -32,13 +32,13 @@ export default function ListingImages({ listing }: { listing: ListingWithGenerat
 						))}
 						<UploadImages listingId={listing.id} />
 					</div>
-				</div>
+					<div className='text-center text-sm text-foreground/50 italic'>Click on an image to remove it</div>
+				</form>
 			</CardContent>
 		</Card>
 	)
 }
 
-// TODO: delete overlay
 function ListingImage({ image, variant }: { image: TListingImage; variant: 'primary' | 'secondary' }) {
 	const useDeleteImage = deleteImage.bind(null, { listingId: image.listing_id, path: image.image_path })
 
