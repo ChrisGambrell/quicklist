@@ -1,6 +1,6 @@
 'use server'
 
-import { getErrorRedirect, getURL } from '@cgambrell/utils'
+import { getErrorRedirect, getSuccessRedirect, getURL } from '@cgambrell/utils'
 import Stripe from 'stripe'
 import { getAuth } from '../_helpers'
 import { calculateTrialEndUnixTimestamp } from '../helpers'
@@ -8,7 +8,7 @@ import { createOrRetrieveCustomer } from '../supabase/admin'
 import { CheckoutResponse, Price } from '../types'
 import { stripe } from './config'
 
-export async function checkoutWithStripe(price: Price, redirectPath: string = '/account'): Promise<CheckoutResponse> {
+export async function checkoutWithStripe(price: Price): Promise<CheckoutResponse> {
 	try {
 		const { user } = await getAuth()
 
@@ -37,8 +37,8 @@ export async function checkoutWithStripe(price: Price, redirectPath: string = '/
 					quantity: 1,
 				},
 			],
-			cancel_url: getURL(),
-			success_url: getURL(redirectPath),
+			cancel_url: getURL('/pricing'),
+			success_url: getURL(getSuccessRedirect('/listings', 'Purchase successful.')),
 		}
 
 		console.log('Trial end:', calculateTrialEndUnixTimestamp(price.trial_period_days))
@@ -71,11 +71,11 @@ export async function checkoutWithStripe(price: Price, redirectPath: string = '/
 	} catch (error) {
 		if (error instanceof Error)
 			return {
-				errorRedirect: getErrorRedirect(redirectPath, error.message),
+				errorRedirect: getErrorRedirect('/pricing', error.message),
 			}
 		else
 			return {
-				errorRedirect: getErrorRedirect(redirectPath, 'An unknown error occurred.'),
+				errorRedirect: getErrorRedirect('/pricing', 'An unknown error occurred.'),
 			}
 	}
 }

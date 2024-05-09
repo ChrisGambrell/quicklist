@@ -7,10 +7,10 @@ export async function getAuth() {
 	const supabase = createClient()
 
 	const { data: auth, error: authError } = await supabase.auth.getUser()
-	if (authError || !auth.user) redirect('/sign-in')
+	if (authError || !auth.user) redirect('/')
 
 	const { data: user, error: userError } = await supabase.from('users').select().eq('id', auth.user.id).maybeSingle()
-	if (userError || !user) redirect(getErrorRedirect('/sign-in', userError?.message ?? "FATAL: User's profile not found."))
+	if (userError || !user) redirect(getErrorRedirect('/', userError?.message ?? "FATAL: User's profile not found."))
 
 	const { data: subscription, error: subscriptionError } = await supabase
 		.from('subscriptions')
@@ -21,7 +21,7 @@ export async function getAuth() {
 		.eq('prices.products.active', true)
 		.returns<SubscriptionWithPriceWithProductWithAmount>()
 		.maybeSingle()
-	if (subscriptionError) redirect(getErrorRedirect('/sign-in', subscriptionError.message))
+	if (subscriptionError) redirect(getErrorRedirect('/', subscriptionError.message))
 
 	return { auth: auth.user, user, subscription, supabase }
 }

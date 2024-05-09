@@ -20,7 +20,7 @@ export async function signInWithPassword(_prevState: any, formData: FormData) {
 	const { error } = await supabase.auth.signInWithPassword(data)
 	if (error) redirect(getErrorRedirect('/sign-in', error.message))
 
-	redirect('/')
+	redirect('/listings')
 }
 
 export async function signInWithOAuth(provider: Provider) {

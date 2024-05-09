@@ -1,8 +1,9 @@
 import Link from 'next/link'
 import { ReactNode } from 'react'
-import { LogoLink } from './logo'
-import { buttonVariants } from './ui/button'
+import { LogoLink } from '../logo'
+import { buttonVariants } from '../ui/button'
 
+// TODO: Just name this a layout?
 export default function NoAuthLayout({ action, children }: { action: { href: string; label: string }; children: ReactNode }) {
 	return (
 		<div className='flex min-h-[100dvh] flex-col'>

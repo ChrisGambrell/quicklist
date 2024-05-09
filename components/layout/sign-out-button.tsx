@@ -1,6 +1,7 @@
 'use client'
 
 import { createClient } from '@/utils/supabase/client'
+import { LogOutIcon } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import toast from 'react-hot-toast'
 import { DropdownMenuItem } from '../ui/dropdown-menu'
@@ -14,8 +15,13 @@ export default function SignOutButton() {
 		const { error } = await supabase.auth.signOut()
 		if (error) return toast.error(error.message)
 
-		router.push('/sign-in')
+		router.refresh()
 	}
 
-	return <DropdownMenuItem onClick={signOut}>Sign out</DropdownMenuItem>
+	return (
+		<DropdownMenuItem onClick={signOut}>
+			<LogOutIcon className='mr-2 h-4 w-4' />
+			<span>Sign out</span>
+		</DropdownMenuItem>
+	)
 }

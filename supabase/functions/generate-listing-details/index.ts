@@ -32,6 +32,7 @@ Deno.serve(async (req) => {
 	)
 	if (!images || images.length === 0) return Response.json({ error: 'No images found' }, { status: 404 })
 
+	// TODO: Include a link to pricing here to reload if not enough?
 	const credits_to_use = requiredCredits(images.length)
 	const { error: canGenerateError } = await supabase.rpc('can_generate', { credits_to_use })
 	if (canGenerateError) return Response.json({ error: canGenerateError.message }, { status: 500 })

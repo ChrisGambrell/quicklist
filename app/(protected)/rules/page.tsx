@@ -1,9 +1,10 @@
 import AddRuleButton from '@/app/(protected)/rules/add-rule-button'
-import Rule from '@/app/(protected)/rules/rule'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Table, TableBody, TableHead, TableHeader, TableRow } from '@/components/ui/table'
+import ActionButton from '@/components/action-button'
+import { DataTable } from '@/components/data-table'
 import { getAuth } from '@/utils/_helpers'
+import { PlusCircleIcon } from 'lucide-react'
 import { Metadata } from 'next'
+import { columns } from './columns'
 
 export const metadata: Metadata = {
 	title: 'QuickList - Rules',
@@ -15,43 +16,26 @@ export default async function RulesPage() {
 	const { data: rules } = await supabase.from('rules').select().eq('user_id', user.id).order('created_at', { ascending: true })
 
 	return (
-		<>
-			<Card>
-				<CardHeader>
-					<div className='flex items-start justify-between'>
-						<CardTitle>Rules</CardTitle>
+		<div className='container grid gap-4'>
+			{/* BUG: Should create a new rule then link to empty rule */}
+			<form action='' className='flex justify-end'>
+				<ActionButton className='gap-1' size='sm'>
+					<PlusCircleIcon className='w-3.5 h-3.5' />
+					Add Rule
+				</ActionButton>
+			</form>
+
+			{rules?.length ? (
+				<DataTable columns={columns} data={rules} defaultState={{ sorting: [{ id: 'created_at', desc: true }] }} />
+			) : (
+				<div className='flex items-center justify-center rounded-lg border border-dashed shadow-sm p-12'>
+					<div className='flex flex-col items-center gap-1 text-center'>
+						<h3 className='text-2xl font-bold tracking-tight'>You have no rules</h3>
+						<p className='text-sm text-muted-foreground mb-4'>Start by adding a rule.</p>
 						<AddRuleButton />
 					</div>
-				</CardHeader>
-				<CardContent>
-					{rules?.length ? (
-						<Table>
-							<TableHeader>
-								<TableRow>
-									<TableHead>Rule</TableHead>
-									<TableHead className='hidden md:table-cell'>Created at</TableHead>
-									<TableHead>
-										<span className='sr-only'>Actions</span>
-									</TableHead>
-								</TableRow>
-							</TableHeader>
-							<TableBody>
-								{rules?.map((rule) => (
-									<Rule key={rule.id} rule={rule} />
-								))}
-							</TableBody>
-						</Table>
-					) : (
-						<div className='flex items-center justify-center rounded-lg border border-dashed shadow-sm p-12'>
-							<div className='flex flex-col items-center gap-1 text-center'>
-								<h3 className='text-2xl font-bold tracking-tight'>You have no rules</h3>
-								<p className='text-sm text-muted-foreground mb-4'>Start by adding a rule.</p>
-								<AddRuleButton />
-							</div>
-						</div>
-					)}
-				</CardContent>
-			</Card>
-		</>
+				</div>
+			)}
+		</div>
 	)
 }

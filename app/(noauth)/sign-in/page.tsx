@@ -1,5 +1,5 @@
 import feature from '@/assets/feature.png'
-import NoAuthLayout from '@/components/noauth-layout'
+import NoAuthLayout from '@/components/layout/noauth-layout'
 import Image from 'next/image'
 import GitHubSignIn from './forms/github-sign-in'
 import GoogleSignIn from './forms/google-sign-in'

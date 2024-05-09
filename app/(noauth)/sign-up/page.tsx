@@ -1,5 +1,5 @@
 import feature from '@/assets/feature.png'
-import NoAuthLayout from '@/components/noauth-layout'
+import NoAuthLayout from '@/components/layout/noauth-layout'
 import Image from 'next/image'
 import PasswordSignUp from './forms/password-sign-up'
 
