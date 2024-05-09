@@ -18,5 +18,16 @@ export default async function UsersPage() {
 		.order('created_at', { ascending: false })
 		.returns<UserWithGenerationsAndPurchases[]>()
 
-	return <DataTable columns={columns} data={users ?? []} defaultState={{ sorting: [{ id: 'purchased', desc: true }] }} />
+	return (
+		<DataTable
+			columns={columns}
+			data={users ?? []}
+			defaultState={{
+				sorting: [
+					{ id: 'purchased', desc: true },
+					{ id: 'used', desc: true },
+				],
+			}}
+		/>
+	)
 }
