@@ -1,8 +1,13 @@
+import BackButton from '@/components/back-button'
 import { createClient } from '@/utils/supabase/server'
 import { Listing } from '@/utils/types'
 import { Metadata } from 'next'
 import { notFound } from 'next/navigation'
-import EditListingClient from './edit-listing-client'
+import DeleteListing from './cards/delete-listing'
+import GenerateDetails from './cards/generate-details'
+import ListingForm from './cards/listing-form'
+import ListingGenerations from './cards/listing-generations'
+import ListingImages from './cards/listing-images'
 
 export const metadata: Metadata = {
 	title: 'QuickList - Edit Listing',
@@ -21,6 +26,27 @@ export default async function EditListingPage({ params: { listingId } }: { param
 		.order('is_primary', { ascending: false, referencedTable: 'listing_images' })
 		.maybeSingle()
 
+	// TODO: Not found page
 	if (!listing) return notFound()
-	return <EditListingClient listing={listing} />
+	return (
+		<div className='mx-auto grid max-w-[59rem] flex-1 auto-rows-max gap-4 w-full'>
+			<div className='flex items-center gap-4 overflow-hidden'>
+				<div className='flex-shrink-0'>
+					<BackButton />
+				</div>
+				<h1 className='flex-1 whitespace-nowrap text-xl font-semibold tracking-tight truncate'>{listing.title}</h1>
+			</div>
+			<div className='grid gap-4 md:grid-cols-[1fr_250px] lg:grid-cols-3'>
+				<div className='grid auto-rows-max items-start gap-4 lg:col-span-2'>
+					<ListingForm listing={listing} />
+					{listing.generations.length > 0 && <ListingGenerations listing={listing} />}
+				</div>
+				<div className='grid auto-rows-max items-start gap-4'>
+					<ListingImages listing={listing} />
+					<GenerateDetails listing={listing} />
+					<DeleteListing listing={listing} />
+				</div>
+			</div>
+		</div>
+	)
 }
