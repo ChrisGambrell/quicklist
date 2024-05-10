@@ -4,6 +4,8 @@ import { ListingWithImages } from '@/utils/types'
 import { notFound } from 'next/navigation'
 import UserListings from './cards/user-listings'
 
+// TODO: Finish this page with user info like name, email, avatar, oauth privider, etc
+
 export default async function UserPage({ params: { userId } }: { params: { userId: string } }) {
 	const supabase = createClient()
 
