@@ -35,7 +35,7 @@ export default function RuleForm({ rule }: { rule: Rule }) {
 						<Button variant='outline' size='sm' type='reset'>
 							Discard
 						</Button>
-						<ActionButton size='sm'>Save Listing</ActionButton>
+						<ActionButton size='sm'>Save Rule</ActionButton>
 					</div>
 				</CardFooter>
 			</Card>
