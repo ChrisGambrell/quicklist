@@ -3,6 +3,7 @@ import { createClient } from '@/utils/supabase/server'
 import { ListingWithImages } from '@/utils/types'
 import { notFound } from 'next/navigation'
 import UserListings from './cards/user-listings'
+import UserRules from './cards/user-rules'
 
 // TODO: Finish this page with user info like name, email, avatar, oauth privider, etc
 
@@ -11,7 +12,7 @@ export default async function UserPage({ params: { userId } }: { params: { userI
 
 	const { data: user, error } = await supabase
 		.from('users')
-		.select('*, listings(*, images:listing_images(*))')
+		.select('*, listings(*, images:listing_images(*)), rules(*)')
 		.eq('id', userId)
 		.maybeSingle()
 	console.log({ error })
@@ -27,8 +28,8 @@ export default async function UserPage({ params: { userId } }: { params: { userI
 			</div>
 			{/* <div className='grid gap-4 md:grid-cols-[1fr_250px] lg:grid-cols-3'> */}
 			<div className='grid auto-rows-max items-start gap-4 lg:col-span-2'>
-				{/* <ListingForm listing={listing} /> */}
 				<UserListings listings={user.listings as ListingWithImages[]} />
+				<UserRules rules={user.rules} />
 			</div>
 			{/* <div className='grid auto-rows-max items-start gap-4'> */}
 			{/* <ListingImages listing={listing} /> */}
