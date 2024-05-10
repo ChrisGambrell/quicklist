@@ -23,7 +23,7 @@ export default function AvatarForm({ user }: { user: User }) {
 							height={128}
 							width={128}
 						/>
-						<Input id='avatar' name='avatar' type='file' />
+						<Input id='avatar' name='avatar' type='file' accept='image/*' />
 					</div>
 				</CardContent>
 				<CardFooter className='border-t px-6 py-4'>

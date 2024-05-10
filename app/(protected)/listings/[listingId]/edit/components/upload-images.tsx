@@ -46,7 +46,7 @@ export default function UploadImages({ listingId }: { listingId: Listing['id'] }
 				<UploadIcon className='h-4 w-4 text-muted-foreground' />
 			)}
 			<span className='sr-only'>{pending ? 'Uploading' : 'Upload'}</span>
-			<input className='sr-only' disabled={pending} id='images' type='file' multiple onChange={uploadImages} />
+			<input className='sr-only' disabled={pending} id='images' type='file' accept='image/*' multiple onChange={uploadImages} />
 		</label>
 	)
 }

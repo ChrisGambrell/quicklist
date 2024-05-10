@@ -11,6 +11,7 @@ import Image from 'next/image'
 import { ChangeEvent, FormEvent, useState } from 'react'
 import toast from 'react-hot-toast'
 
+// BUG: Need to only accept certain files and a max file size of 50mb
 export default function ChatImageUpload() {
 	const [images, setImages] = useState<File[]>([])
 	const [isLoading, setIsLoading] = useState(false)
@@ -83,7 +84,15 @@ export default function ChatImageUpload() {
 							htmlFor='images'>
 							<UploadIcon className='h-4 w-4 text-muted-foreground' />
 							<span className='sr-only'>Upload</span>
-							<input className='sr-only' disabled={isLoading} id='images' type='file' multiple onChange={onUpload} />
+							<input
+								className='sr-only'
+								disabled={isLoading}
+								id='images'
+								type='file'
+								accept='image/*'
+								multiple
+								onChange={onUpload}
+							/>
 						</label>
 					</div>
 				)}
@@ -94,7 +103,15 @@ export default function ChatImageUpload() {
 						htmlFor='images'>
 						<UploadIcon className='h-4 w-4 text-muted-foreground' />
 						<span className='sr-only'>Upload</span>
-						<input className='sr-only' disabled={isLoading} id='images' type='file' multiple onChange={onUpload} />
+						<input
+							className='sr-only'
+							disabled={isLoading}
+							id='images'
+							type='file'
+							accept='image/*'
+							multiple
+							onChange={onUpload}
+						/>
 					</label>
 				)}
 
