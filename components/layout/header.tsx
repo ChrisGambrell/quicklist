@@ -14,12 +14,13 @@ export default function Header() {
 				pattern: /^\/listings(\/([a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}))?(\/edit)?$/,
 				description: pathname.includes('edit') ? 'Edit Listing' : 'Listings',
 			},
+			{ pattern: /^\/pricing$/, description: 'Pricing' },
 			{
 				pattern: /^\/rules(\/([a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}))?(\/edit)?$/,
 				description: pathname.includes('edit') ? 'Edit Rule' : 'Rules',
 			},
-			{ pattern: /^\/users$/, description: 'Users' },
 			{ pattern: /^\/settings(\/password)?$/, description: pathname.includes('password') ? 'Change Password' : 'Settings' },
+			{ pattern: /^\/users$/, description: 'Users' },
 		]
 
 		for (const route of routes) if (route.pattern.test(pathname)) return route.description
