@@ -5,6 +5,7 @@ import { PLACEHOLDER_AVATAR } from '@/utils/constants'
 import { UserWithGenerationsAndPurchases } from '@/utils/types'
 import { ColumnDef } from '@tanstack/react-table'
 import Image from 'next/image'
+import Link from 'next/link'
 
 export const columns: ColumnDef<UserWithGenerationsAndPurchases>[] = [
 	{
@@ -24,6 +25,11 @@ export const columns: ColumnDef<UserWithGenerationsAndPurchases>[] = [
 	{
 		accessorKey: 'full_name',
 		header: ({ column }) => <ColumnHeader column={column} title='Name' />,
+		cell: ({ getValue, row }) => (
+			<Link className='hover:underline' href={`/users/${row.original.id}`}>
+				{getValue<UserWithGenerationsAndPurchases['full_name']>()}
+			</Link>
+		),
 		meta: { cellClassName: (row: UserWithGenerationsAndPurchases) => (row.is_admin ? 'font-black' : 'font-medium') },
 	},
 	{

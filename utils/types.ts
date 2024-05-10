@@ -13,6 +13,7 @@ export type ProductAmount = Tables<'product_amounts'>
 export type Purchase = Tables<'purchases'>
 export type Subscription = Tables<'subscriptions'>
 
+export type ListingWithImages = Listing & { images: ListingImage[] }
 export type ListingWithGenerationsAndImages = Listing & { generations: Generation[]; images: ListingImage[] }
 
 export type ProductWithPrices = Product & { prices: Price[] }
