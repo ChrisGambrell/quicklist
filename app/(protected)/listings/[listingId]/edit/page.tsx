@@ -1,5 +1,5 @@
 import BackButton from '@/components/back-button'
-import { createClient } from '@/utils/supabase/server'
+import { getAuth } from '@/utils/_helpers'
 import { Listing } from '@/utils/types'
 import { Metadata } from 'next'
 import { notFound } from 'next/navigation'
@@ -17,7 +17,8 @@ export const metadata: Metadata = {
 export const maxDuration = 300
 
 export default async function EditListingPage({ params: { listingId } }: { params: { listingId: Listing['id'] } }) {
-	const supabase = createClient()
+	const { user, supabase } = await getAuth()
+
 	const { data: listing } = await supabase
 		.from('listings')
 		.select('*, generations(*), images:listing_images(*)')
@@ -38,13 +39,17 @@ export default async function EditListingPage({ params: { listingId } }: { param
 			</div>
 			<div className='grid gap-4 md:grid-cols-[1fr_250px] lg:grid-cols-3'>
 				<div className='grid auto-rows-max items-start gap-4 lg:col-span-2'>
-					<ListingForm listing={listing} />
+					<ListingForm canEdit={user.id === listing.user_id} listing={listing} />
 					{listing.generations.length > 0 && <ListingGenerations listing={listing} />}
 				</div>
 				<div className='grid auto-rows-max items-start gap-4'>
-					<ListingImages listing={listing} />
-					<GenerateDetails listing={listing} />
-					<DeleteListing listing={listing} />
+					<ListingImages canEdit={user.id === listing.user_id} listing={listing} />
+					{user.id === listing.user_id && (
+						<>
+							<GenerateDetails listing={listing} />
+							<DeleteListing listing={listing} />
+						</>
+					)}
 				</div>
 			</div>
 		</div>

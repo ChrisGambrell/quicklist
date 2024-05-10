@@ -1,5 +1,5 @@
 import BackButton from '@/components/back-button'
-import { createClient } from '@/utils/supabase/server'
+import { getAuth } from '@/utils/_helpers'
 import { Rule } from '@/utils/types'
 import { Metadata } from 'next'
 import { notFound } from 'next/navigation'
@@ -12,7 +12,7 @@ export const metadata: Metadata = {
 }
 
 export default async function EditRulePage({ params: { ruleId } }: { params: { ruleId: Rule['id'] } }) {
-	const supabase = createClient()
+	const { user, supabase } = await getAuth()
 	const { data: rule } = await supabase.from('rules').select().eq('id', ruleId).maybeSingle()
 
 	if (!rule) return notFound()
@@ -26,11 +26,9 @@ export default async function EditRulePage({ params: { ruleId } }: { params: { r
 			</div>
 			<div className='grid gap-4 md:grid-cols-[1fr_250px] lg:grid-cols-3'>
 				<div className='grid auto-rows-max items-start gap-4 lg:col-span-2'>
-					<RuleForm rule={rule} />
+					<RuleForm canEdit={user.id === rule.user_id} rule={rule} />
 				</div>
-				<div className='grid auto-rows-max items-start gap-4'>
-					<DeleteRule rule={rule} />
-				</div>
+				<div className='grid auto-rows-max items-start gap-4'>{user.id === rule.user_id && <DeleteRule rule={rule} />}</div>
 			</div>
 		</div>
 	)

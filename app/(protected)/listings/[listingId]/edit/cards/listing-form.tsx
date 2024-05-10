@@ -21,7 +21,7 @@ const placeholder = {
 	description: 'Enhance your wardrobe with this timeless navy and white checkered long sleeve shirt...',
 }
 
-export default function ListingForm({ listing }: { listing: ListingWithGenerationsAndImages }) {
+export default function ListingForm({ canEdit, listing }: { canEdit: boolean; listing: ListingWithGenerationsAndImages }) {
 	const useUpdateListing = updateListing.bind(null, { listingId: listing.id })
 	const form = useForm<z.infer<typeof updateListingSchema>>({ defaultValues: { ...listing }, resolver: zodResolver(updateListingSchema) })
 
@@ -90,14 +90,16 @@ export default function ListingForm({ listing }: { listing: ListingWithGeneratio
 							/>
 						</div>
 					</CardContent>
-					<CardFooter>
-						<div className='ml-auto flex gap-2'>
-							<Button variant='outline' size='sm' type='reset'>
-								Discard
-							</Button>
-							<ActionButton size='sm'>Save Listing</ActionButton>
-						</div>
-					</CardFooter>
+					{canEdit && (
+						<CardFooter>
+							<div className='ml-auto flex gap-2'>
+								<Button variant='outline' size='sm' type='reset'>
+									Discard
+								</Button>
+								<ActionButton size='sm'>Save Listing</ActionButton>
+							</div>
+						</CardFooter>
+					)}
 				</Card>
 			</form>
 		</Form>

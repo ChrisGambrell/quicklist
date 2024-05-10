@@ -7,11 +7,10 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { Textarea } from '@/components/ui/textarea'
 import { Rule } from '@/utils/types'
 import { useFormState } from 'react-dom'
 
-export default function RuleForm({ rule }: { rule: Rule }) {
+export default function RuleForm({ canEdit, rule }: { canEdit: boolean; rule: Rule }) {
 	const [state, action] = useFormState(updateRule.bind(null, { ruleId: rule.id }), null)
 
 	return (
@@ -30,14 +29,16 @@ export default function RuleForm({ rule }: { rule: Rule }) {
 						</div>
 					</div>
 				</CardContent>
-				<CardFooter>
-					<div className='ml-auto flex gap-2'>
-						<Button variant='outline' size='sm' type='reset'>
-							Discard
-						</Button>
-						<ActionButton size='sm'>Save Rule</ActionButton>
-					</div>
-				</CardFooter>
+				{canEdit && (
+					<CardFooter>
+						<div className='ml-auto flex gap-2'>
+							<Button variant='outline' size='sm' type='reset'>
+								Discard
+							</Button>
+							<ActionButton size='sm'>Save Rule</ActionButton>
+						</div>
+					</CardFooter>
+				)}
 			</Card>
 		</form>
 	)

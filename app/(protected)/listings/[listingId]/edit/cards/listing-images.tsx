@@ -1,12 +1,12 @@
 import { deleteImage } from '@/actions/listing'
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { PLACEHOLDER_IMAGE } from '@/utils/constants'
 import { getImageUrl } from '@/utils/helpers'
 import { ListingWithGenerationsAndImages, ListingImage as TListingImage } from '@/utils/types'
 import Image from 'next/image'
 import UploadImages from '../components/upload-images'
 
-export default function ListingImages({ listing }: { listing: ListingWithGenerationsAndImages }) {
+export default function ListingImages({ canEdit, listing }: { canEdit: boolean; listing: ListingWithGenerationsAndImages }) {
 	return (
 		<Card className='overflow-hidden' x-chunk='dashboard-07-chunk-4'>
 			<CardHeader>
@@ -30,9 +30,9 @@ export default function ListingImages({ listing }: { listing: ListingWithGenerat
 						{listing.images.slice(1).map((image) => (
 							<ListingImage key={image.id} image={image} variant='secondary' />
 						))}
-						<UploadImages listingId={listing.id} />
+						{canEdit && <UploadImages listingId={listing.id} />}
 					</div>
-					<div className='text-center text-sm text-foreground/50 italic'>Click on an image to remove it</div>
+					{canEdit && <div className='text-center text-sm text-foreground/50 italic'>Click on an image to remove it</div>}
 				</form>
 			</CardContent>
 		</Card>
