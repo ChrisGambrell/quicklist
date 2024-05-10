@@ -15,7 +15,7 @@ export function Pagination<TData>({ table }: PaginationProps<TData>) {
 				{`${table.getState().pagination.pageIndex * table.getState().pagination.pageSize + 1}-${Math.min(
 					(table.getState().pagination.pageIndex + 1) * table.getState().pagination.pageSize,
 					table.getFilteredRowModel().rows.length
-				)} rows shown`}
+				)} of ${table.getFilteredRowModel().rows.length} row(s) shown`}
 			</div>
 			<div className='flex items-center space-x-6 lg:space-x-8'>
 				<div className='flex items-center space-x-2'>
