@@ -50,8 +50,15 @@ export async function generateListingData({ listingId }: { listingId: Listing['i
 
 	if (error || !data) {
 		let errorMessage = error?.message ?? 'An unexpected error occurred'
-		if (error instanceof FunctionsHttpError) errorMessage = (await error.context.json()).error
-		redirect(getErrorRedirect(`/listings/${listingId}/edit`, errorMessage))
+		if (error instanceof FunctionsHttpError) {
+			errorMessage = (await error.context.json()).error
+		}
+		redirect(
+			getErrorRedirect(
+				errorMessage === 'Not enough credits to generate data' ? '/pricing' : `/listings/${listingId}/edit`,
+				errorMessage
+			)
+		)
 	}
 
 	revalidatePath(`/listings/${listingId}/edit`, 'page')
