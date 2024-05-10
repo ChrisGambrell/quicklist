@@ -37,7 +37,7 @@ export default async function UserMenu() {
 					<Image
 						src={user.avatar_url ?? PLACEHOLDER_AVATAR}
 						alt='User avatar'
-						className='overflow-hidden rounded-full'
+						className='overflow-hidden rounded-full object-cover'
 						width={40}
 						height={40}
 					/>
