@@ -68,24 +68,30 @@ Deno.serve(async (req) => {
 		return Response.json({ error: 'No response from OpenAI' }, { status: 500 })
 
 	console.log(`{${res.choices[0].message.content.replace(/.*{/s, '').replace(/}.*/s, '').trim()}}`)
-	const resJson = JSON.parse(`{${res.choices[0].message.content.replace(/.*{/s, '').replace(/}.*/s, '').trim()}}`)
-	const { title, description, price } = resJson
 
-	const { error: insertGenerationError } = await supabase
-		.from('generations')
-		.insert({ listing_id: listingId, user_id: listing.user_id, credits: credits_to_use, data: resJson })
-	if (insertGenerationError) return Response.json({ error: insertGenerationError.message }, { status: 500 })
+	try {
+		const resJson = JSON.parse(`{${res.choices[0].message.content.replace(/.*{/s, '').replace(/}.*/s, '').trim()}}`)
+		const { title, description, price } = resJson
 
-	const { data: updatedListing, error: updateError } = await supabase
-		.from('listings')
-		.update({
-			title: title?.trim() ?? null,
-			description: description?.trim() ?? null,
-			price: price ?? null,
-		})
-		.eq('id', listingId)
-		.select()
-	if (updateError) return Response.json({ error: updateError.message }, { status: 500 })
+		const { error: insertGenerationError } = await supabase
+			.from('generations')
+			.insert({ listing_id: listingId, user_id: listing.user_id, credits: credits_to_use, data: resJson })
+		if (insertGenerationError) return Response.json({ error: insertGenerationError.message }, { status: 500 })
 
-	return Response.json({ listing: updatedListing })
+		const { data: updatedListing, error: updateError } = await supabase
+			.from('listings')
+			.update({
+				title: title?.trim() ?? null,
+				description: description?.trim() ?? null,
+				price: price ?? null,
+			})
+			.eq('id', listingId)
+			.select()
+		if (updateError) return Response.json({ error: updateError.message }, { status: 500 })
+
+		return Response.json({ listing: updatedListing })
+	} catch (error) {
+		if (error instanceof SyntaxError) return Response.json({ error: res.choices[0].message.content }, { status: 500 })
+		return Response.json({ error: error.message }, { status: 500 })
+	}
 })
