@@ -24,6 +24,7 @@ export default async function UsersPage() {
 				columns={columns}
 				data={users ?? []}
 				defaultState={{
+					pageSize: 10,
 					sorting: [
 						{ id: 'purchased', desc: true },
 						{ id: 'used', desc: true },

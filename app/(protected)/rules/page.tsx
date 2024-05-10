@@ -20,7 +20,7 @@ export default async function RulesPage() {
 			<AddRuleButton />
 
 			{rules?.length ? (
-				<DataTable columns={columns} data={rules} defaultState={{ sorting: [{ id: 'created_at', desc: true }] }} />
+				<DataTable columns={columns} data={rules} defaultState={{ pageSize: 10, sorting: [{ id: 'created_at', desc: true }] }} />
 			) : (
 				<div className='flex items-center justify-center rounded-lg border border-dashed shadow-sm p-12'>
 					<div className='flex flex-col items-center gap-1 text-center'>
