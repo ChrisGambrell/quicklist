@@ -1,4 +1,4 @@
-Hello [Name],
+Hey [Name],
 
 I hope you're having a great day! I came across your listing and thought you might be interested in a new tool I've developed that could help enhance your listing.
 
@@ -7,6 +7,7 @@ My app automatically generates catchy titles, detailed descriptions, and suggest
 I've used your listing as an example. Here’s what my app came up with:
 
 Title: [Title]
+Price: [Price]
 
 Description: [Description]
 
