@@ -48,7 +48,7 @@ Deno.serve(async (req) => {
 	const format = `{"title": "[title:string]", "description": "[description:string]", "price": [price:float]}`
 
 	const res = await openai.chat.completions.create({
-		model: 'gpt-4-vision-preview',
+		model: 'gpt-4o-2024-05-13',
 		messages: [
 			{
 				role: 'user',
