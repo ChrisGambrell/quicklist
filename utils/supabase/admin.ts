@@ -1,5 +1,4 @@
 import { Database, TablesInsert } from '@/db_types'
-import { env } from '@/env'
 import { toDateTime } from '@/utils/helpers'
 import { stripe } from '@/utils/stripe/config'
 import { Price as TPrice, Product as TProduct } from '@/utils/types'
@@ -12,7 +11,7 @@ type ProductAmount = TablesInsert<'product_amounts'>
 type Price = OmitDates<TPrice>
 
 const TRIAL_PERIOD_DAYS = 0
-const supabaseAdmin = createClient<Database>(env.NEXT_PUBLIC_SUPABASE_URL, env.SUPABASE_SERVICE_ROLE_KEY)
+const supabaseAdmin = createClient<Database>(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.SUPABASE_SERVICE_ROLE_KEY!)
 
 const upsertProductRecord = async (product: Stripe.Product) => {
 	const productData: Product = {

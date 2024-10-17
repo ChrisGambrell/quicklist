@@ -1,5 +1,5 @@
 import { generateListingData } from '@/actions/listing'
-import ActionButton from '@/components/action-button'
+import { ActionButton } from '@/components/action-button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { requiredCredits } from '@/utils/helpers'
 import { ListingWithGenerationsAndImages } from '@/utils/types'

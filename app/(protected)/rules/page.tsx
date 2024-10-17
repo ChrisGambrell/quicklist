@@ -1,5 +1,5 @@
 import { createRule } from '@/actions/rule'
-import ActionButton from '@/components/action-button'
+import { ActionButton } from '@/components/action-button'
 import { DataTable } from '@/components/data-table'
 import { getAuth } from '@/utils/_helpers'
 import { PlusCircleIcon } from 'lucide-react'

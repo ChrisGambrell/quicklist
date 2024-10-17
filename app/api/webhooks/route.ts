@@ -1,4 +1,4 @@
-import { env } from '@/env'
+import { env } from '@/lib/env'
 import { stripe } from '@/utils/stripe/config'
 import {
 	deletePriceRecord,

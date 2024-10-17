@@ -1,9 +1,8 @@
-import { env } from '@/env'
 import { ZodTypeAny, z } from 'zod'
 import { ListingImage } from './types'
 
 export const getImageUrl = (path: ListingImage['image_path']) =>
-	`${env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/listing_images/${path}`
+	`${process.env.NEXT_PUBLIC_SUPABASE_URL!}/storage/v1/object/public/listing_images/${path}`
 
 export function requiredCredits(num: number) {
 	if (num === 0) return 0

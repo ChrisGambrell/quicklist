@@ -1,7 +1,7 @@
 'use client'
 
 import { updateRule } from '@/actions/rule'
-import ActionButton from '@/components/action-button'
+import { ActionButton } from '@/components/action-button'
 import { FormError } from '@/components/form-error'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'

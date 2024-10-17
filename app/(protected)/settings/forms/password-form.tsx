@@ -1,7 +1,7 @@
 'use client'
 
 import { updatePassword } from '@/actions/user'
-import ActionButton from '@/components/action-button'
+import { ActionButton } from '@/components/action-button'
 import { FormError } from '@/components/form-error'
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'

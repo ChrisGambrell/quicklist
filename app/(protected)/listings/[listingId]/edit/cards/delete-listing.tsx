@@ -1,5 +1,5 @@
 import { deleteListing } from '@/actions/listing'
-import ActionButton from '@/components/action-button'
+import { ActionButton } from '@/components/action-button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { ListingWithGenerationsAndImages } from '@/utils/types'
 

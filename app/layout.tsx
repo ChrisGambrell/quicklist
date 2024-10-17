@@ -1,8 +1,11 @@
-import GlobalToaster from '@/components/global-toaster'
+import { GlobalToaster } from '@/components/global-toaster'
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import { Suspense } from 'react'
 import './globals.css'
+
+// Import to verify environment variables are set
+import '@/lib/env'
 
 const inter = Inter({ subsets: ['latin'] })
 

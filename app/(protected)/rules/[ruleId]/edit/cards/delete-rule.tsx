@@ -1,5 +1,5 @@
 import { deleteRule } from '@/actions/rule'
-import ActionButton from '@/components/action-button'
+import { ActionButton } from '@/components/action-button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Rule } from '@/utils/types'
 
