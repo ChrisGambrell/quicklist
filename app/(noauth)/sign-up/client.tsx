@@ -22,7 +22,7 @@ export function ClientPage() {
 			/>
 			<FormInput label='Password' name='password' type='password' error={state?.errors.password} />
 			<FormInput label='Confirm password' name='confirmPassword' type='password' error={state?.errors.confirmPassword} />
-			<ActionButton>Sign up</ActionButton>
+			<ActionButton>Register</ActionButton>
 		</form>
 	)
 }

@@ -14,7 +14,7 @@ export function ClientPage() {
 				<FormInput label='Email address' name='email' placeholder='me@example.com' type='email' error={state?.errors.email} />
 				<FormInput label='Password' name='password' type='password' error={state?.errors.password} />
 				{/* BUG: Missing forgot password link */}
-				<ActionButton>Sign in</ActionButton>
+				<ActionButton>Login</ActionButton>
 			</div>
 
 			<div className='flex items-center gap-2'>
@@ -25,10 +25,10 @@ export function ClientPage() {
 
 			<div className='flex flex-col gap-2'>
 				<ActionButton formAction={oauth.bind(null, 'google')} className='w-full' variant='outline'>
-					Sign in with Google
+					Login with Google
 				</ActionButton>
 				<ActionButton formAction={oauth.bind(null, 'github')} className='w-full' variant='outline'>
-					Sign in with GitHub
+					Login with GitHub
 				</ActionButton>
 			</div>
 		</form>

@@ -5,7 +5,7 @@ import { ClientPage } from './client'
 
 export default function Component() {
 	return (
-		<NoAuthLayout action={{ href: '/sign-in', label: 'Sign In' }}>
+		<NoAuthLayout action={{ href: '/login', label: 'Login' }}>
 			<div className='mx-auto grid w-full max-w-[900px] grid-cols-1 items-center gap-12 rounded-xl bg-white p-8 shadow-lg dark:bg-gray-950 md:grid-cols-2 border'>
 				<div className='space-y-4'>
 					<div className='space-y-2'>
