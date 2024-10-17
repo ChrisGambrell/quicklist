@@ -4,9 +4,9 @@ import { PLACEHOLDER_IMAGE } from '@/lib/constants'
 import { getImageUrl } from '@/lib/utils'
 import { Prisma, ListingImage as TListingImage } from '@prisma/client'
 import Image from 'next/image'
-import UploadImages from '../components/upload-images'
+import { UploadImages } from '../components/upload-images'
 
-export default function ListingImages({
+export function ListingImages({
 	canEdit,
 	listing,
 }: {

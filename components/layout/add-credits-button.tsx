@@ -9,7 +9,7 @@ import { usePathname, useRouter } from 'next/navigation'
 import { useState } from 'react'
 import { Button } from '../ui/button'
 
-export default function AddCreditsButton({ product }: { product: Prisma.ProductGetPayload<{ include: { prices: true } }> }) {
+export function AddCreditsButton({ product }: { product: Prisma.ProductGetPayload<{ include: { prices: true } }> }) {
 	const pathname = usePathname()
 	const router = useRouter()
 	const [isLoading, setIsLoading] = useState(false)

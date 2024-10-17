@@ -6,7 +6,7 @@ import { Loader2Icon } from 'lucide-react'
 import { usePathname, useRouter } from 'next/navigation'
 import { useState } from 'react'
 
-export default function ManageSubscriptionButton() {
+export function ManageSubscriptionButton() {
 	const pathname = usePathname()
 	const router = useRouter()
 	const [isSubmitting, setIsSubmitting] = useState(false)

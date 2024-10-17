@@ -36,7 +36,7 @@ export const columns: ColumnDef<Rule>[] = [
 	},
 ]
 
-export default function Actions({ ruleId }: { ruleId: Rule['id'] }) {
+function Actions({ ruleId }: { ruleId: Rule['id'] }) {
 	const router = useRouter()
 
 	// BUG: Needs to be server action

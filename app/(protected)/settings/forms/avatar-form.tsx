@@ -6,7 +6,7 @@ import { PLACEHOLDER_AVATAR } from '@/lib/constants'
 import { AuthUser } from '@/lib/utils'
 import Image from 'next/image'
 
-export default function AvatarForm({ user }: { user: AuthUser }) {
+export function AvatarForm({ user }: { user: AuthUser }) {
 	return (
 		<form action={updateAvatar}>
 			<Card>

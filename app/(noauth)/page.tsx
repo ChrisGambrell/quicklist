@@ -1,10 +1,10 @@
-import NoAuthLayout from '@/components/layout/noauth-layout'
-import Logo from '@/components/logo'
+import { NoAuthLayout } from '@/components/layout/noauth-layout'
+import { Logo } from '@/components/logo'
 import { buttonVariants } from '@/components/ui/button'
 import Link from 'next/link'
 import { redirect } from 'next/navigation'
 
-export default function LandingPage() {
+export default function RootPage() {
 	return redirect('/listings')
 	return (
 		<NoAuthLayout action={{ href: '/login', label: 'Login' }}>

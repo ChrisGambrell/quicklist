@@ -4,7 +4,7 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { buttonVariants } from '../ui/button'
 
-export default function NewGenerationButton() {
+export function NewGenerationButton() {
 	const pathname = usePathname()
 
 	if (pathname === '/listings') return null

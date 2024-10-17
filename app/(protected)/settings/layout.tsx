@@ -1,6 +1,6 @@
 import { LayoutProps } from '@cgambrell/utils'
 import { Metadata } from 'next'
-import NavLink from './nav-link'
+import { NavLink } from './nav-link'
 
 export const metadata: Metadata = {
 	title: 'QuickList - Settings',

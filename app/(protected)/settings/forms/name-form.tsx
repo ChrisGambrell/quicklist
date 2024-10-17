@@ -4,7 +4,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Input } from '@/components/ui/input'
 import { AuthUser } from '@/lib/utils'
 
-export default function NameForm({ user }: { user: AuthUser }) {
+export function NameForm({ user }: { user: AuthUser }) {
 	return (
 		<form action={updateName}>
 			<Card>

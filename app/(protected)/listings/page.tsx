@@ -3,7 +3,7 @@ import { auth } from '@/lib/auth'
 import prisma from '@/lib/db'
 import { cn } from '@/lib/utils'
 import { Metadata } from 'next'
-import ChatImageUpload from '../chat-image-upload'
+import { ChatImageUpload } from '../chat-image-upload'
 import { columns } from './columns'
 
 export const metadata: Metadata = {

@@ -11,7 +11,7 @@ import Image from 'next/image'
 import { ChangeEvent, FormEvent, useState } from 'react'
 
 // BUG: Need to only accept certain files and a max file size of 50mb
-export default function ChatImageUpload() {
+export function ChatImageUpload() {
 	const [images, setImages] = useState<File[]>([])
 	const [isLoading, setIsLoading] = useState(false)
 

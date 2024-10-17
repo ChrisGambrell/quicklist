@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Rule } from '@prisma/client'
 import { ruleColumns } from '../components/rule-columns'
 
-export default function UserRules({ rules }: { rules: Rule[] }) {
+export function UserRules({ rules }: { rules: Rule[] }) {
 	return (
 		<Card>
 			<CardHeader>

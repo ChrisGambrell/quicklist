@@ -3,7 +3,7 @@ import { ReactNode } from 'react'
 import { LogoLink } from '../logo'
 import { buttonVariants } from '../ui/button'
 
-export default function NoAuthLayout({ action, children }: { action: { href: string; label: string }; children: ReactNode }) {
+export function NoAuthLayout({ action, children }: { action: { href: string; label: string }; children: ReactNode }) {
 	return (
 		<div className='flex min-h-[100dvh] flex-col'>
 			<header className='flex items-center justify-between px-6 py-4'>

@@ -1,9 +1,9 @@
-import BackButton from '@/components/back-button'
+import { BackButton } from '@/components/back-button'
 import prisma from '@/lib/db'
 import { ServerProps } from '@cgambrell/utils'
 import { notFound } from 'next/navigation'
-import UserListings from './cards/user-listings'
-import UserRules from './cards/user-rules'
+import { UserListings } from './cards/user-listings'
+import { UserRules } from './cards/user-rules'
 
 // TODO: Finish this page with user info like name, email, avatar, oauth privider, etc
 

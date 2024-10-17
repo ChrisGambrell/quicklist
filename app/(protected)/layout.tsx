@@ -1,6 +1,6 @@
-import Header from '@/components/layout/header'
-import NewGenerationButton from '@/components/layout/new-generation-button'
-import UserMenu from '@/components/layout/user-menu'
+import { Header } from '@/components/layout/header'
+import { NewGenerationButton } from '@/components/layout/new-generation-button'
+import { UserMenu } from '@/components/layout/user-menu'
 import { auth } from '@/lib/auth'
 import { LayoutProps } from '@cgambrell/utils'
 

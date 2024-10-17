@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation'
 import { ChangeEvent, useState } from 'react'
 
 // BUG: Can't do this on client
-export default function UploadImages({ listingId }: { listingId: Listing['id'] }) {
+export function UploadImages({ listingId }: { listingId: Listing['id'] }) {
 	const router = useRouter()
 	const [pending, setPending] = useState(false)
 

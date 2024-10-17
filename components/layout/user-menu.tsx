@@ -27,7 +27,7 @@ import {
 } from '../ui/dropdown-menu'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '../ui/tooltip'
 
-export default async function UserMenu() {
+export async function UserMenu() {
 	const user = await auth()
 	// BUG: Needs to be a correct function
 	const credits = 0 // await getRemainingCredits()

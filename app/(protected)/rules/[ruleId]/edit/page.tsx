@@ -1,11 +1,11 @@
-import BackButton from '@/components/back-button'
+import { BackButton } from '@/components/back-button'
 import { auth } from '@/lib/auth'
 import prisma from '@/lib/db'
 import { Rule } from '@prisma/client'
 import { Metadata } from 'next'
 import { notFound } from 'next/navigation'
-import DeleteRule from './cards/delete-rule'
-import RuleForm from './cards/rule-form'
+import { DeleteRule } from './cards/delete-rule'
+import { RuleForm } from './cards/rule-form'
 
 export const metadata: Metadata = {
 	title: 'QuickList - Edit Rule',

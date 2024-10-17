@@ -2,7 +2,7 @@
 
 import { updateListing } from '@/actions/listing'
 import { ActionButton } from '@/components/action-button'
-import CopyButton from '@/components/copy-button'
+import { CopyButton } from '@/components/copy-button'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
@@ -21,7 +21,7 @@ const placeholder = {
 	description: 'Enhance your wardrobe with this timeless navy and white checkered long sleeve shirt...',
 }
 
-export default function ListingForm({ canEdit, listing }: { canEdit: boolean; listing: Listing }) {
+export function ListingForm({ canEdit, listing }: { canEdit: boolean; listing: Listing }) {
 	const useUpdateListing = updateListing.bind(null, { listingId: listing.id })
 	const form = useForm<z.infer<typeof updateListingSchema>>({ defaultValues: { ...listing }, resolver: zodResolver(updateListingSchema) })
 

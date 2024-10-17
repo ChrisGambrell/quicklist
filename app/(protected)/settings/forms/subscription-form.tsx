@@ -1,9 +1,9 @@
 import { updateName } from '@/actions/user'
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 import { Prisma } from '@prisma/client'
-import ManageSubscriptionButton from './manage-subscription-button'
+import { ManageSubscriptionButton } from './manage-subscription-button'
 
-export default function SubscriptionForm({
+export function SubscriptionForm({
 	subscription,
 }: {
 	subscription: Prisma.SubscriptionGetPayload<{ include: { price: { include: { product: { include: { amount: true } } } } } }>

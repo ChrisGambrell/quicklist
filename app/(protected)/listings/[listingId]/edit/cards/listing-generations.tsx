@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Prisma } from '@prisma/client'
 import { columns } from '../components/columns'
 
-export default function ListingGenerations({ listing }: { listing: Prisma.ListingGetPayload<{ include: { generations: true } }> }) {
+export function ListingGenerations({ listing }: { listing: Prisma.ListingGetPayload<{ include: { generations: true } }> }) {
 	return (
 		<Card>
 			<CardHeader>

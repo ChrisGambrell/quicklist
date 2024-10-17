@@ -3,7 +3,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { requiredCredits } from '@/lib/utils'
 import { Prisma } from '@prisma/client'
 
-export default function GenerateDetails({ listing }: { listing: Prisma.ListingGetPayload<{ include: { images: true } }> }) {
+export function GenerateDetails({ listing }: { listing: Prisma.ListingGetPayload<{ include: { images: true } }> }) {
 	// TODO: Fix this... need to be able to generate
 	// const useGenerateData = generateListingData.bind(null, { listingId: listing.id })
 

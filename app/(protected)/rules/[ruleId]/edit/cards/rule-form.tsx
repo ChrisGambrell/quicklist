@@ -8,7 +8,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Rule } from '@prisma/client'
 import { useFormState } from 'react-dom'
 
-export default function RuleForm({ canEdit, rule }: { canEdit: boolean; rule: Rule }) {
+export function RuleForm({ canEdit, rule }: { canEdit: boolean; rule: Rule }) {
 	const [state, action] = useFormState(updateRule.bind(null, { ruleId: rule.id }), null)
 
 	return (

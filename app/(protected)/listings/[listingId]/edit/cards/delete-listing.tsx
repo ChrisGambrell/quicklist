@@ -3,7 +3,7 @@ import { ActionButton } from '@/components/action-button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Listing } from '@prisma/client'
 
-export default function DeleteListing({ listing }: { listing: Listing }) {
+export function DeleteListing({ listing }: { listing: Listing }) {
 	const useDeleteListing = deleteListing.bind(null, { listingId: listing.id })
 
 	return (
