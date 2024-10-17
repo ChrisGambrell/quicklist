@@ -14,6 +14,11 @@ export const env = createEnv({
 		AUTH_RESEND_KEY: z.string().min(1),
 		AUTH_RESEND_EMAIL: z.string().email(),
 
+		AWS_ACCESS_KEY_ID: z.string().min(1),
+		AWS_SECRET_ACCESS_KEY: z.string().min(1),
+		AWS_REGION: z.string().min(1),
+		AWS_BUCKET_NAME: z.string().min(1),
+
 		DATABASE_URL: z.string().url(),
 
 		OPENAI_KEY: z.string().min(1),
@@ -36,6 +41,11 @@ export const env = createEnv({
 
 		AUTH_RESEND_KEY: process.env.AUTH_RESEND_KEY,
 		AUTH_RESEND_EMAIL: process.env.AUTH_RESEND_EMAIL,
+
+		AWS_ACCESS_KEY_ID: process.env.AWS_ACCESS_KEY_ID,
+		AWS_SECRET_ACCESS_KEY: process.env.AWS_SECRET_ACCESS_KEY,
+		AWS_REGION: process.env.AWS_REGION,
+		AWS_BUCKET_NAME: process.env.AWS_BUCKET_NAME,
 
 		DATABASE_URL: process.env.DATABASE_URL,
 

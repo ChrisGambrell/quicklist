@@ -2,9 +2,13 @@
 
 import { auth } from '@/lib/auth'
 import prisma from '@/lib/db'
-import { updateListingSchema } from '@/validators/listing'
+import { env } from '@/lib/env'
+import { s3, S3_URL } from '@/lib/s3'
+import { updateListingSchema, uploadListingImageSchema } from '@/validators/listing'
+import { _Object, DeleteObjectCommand } from '@aws-sdk/client-s3'
+import { createPresignedPost } from '@aws-sdk/s3-presigned-post'
 import { getSuccessRedirect, parseFormData } from '@cgambrell/utils'
-import { Listing } from '@prisma/client'
+import { Listing, ListingImage } from '@prisma/client'
 import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
 
@@ -33,6 +37,30 @@ export async function deleteListing({ listingId }: { listingId: Listing['id'] })
 	redirect(getSuccessRedirect('/listings', 'Listing deleted'))
 }
 
+export async function uploadListingImage({ listingId }: { listingId: Listing['id'] }, _prevState: any, formData: FormData) {
+	const { data, errors } = parseFormData(formData, uploadListingImageSchema)
+	if (errors) return { errors }
+
+	const fileExt = data.file.name.split('.').pop()
+	const Key = `listingImages/${listingId}/${new Date().getTime()}-${Math.random()}.${fileExt}`
+
+	try {
+		const { url, fields } = await createPresignedPost(s3, { Bucket: env.AWS_BUCKET_NAME, Key, Expires: 600 })
+
+		const fd = new FormData()
+		Object.entries(fields).forEach(([key, value]) => fd.append(key, value as string))
+		fd.append('file', data.file)
+
+		await fetch(url, { method: 'POST', body: fd })
+		await prisma.listingImage.create({ data: { listingId, imagePath: `${S3_URL}/${Key}` } })
+	} catch (error) {
+		throw error
+	}
+
+	revalidatePath(`/listings/${listingId}/edit`, 'page')
+	redirect(getSuccessRedirect(`/listings/${listingId}/edit`, 'Image uploaded'))
+}
+
 // BUG: Need to do this with prisma
 // export async function generateListingData({ listingId }: { listingId: Listing['id'] }) {
 // 	const supabase = createClient()
@@ -56,13 +84,13 @@ export async function deleteListing({ listingId }: { listingId: Listing['id'] })
 // 	redirect(getSuccessRedirect(`/listings/${listingId}/edit`, 'Listing data generated'))
 // }
 
-// BUG: Need to do this with prisma
-// export async function deleteImage({ listingId, path }: { listingId: Listing['id']; path: ListingImage['image_path'] }) {
-// 	const supabase = createClient()
+export async function deleteListingImage({ listingImageId }: { listingImageId: ListingImage['id'] }) {
+	const listingImage = await prisma.listingImage.findUnique({ where: { id: listingImageId } })
+	if (!listingImage) throw new Error('Listing image not found')
 
-// 	const { error } = await supabase.storage.from('listing_images').remove([path])
-// 	if (error) redirect(getErrorRedirect(`/listings/${listingId}/edit`, error.message))
+	await s3.send(new DeleteObjectCommand({ Bucket: env.AWS_BUCKET_NAME, Key: listingImage.imagePath }))
+	await prisma.listingImage.delete({ where: { id: listingImageId } })
 
-// 	revalidatePath(`/listings/${listingId}/edit`, 'page')
-// 	redirect(getSuccessRedirect(`/listings/${listingId}/edit`, 'Image deleted'))
-// }
+	revalidatePath(`/listings/${listingImage.listingId}/edit`, 'page')
+	redirect(getSuccessRedirect(`/listings/${listingImage.listingId}/edit`, 'Deleted successfully'))
+}

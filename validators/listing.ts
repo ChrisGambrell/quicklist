@@ -8,3 +8,7 @@ export const updateListingSchema = z.object({
 		.transform((arg) => (!arg.trim() ? null : arg))
 		.pipe(z.coerce.number().nullable()),
 })
+
+export const uploadListingImageSchema = z.object({
+	file: z.instanceof(File).refine((arg) => arg.size > 0, { message: 'File is required' }),
+})

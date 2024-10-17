@@ -1,4 +1,4 @@
-import { deleteImage } from '@/actions/listing'
+import { deleteListingImage } from '@/actions/listing'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { PLACEHOLDER_IMAGE } from '@/lib/constants'
 import { getImageUrl } from '@/lib/utils'
@@ -46,7 +46,7 @@ export default function ListingImages({
 }
 
 function ListingImage({ image, variant }: { image: TListingImage; variant: 'primary' | 'secondary' }) {
-	const useDeleteImage = deleteImage.bind(null, { listingId: image.listingId, path: image.imagePath })
+	const useDeleteImage = deleteListingImage.bind(null, { listingImageId: image.id })
 
 	const sizeMap: Record<'primary' | 'secondary', number> = {
 		primary: 84,
