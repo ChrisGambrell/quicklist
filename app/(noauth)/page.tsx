@@ -2,8 +2,10 @@ import NoAuthLayout from '@/components/layout/noauth-layout'
 import Logo from '@/components/logo'
 import { buttonVariants } from '@/components/ui/button'
 import Link from 'next/link'
+import { redirect } from 'next/navigation'
 
 export default function LandingPage() {
+	return redirect('/listings')
 	return (
 		<NoAuthLayout action={{ href: '/login', label: 'Login' }}>
 			<div className='container px-4 md:px-6'>
