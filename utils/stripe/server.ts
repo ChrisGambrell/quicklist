@@ -1,11 +1,11 @@
 'use server'
 
+import { createOrRetrieveCustomer } from '@/actions/stripe'
 import { auth } from '@/lib/auth'
 import { getErrorRedirect, getSuccessRedirect, getURL } from '@cgambrell/utils'
 import { Price } from '@prisma/client'
 import Stripe from 'stripe'
 import { calculateTrialEndUnixTimestamp } from '../helpers'
-import { createOrRetrieveCustomer } from '../supabase/admin'
 import { CheckoutResponse } from '../types'
 import { stripe } from './config'
 
