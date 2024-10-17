@@ -7,7 +7,7 @@ import {
 	upsertPurchaseRecord,
 } from '@/actions/stripe'
 import { env } from '@/lib/env'
-import { stripe } from '@/utils/stripe/config'
+import { stripe } from '@/lib/stripe/config'
 import Stripe from 'stripe'
 
 const relevantEvents = new Set([

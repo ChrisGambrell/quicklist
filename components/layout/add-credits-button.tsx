@@ -1,7 +1,7 @@
 'use client'
 
-import { getStripe } from '@/utils/stripe/client'
-import { checkoutWithStripe } from '@/utils/stripe/server'
+import { getStripe } from '@/lib/stripe/client'
+import { checkoutWithStripe } from '@/lib/stripe/server'
 import { getErrorRedirect } from '@cgambrell/utils'
 import { Prisma } from '@prisma/client'
 import { Loader2Icon } from 'lucide-react'

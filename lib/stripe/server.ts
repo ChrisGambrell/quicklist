@@ -5,9 +5,13 @@ import { auth } from '@/lib/auth'
 import { getErrorRedirect, getSuccessRedirect, getURL } from '@cgambrell/utils'
 import { Price } from '@prisma/client'
 import Stripe from 'stripe'
-import { calculateTrialEndUnixTimestamp } from '../helpers'
-import { CheckoutResponse } from '../types'
+import { calculateTrialEndUnixTimestamp } from '../utils'
 import { stripe } from './config'
+
+type CheckoutResponse = {
+	errorRedirect?: string
+	sessionId?: string
+}
 
 export async function checkoutWithStripe(price: Price): Promise<CheckoutResponse> {
 	try {

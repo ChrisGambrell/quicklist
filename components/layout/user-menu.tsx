@@ -1,7 +1,7 @@
 import { logout } from '@/actions/auth'
 import { auth } from '@/lib/auth'
+import { PLACEHOLDER_AVATAR } from '@/lib/constants'
 import { cn } from '@/lib/utils'
-import { PLACEHOLDER_AVATAR } from '@/utils/constants'
 import {
 	CircleDollarSignIcon,
 	ClockIcon,

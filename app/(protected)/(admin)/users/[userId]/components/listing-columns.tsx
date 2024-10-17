@@ -1,8 +1,8 @@
 'use client'
 
 import { ColumnHeader } from '@/components/column-header'
-import { PLACEHOLDER_IMAGE } from '@/utils/constants'
-import { getImageUrl } from '@/utils/helpers'
+import { PLACEHOLDER_IMAGE } from '@/lib/constants'
+import { getImageUrl } from '@/lib/utils'
 import { Prisma } from '@prisma/client'
 import { ColumnDef } from '@tanstack/react-table'
 import Image from 'next/image'
