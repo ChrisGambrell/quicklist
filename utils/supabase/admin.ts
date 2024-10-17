@@ -1,24 +1,21 @@
 import { Database, TablesInsert } from '@/db_types'
 import { toDateTime } from '@/utils/helpers'
 import { stripe } from '@/utils/stripe/config'
-import { Price as TPrice, Product as TProduct } from '@/utils/types'
+import { Prisma } from '@prisma/client'
 import { createClient } from '@supabase/supabase-js'
 import Stripe from 'stripe'
 
-type OmitDates<T> = Omit<T, 'created_at' | 'updated_at'>
-type Product = OmitDates<TProduct>
 type ProductAmount = TablesInsert<'product_amounts'>
-type Price = OmitDates<TPrice>
 
 const TRIAL_PERIOD_DAYS = 0
 const supabaseAdmin = createClient<Database>(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.SUPABASE_SERVICE_ROLE_KEY!)
 
 const upsertProductRecord = async (product: Stripe.Product) => {
-	const productData: Product = {
+	const productData: Prisma.ProductCreateInput = {
 		id: product.id,
 		active: product.active,
 		name: product.name,
-		description: product.description ?? null,
+		desc: product.description ?? null,
 		image: product.images?.[0] ?? null,
 		metadata: product.metadata,
 	}
@@ -38,16 +35,16 @@ const upsertProductRecord = async (product: Stripe.Product) => {
 }
 
 const upsertPriceRecord = async (price: Stripe.Price, retryCount = 0, maxRetries = 3) => {
-	const priceData: Price = {
+	const priceData: Prisma.PriceCreateInput = {
 		id: price.id,
-		product_id: typeof price.product === 'string' ? price.product : '',
+		product: { connect: { id: price.product as string } },
 		active: price.active,
 		currency: price.currency,
 		type: price.type,
-		unit_amount: price.unit_amount ?? null,
+		unitAmount: price.unit_amount ?? null,
 		interval: price.recurring?.interval ?? null,
-		interval_count: price.recurring?.interval_count ?? null,
-		trial_period_days: price.recurring?.trial_period_days ?? TRIAL_PERIOD_DAYS,
+		intervalCount: price.recurring?.interval_count ?? null,
+		trialPeriodDays: price.recurring?.trial_period_days ?? TRIAL_PERIOD_DAYS,
 	}
 
 	const { error: upsertError } = await supabaseAdmin.from('prices').upsert([priceData])

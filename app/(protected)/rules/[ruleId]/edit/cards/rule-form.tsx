@@ -5,7 +5,7 @@ import { ActionButton } from '@/components/action-button'
 import { FormInput } from '@/components/form-input'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
-import { Rule } from '@/utils/types'
+import { Rule } from '@prisma/client'
 import { useFormState } from 'react-dom'
 
 export default function RuleForm({ canEdit, rule }: { canEdit: boolean; rule: Rule }) {

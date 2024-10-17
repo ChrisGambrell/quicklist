@@ -1,11 +1,13 @@
+import { logout } from '@/actions/auth'
+import { auth } from '@/lib/auth'
 import { cn } from '@/lib/utils'
-import { getAuth, getRemainingCredits } from '@/utils/_helpers'
 import { PLACEHOLDER_AVATAR } from '@/utils/constants'
 import {
 	CircleDollarSignIcon,
 	ClockIcon,
 	HistoryIcon,
 	LockKeyholeIcon,
+	LogOutIcon,
 	LucideIcon,
 	ScaleIcon,
 	SettingsIcon,
@@ -24,18 +26,18 @@ import {
 	DropdownMenuTrigger,
 } from '../ui/dropdown-menu'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '../ui/tooltip'
-import SignOutButton from './sign-out-button'
 
 export default async function UserMenu() {
-	const { user } = await getAuth()
-	const credits = await getRemainingCredits()
+	const user = await auth()
+	// BUG: Needs to be a correct function
+	const credits = 0 // await getRemainingCredits()
 
 	return (
 		<DropdownMenu>
 			<DropdownMenuTrigger asChild>
 				<Button variant='outline' size='icon' className='overflow-hidden rounded-full'>
 					<Image
-						src={user.avatar_url ?? PLACEHOLDER_AVATAR}
+						src={user.image ?? PLACEHOLDER_AVATAR}
 						alt='User avatar'
 						className='overflow-hidden rounded-full object-cover w-full h-full'
 						width={40}
@@ -47,7 +49,7 @@ export default async function UserMenu() {
 			<DropdownMenuContent className='w-80 mr-4'>
 				<div className='flex items-center text-sm px-2 py-1'>
 					<div>
-						<div>{user.full_name}</div>
+						<div>{user.name}</div>
 						<div className='text-xs text-foreground/80'>{user.email}</div>
 					</div>
 					<div className='ml-auto'>
@@ -69,7 +71,7 @@ export default async function UserMenu() {
 				<DropdownMenuGroup>
 					<DropdownLink href='/listings' icon={HistoryIcon} label='History' />
 					<DropdownLink href='/rules' icon={ScaleIcon} label='Rules' />
-					{user.is_admin && <DropdownLink href='/users' icon={Users2Icon} label='Users' />}
+					{user.isAdmin && <DropdownLink href='/users' icon={Users2Icon} label='Users' />}
 				</DropdownMenuGroup>
 				<DropdownMenuSeparator />
 				<DropdownMenuGroup>
@@ -82,7 +84,14 @@ export default async function UserMenu() {
 					<DropdownLink href='/settings' icon={SettingsIcon} label='Settings' />
 				</DropdownMenuGroup>
 				<DropdownMenuSeparator />
-				<SignOutButton />
+				<DropdownMenuItem asChild>
+					<form action={logout}>
+						<button className='w-full text-left' type='submit'>
+							<LogOutIcon className='mr-2 size-4' />
+							Logout
+						</button>
+					</form>
+				</DropdownMenuItem>
 			</DropdownMenuContent>
 		</DropdownMenu>
 	)

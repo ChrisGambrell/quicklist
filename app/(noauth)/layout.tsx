@@ -1,12 +1,9 @@
-import { createClient } from '@/utils/supabase/server'
+import { auth } from '@/lib/auth'
+import { LayoutProps } from '@cgambrell/utils'
 import { redirect } from 'next/navigation'
-import { ReactNode } from 'react'
 
-export default async function NoAuthLayout({ children }: { children: ReactNode }) {
-	const supabase = createClient()
-	const {
-		data: { user },
-	} = await supabase.auth.getUser()
+export default async function NoAuthLayout({ children }: LayoutProps) {
+	const user = await auth()
 
 	if (!!user) redirect('/listings')
 	return children

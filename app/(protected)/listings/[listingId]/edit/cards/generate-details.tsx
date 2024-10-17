@@ -1,10 +1,9 @@
-import { generateListingData } from '@/actions/listing'
 import { ActionButton } from '@/components/action-button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { requiredCredits } from '@/utils/helpers'
-import { ListingWithGenerationsAndImages } from '@/utils/types'
+import { Prisma } from '@prisma/client'
 
-export default function GenerateDetails({ listing }: { listing: ListingWithGenerationsAndImages }) {
+export default function GenerateDetails({ listing }: { listing: Prisma.ListingGetPayload<{ include: { images: true } }> }) {
 	const useGenerateData = generateListingData.bind(null, { listingId: listing.id })
 
 	return (

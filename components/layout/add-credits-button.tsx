@@ -2,20 +2,20 @@
 
 import { getStripe } from '@/utils/stripe/client'
 import { checkoutWithStripe } from '@/utils/stripe/server'
-import { ProductWithPrices } from '@/utils/types'
 import { getErrorRedirect } from '@cgambrell/utils'
+import { Prisma } from '@prisma/client'
 import { Loader2Icon } from 'lucide-react'
 import { usePathname, useRouter } from 'next/navigation'
 import { useState } from 'react'
 import { Button } from '../ui/button'
 
-export default function AddCreditsButton({ product }: { product: ProductWithPrices }) {
+export default function AddCreditsButton({ product }: { product: Prisma.ProductGetPayload<{ include: { prices: true } }> }) {
 	const pathname = usePathname()
 	const router = useRouter()
 	const [isLoading, setIsLoading] = useState(false)
 
 	const price = product.prices[0]
-	if (!price || !price.unit_amount) return null
+	if (!price || !price.unitAmount) return null
 
 	const handleStripeCheckout = async () => {
 		setIsLoading(true)

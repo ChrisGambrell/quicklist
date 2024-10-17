@@ -2,7 +2,6 @@
 
 'use client'
 
-import { generateListingData } from '@/actions/listing'
 import { Button } from '@/components/ui/button'
 import { requiredCredits } from '@/utils/helpers'
 import { createClient } from '@/utils/supabase/client'
@@ -53,7 +52,8 @@ export default function ChatImageUpload() {
 			}
 		}
 
-		await generateListingData({ listingId: listing.id })
+		// BUG: Need to do this with prisma on the server
+		// await generateListingData({ listingId: listing.id })
 		setIsLoading(false)
 	}
 

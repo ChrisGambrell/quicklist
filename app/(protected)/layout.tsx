@@ -1,11 +1,11 @@
 import Header from '@/components/layout/header'
 import NewGenerationButton from '@/components/layout/new-generation-button'
 import UserMenu from '@/components/layout/user-menu'
-import { getAuth } from '@/utils/_helpers'
-import { ReactNode } from 'react'
+import { auth } from '@/lib/auth'
+import { LayoutProps } from '@cgambrell/utils'
 
-export default async function ProtectedLayout({ children }: { children: ReactNode }) {
-	await getAuth()
+export default async function ProtectedLayout({ children }: LayoutProps) {
+	await auth()
 
 	return (
 		<div className='flex min-h-[100dvh] flex-col'>

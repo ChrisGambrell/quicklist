@@ -1,16 +1,17 @@
 'use server'
 
+import { auth } from '@/lib/auth'
 import { getErrorRedirect, getSuccessRedirect, getURL } from '@cgambrell/utils'
+import { Price } from '@prisma/client'
 import Stripe from 'stripe'
-import { getAuth } from '../_helpers'
 import { calculateTrialEndUnixTimestamp } from '../helpers'
 import { createOrRetrieveCustomer } from '../supabase/admin'
-import { CheckoutResponse, Price } from '../types'
+import { CheckoutResponse } from '../types'
 import { stripe } from './config'
 
 export async function checkoutWithStripe(price: Price): Promise<CheckoutResponse> {
 	try {
-		const { user } = await getAuth()
+		const user = await auth()
 
 		// Retrieve or create the customer in Stripe
 		let customer: string
@@ -41,13 +42,13 @@ export async function checkoutWithStripe(price: Price): Promise<CheckoutResponse
 			success_url: getURL(getSuccessRedirect('/listings', 'Purchase successful.')),
 		}
 
-		console.log('Trial end:', calculateTrialEndUnixTimestamp(price.trial_period_days))
+		console.log('Trial end:', calculateTrialEndUnixTimestamp(price.trialPeriodDays))
 		if (price.type === 'recurring')
 			params = {
 				...params,
 				mode: 'subscription',
 				subscription_data: {
-					trial_end: calculateTrialEndUnixTimestamp(price.trial_period_days),
+					trial_end: calculateTrialEndUnixTimestamp(price.trialPeriodDays),
 				},
 			}
 		else if (price.type === 'one_time')
@@ -82,7 +83,7 @@ export async function checkoutWithStripe(price: Price): Promise<CheckoutResponse
 
 export async function createStripePortal(currentPath: string) {
 	try {
-		const { user } = await getAuth()
+		const user = await auth()
 
 		let customer
 		try {

@@ -1,7 +1,7 @@
+import { ListingImage } from '@prisma/client'
 import { ZodTypeAny, z } from 'zod'
-import { ListingImage } from './types'
 
-export const getImageUrl = (path: ListingImage['image_path']) =>
+export const getImageUrl = (path: ListingImage['imagePath']) =>
 	`${process.env.NEXT_PUBLIC_SUPABASE_URL!}/storage/v1/object/public/listing_images/${path}`
 
 export function requiredCredits(num: number) {

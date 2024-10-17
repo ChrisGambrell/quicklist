@@ -1,7 +1,7 @@
 'use client'
 
 import { ColumnHeader } from '@/components/column-header'
-import { Rule } from '@/utils/types'
+import { Rule } from '@prisma/client'
 import { ColumnDef } from '@tanstack/react-table'
 import Link from 'next/link'
 
@@ -19,7 +19,7 @@ export const ruleColumns: ColumnDef<Rule>[] = [
 	{
 		accessorKey: 'created_at',
 		header: ({ column }) => <ColumnHeader column={column} title='Created at' />,
-		cell: ({ getValue }) => new Date(getValue<Rule['created_at']>()).toDateString(),
+		cell: ({ getValue }) => new Date(getValue<Rule['createdAt']>()).toDateString(),
 		meta: { className: 'hidden md:table-cell whitespace-nowrap' },
 	},
 ]

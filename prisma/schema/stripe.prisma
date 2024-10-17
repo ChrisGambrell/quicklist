@@ -50,7 +50,20 @@ model Product {
     image    String?
     metadata Json?
 
+    amount ProductAmount?
     prices Price[]
+}
+
+model ProductAmount {
+    id        String   @id @default(cuid())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    credits       Int @default(0)
+    listingAmount Int @default(0)
+    ruleAmount    Int @default(0)
+
+    product Product @relation(fields: [id], references: [id], onDelete: Cascade)
 }
 
 model Purchase {
@@ -83,15 +96,16 @@ model Subscription {
 
     priceId            String
     userId             String
+    status             SubscriptionStatus?
     quantity           Int?
     cancelAtPeriodEnd  Boolean?
-    currentPeriodStart DateTime @default(now())
-    currentPeriodEnd   DateTime @default(now())
-    endedAt            DateTime @default(now())
-    cancelAt           DateTime @default(now())
-    canceledAt         DateTime @default(now())
-    trialStart         DateTime @default(now())
-    trialEnd           DateTime @default(now())
+    currentPeriodStart DateTime            @default(now())
+    currentPeriodEnd   DateTime            @default(now())
+    endedAt            DateTime            @default(now())
+    cancelAt           DateTime            @default(now())
+    canceledAt         DateTime            @default(now())
+    trialStart         DateTime            @default(now())
+    trialEnd           DateTime            @default(now())
 
     price Price @relation(fields: [priceId], references: [id], onDelete: Cascade)
     user  User  @relation(fields: [userId], references: [id], onDelete: Cascade)

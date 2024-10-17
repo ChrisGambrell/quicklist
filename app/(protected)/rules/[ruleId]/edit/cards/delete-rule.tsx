@@ -1,7 +1,7 @@
 import { deleteRule } from '@/actions/rule'
 import { ActionButton } from '@/components/action-button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Rule } from '@/utils/types'
+import { Rule } from '@prisma/client'
 
 export default function DeleteRule({ rule }: { rule: Rule }) {
 	const useDeleteRule = deleteRule.bind(null, { ruleId: rule.id })

@@ -13,7 +13,9 @@ model User {
 
     customer      Customer?
     generations   Generation[]
+    listings      Listing[]
     purchases     Purchase[]
+    rules         Rule[]
     subscriptions Subscription[]
 
     accounts      Account[]

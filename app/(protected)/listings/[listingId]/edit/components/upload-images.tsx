@@ -1,12 +1,13 @@
 'use client'
 
 import { createClient } from '@/utils/supabase/client'
-import { Listing } from '@/utils/types'
+import { Listing } from '@prisma/client'
 import { Loader2Icon, UploadIcon } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { ChangeEvent, useState } from 'react'
 import toast from 'react-hot-toast'
 
+// BUG: Can't do this on client
 export default function UploadImages({ listingId }: { listingId: Listing['id'] }) {
 	const router = useRouter()
 	const [pending, setPending] = useState(false)
