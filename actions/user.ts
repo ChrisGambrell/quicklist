@@ -2,14 +2,9 @@
 
 import { auth } from '@/lib/auth'
 import prisma from '@/lib/db'
+import { updateAvatarSchema, updateNameSchema, updatePasswordSchema } from '@/validators/user'
 import { getErrorRedirect, getSuccessRedirect, parseFormData } from '@cgambrell/utils'
 import { redirect } from 'next/navigation'
-import { z } from 'zod'
-
-// TODO: Search for zod and move to validators
-const updateNameSchema = z.object({ full_name: z.string().transform((arg) => (!arg.trim() ? null : arg)) })
-const updateAvatarSchema = z.object({ avatar: z.instanceof(File) })
-const updatePasswordSchema = z.object({ password: z.string().min(8).optional(), confirm_password: z.string().optional() })
 
 export async function updateName(formData: FormData) {
 	const { data, errors } = parseFormData(formData, updateNameSchema)

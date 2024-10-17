@@ -2,13 +2,11 @@
 
 import { auth } from '@/lib/auth'
 import prisma from '@/lib/db'
+import { updateRuleSchema } from '@/validators/rule'
 import { getSuccessRedirect, parseFormData } from '@cgambrell/utils'
 import { Rule } from '@prisma/client'
 import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
-import { z } from 'zod'
-
-const updateRuleSchema = z.object({ rule: z.string().transform((arg) => (!arg.trim() ? null : arg)) })
 
 export async function createRule() {
 	const user = await auth()
