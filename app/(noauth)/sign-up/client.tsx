@@ -2,44 +2,26 @@
 
 import { register } from '@/actions/auth'
 import { ActionButton } from '@/components/action-button'
-import { FormError } from '@/components/form-error'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
+import { FormInput } from '@/components/form-input'
 import { useFormState } from 'react-dom'
 
 export function ClientPage() {
 	const [state, action] = useFormState(register, null)
 
 	return (
-		<form action={action} className='grid gap-4'>
-			<div className='grid gap-2'>
-				<Label htmlFor='firstName'>First name</Label>
-				<Input id='firstName' name='firstName' placeholder='Max' />
-				<FormError value={state?.errors.firstName} />
-			</div>
-			<div className='grid gap-2'>
-				<Label htmlFor='lastName'>Last name</Label>
-				<Input id='lastName' name='lastName' placeholder='Robinson' />
-				<FormError value={state?.errors.lastName} />
-			</div>
-
-			<div className='grid gap-2'>
-				<Label htmlFor='email'>Email address</Label>
-				<Input id='email' name='email' placeholder='me@example.com' type='email' />
-				<FormError value={state?.errors.email} />
-			</div>
-
-			<div className='grid gap-2'>
-				<Label htmlFor='password'>Password</Label>
-				<Input id='password' name='password' type='password' />
-				<FormError value={state?.errors.password} />
-			</div>
-			<div className='grid gap-2'>
-				<Label htmlFor='confirmPassword'>Confirm password</Label>
-				<Input id='confirmPassword' name='confirmPassword' type='password' />
-				<FormError value={state?.errors.confirmPassword} />
-			</div>
-
+		<form action={action} className='grid gap-y-4 gap-x-2 grid-cols-2'>
+			<FormInput label='First name' name='firstName' placeholder='Max' error={state?.errors.firstName} />
+			<FormInput label='Last name' name='lastName' placeholder='Robinson' error={state?.errors.lastName} />
+			<FormInput
+				className='col-span-full'
+				label='Email address'
+				name='email'
+				placeholder='me@example.com'
+				type='email'
+				error={state?.errors.email}
+			/>
+			<FormInput label='Password' name='password' type='password' error={state?.errors.password} />
+			<FormInput label='Confirm password' name='confirmPassword' type='password' error={state?.errors.confirmPassword} />
 			<ActionButton>Sign up</ActionButton>
 		</form>
 	)

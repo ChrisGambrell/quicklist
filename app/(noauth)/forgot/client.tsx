@@ -2,9 +2,7 @@
 
 import { verifyEmail } from '@/actions/auth'
 import { ActionButton } from '@/components/action-button'
-import { FormError } from '@/components/form-error'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
+import { FormInput } from '@/components/form-input'
 import { useFormState } from 'react-dom'
 
 export function ClientPage() {
@@ -12,12 +10,7 @@ export function ClientPage() {
 
 	return (
 		<form action={action} className='grid gap-4'>
-			<div className='grid gap-2'>
-				<Label htmlFor='email'>Email address</Label>
-				<Input id='email' name='email' placeholder='me@example.com' type='email' />
-				<FormError value={state?.errors.email} />
-			</div>
-
+			<FormInput label='Email address' name='email' placeholder='me@example.com' type='email' error={state?.errors.email} />
 			<ActionButton>Send reset</ActionButton>
 		</form>
 	)
