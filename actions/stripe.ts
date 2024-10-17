@@ -2,7 +2,7 @@
 
 import prisma from '@/lib/db'
 import { stripe } from '@/lib/stripe/config'
-import { toDateTime } from '@/utils/helpers'
+import { toDateTime } from '@/lib/utils'
 import { Prisma } from '@prisma/client'
 import Stripe from 'stripe'
 

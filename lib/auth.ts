@@ -63,3 +63,18 @@ export const auth = async (): Promise<AuthUser> => {
 
 	return user
 }
+
+export const canGenerate = async (creditsToUse: number): Promise<boolean> => {
+	const user = await auth()
+
+	const purchases = await prisma.purchase.findMany({
+		where: { userId: user.id },
+		include: { price: { include: { product: { include: { amount: true } } } } },
+	})
+	const purchasedCredits = purchases.reduce((acc, purchase) => acc + (purchase.price.product.amount?.credits ?? 0), 0) + 10
+
+	const generations = await prisma.generation.findMany({ where: { userId: user.id } })
+	const usedCredits = generations.reduce((acc, generation) => acc + generation.credits, 0)
+
+	return purchasedCredits - usedCredits >= creditsToUse
+}

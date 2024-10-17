@@ -4,8 +4,8 @@ import { ColumnHeader } from '@/components/column-header'
 import { Button } from '@/components/ui/button'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
 import { PLACEHOLDER_IMAGE } from '@/lib/constants'
+import prisma from '@/lib/db'
 import { getImageUrl } from '@/lib/utils'
-import { createClient } from '@/utils/supabase/client'
 import { Listing, Prisma } from '@prisma/client'
 import { ColumnDef } from '@tanstack/react-table'
 import { MoreHorizontalIcon } from 'lucide-react'
@@ -61,15 +61,12 @@ export const columns: ColumnDef<ColType>[] = [
 	},
 ]
 
+// BUG: Can't do this in a client component
 function Actions({ listingId }: { listingId: Listing['id'] }) {
 	const router = useRouter()
 
 	async function deleteListing() {
-		const supabase = createClient()
-
-		const { error } = await supabase.from('listings').delete().eq('id', listingId)
-		if (error) return toast.error(error.message)
-
+		await prisma.listing.delete({ where: { id: listingId } })
 		toast.success('Listing deleted')
 		router.refresh()
 	}

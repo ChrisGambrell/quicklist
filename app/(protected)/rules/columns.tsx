@@ -3,7 +3,7 @@
 import { ColumnHeader } from '@/components/column-header'
 import { Button } from '@/components/ui/button'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
-import { createClient } from '@/utils/supabase/client'
+import prisma from '@/lib/db'
 import { Rule } from '@prisma/client'
 import { ColumnDef } from '@tanstack/react-table'
 import { MoreHorizontalIcon } from 'lucide-react'
@@ -39,12 +39,9 @@ export const columns: ColumnDef<Rule>[] = [
 export default function Actions({ ruleId }: { ruleId: Rule['id'] }) {
 	const router = useRouter()
 
+	// BUG: Needs to be server action
 	async function deleteRule() {
-		const supabase = createClient()
-
-		const { error } = await supabase.from('rules').delete().eq('id', ruleId)
-		if (error) return toast.error(error.message)
-
+		await prisma.rule.delete({ where: { id: ruleId } })
 		toast.success('Rule deleted')
 		router.refresh()
 	}

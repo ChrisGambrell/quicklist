@@ -1,7 +1,7 @@
 'use client'
 
 import { Button } from '@/components/ui/button'
-import { createStripePortal } from '@/utils/stripe/server'
+import { createStripePortal } from '@/lib/stripe/server'
 import { Loader2Icon } from 'lucide-react'
 import { usePathname, useRouter } from 'next/navigation'
 import { useState } from 'react'

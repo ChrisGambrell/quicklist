@@ -6,7 +6,7 @@ import ManageSubscriptionButton from './manage-subscription-button'
 export default function SubscriptionForm({
 	subscription,
 }: {
-	subscription: Prisma.SubscriptionGetPayload<{ include: { price: { include: { product: true } } } }>
+	subscription: Prisma.SubscriptionGetPayload<{ include: { price: { include: { product: { include: { amount: true } } } } } }>
 }) {
 	return (
 		<form action={updateName}>
@@ -18,10 +18,10 @@ export default function SubscriptionForm({
 				<CardContent>
 					<h6 className='text-xl font-semibold'>{subscription.price.product.name}</h6>
 					<p>
-						${(subscription.price.unit_amount ?? 0) / 100}/{subscription.price.interval}
+						${(Number(subscription.price.unitAmount) ?? 0) / 100}/{subscription.price.interval}
 					</p>
-					<p>{subscription.price.product.amount.listing_amount} listings/month</p>
-					<p>{subscription.price.product.amount.rule_amount} rules</p>
+					<p>{subscription.price.product.amount?.listingAmount} listings/month</p>
+					<p>{subscription.price.product.amount?.ruleAmount} rules</p>
 				</CardContent>
 				<CardFooter className='border-t px-6 py-4'>
 					<ManageSubscriptionButton />
