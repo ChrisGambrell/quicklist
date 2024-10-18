@@ -1,16 +1,14 @@
 'use client'
 
 import { updateRule } from '@/actions/rule'
-import ActionButton from '@/components/action-button'
-import { FormError } from '@/components/form-error'
+import { ActionButton } from '@/components/action-button'
+import { FormInput } from '@/components/form-input'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
-import { Rule } from '@/utils/types'
+import { Rule } from '@prisma/client'
 import { useFormState } from 'react-dom'
 
-export default function RuleForm({ canEdit, rule }: { canEdit: boolean; rule: Rule }) {
+export function RuleForm({ canEdit, rule }: { canEdit: boolean; rule: Rule }) {
 	const [state, action] = useFormState(updateRule.bind(null, { ruleId: rule.id }), null)
 
 	return (
@@ -22,11 +20,7 @@ export default function RuleForm({ canEdit, rule }: { canEdit: boolean; rule: Ru
 				</CardHeader>
 				<CardContent>
 					<div className='grid gap-6'>
-						<div className='grid gap-3'>
-							<Label htmlFor='rule'>Rule</Label>
-							<Input id='rule' name='rule' defaultValue={rule.rule ?? ''} />
-							<FormError value={state?.errors.rule} />
-						</div>
+						<FormInput label='Rule' name='rule' defaultValue={rule.rule ?? ''} error={state?.errors.rule} />
 					</div>
 				</CardContent>
 				{canEdit && (

@@ -5,7 +5,7 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { ReactNode, useMemo } from 'react'
 
-export default function NavLink({ children, exact = false, href }: { children: ReactNode; exact?: boolean; href: string }) {
+export function NavLink({ children, exact = false, href }: { children: ReactNode; exact?: boolean; href: string }) {
 	const pathname = usePathname()
 
 	const isActive = useMemo(() => {

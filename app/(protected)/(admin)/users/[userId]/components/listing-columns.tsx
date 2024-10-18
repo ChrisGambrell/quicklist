@@ -1,19 +1,21 @@
 'use client'
 
 import { ColumnHeader } from '@/components/column-header'
-import { PLACEHOLDER_IMAGE } from '@/utils/constants'
-import { getImageUrl } from '@/utils/helpers'
-import { Listing, ListingWithImages } from '@/utils/types'
+import { PLACEHOLDER_IMAGE } from '@/lib/constants'
+import { getImageUrl } from '@/lib/utils'
+import { Prisma } from '@prisma/client'
 import { ColumnDef } from '@tanstack/react-table'
 import Image from 'next/image'
 import Link from 'next/link'
 
-export const listingColumns: ColumnDef<ListingWithImages>[] = [
+type ColType = Prisma.ListingGetPayload<{ include: { images: true } }>
+
+export const listingColumns: ColumnDef<ColType>[] = [
 	{
 		id: 'image',
 		cell: ({ row }) => (
 			<Image
-				src={row.original.images.length ? getImageUrl(row.original.images[0].image_path) : PLACEHOLDER_IMAGE}
+				src={row.original.images.length ? getImageUrl(row.original.images[0].imagePath) : PLACEHOLDER_IMAGE}
 				alt='Listing image'
 				className='aspect-square rounded-md object-cover'
 				height={64}
@@ -27,7 +29,7 @@ export const listingColumns: ColumnDef<ListingWithImages>[] = [
 		header: ({ column }) => <ColumnHeader column={column} title='Title' />,
 		cell: ({ getValue, row }) => (
 			<Link className='line-clamp-1 hover:underline' href={`/listings/${row.original.id}/edit`}>
-				{getValue<ListingWithImages['title']>() ?? '-'}
+				{getValue<ColType['title']>() ?? '-'}
 			</Link>
 		),
 		meta: { cellClassName: 'font-medium w-[99%] break-all' },
@@ -39,9 +41,9 @@ export const listingColumns: ColumnDef<ListingWithImages>[] = [
 		meta: { className: 'hidden md:table-cell whitespace-nowrap' },
 	},
 	{
-		accessorKey: 'created_at',
+		accessorKey: 'createdAt',
 		header: ({ column }) => <ColumnHeader column={column} title='Created at' />,
-		cell: ({ getValue }) => new Date(getValue<ListingWithImages['created_at']>()).toDateString(),
+		cell: ({ getValue }) => new Date(getValue<ColType['createdAt']>()).toDateString(),
 		meta: { className: 'hidden md:table-cell whitespace-nowrap' },
 	},
 ]

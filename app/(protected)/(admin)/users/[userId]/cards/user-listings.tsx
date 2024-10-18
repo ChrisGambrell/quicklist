@@ -1,9 +1,9 @@
 import { DataTable } from '@/components/data-table'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { ListingWithImages } from '@/utils/types'
+import { Prisma } from '@prisma/client'
 import { listingColumns } from '../components/listing-columns'
 
-export default function UserListings({ listings }: { listings: ListingWithImages[] }) {
+export function UserListings({ listings }: { listings: Prisma.ListingGetPayload<{ include: { images: true } }>[] }) {
 	return (
 		<Card>
 			<CardHeader>

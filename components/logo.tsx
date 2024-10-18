@@ -2,7 +2,7 @@ import icon from '@/app/icon.png'
 import Image from 'next/image'
 import Link from 'next/link'
 
-export default function Logo({ size }: { size: number }) {
+export function Logo({ size }: { size: number }) {
 	return <Image src={icon} alt='QuickList' className='rounded-lg' height={size} width={size} />
 }
 

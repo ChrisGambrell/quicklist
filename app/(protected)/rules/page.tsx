@@ -1,7 +1,8 @@
 import { createRule } from '@/actions/rule'
-import ActionButton from '@/components/action-button'
+import { ActionButton } from '@/components/action-button'
 import { DataTable } from '@/components/data-table'
-import { getAuth } from '@/utils/_helpers'
+import { auth } from '@/lib/auth'
+import prisma from '@/lib/db'
 import { PlusCircleIcon } from 'lucide-react'
 import { Metadata } from 'next'
 import { columns } from './columns'
@@ -12,8 +13,8 @@ export const metadata: Metadata = {
 }
 
 export default async function RulesPage() {
-	const { user, supabase } = await getAuth()
-	const { data: rules } = await supabase.from('rules').select().eq('user_id', user.id).order('created_at', { ascending: true })
+	const user = await auth()
+	const rules = await prisma.rule.findMany({ where: { userId: user.isAdmin ? undefined : user.id }, orderBy: { createdAt: 'asc' } })
 
 	return (
 		<div className='container grid gap-4'>

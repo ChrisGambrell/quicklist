@@ -1,76 +1,83 @@
 'use server'
 
-import { getAuth } from '@/utils/_helpers'
-import { parseFormData } from '@/utils/helpers'
-import { createClient } from '@/utils/supabase/server'
-import { Listing, ListingImage } from '@/utils/types'
-import { updateListingSchema } from '@/validators/listing'
-import { getErrorRedirect, getSuccessRedirect } from '@cgambrell/utils'
-import { FunctionsHttpError } from '@supabase/supabase-js'
+import { auth } from '@/lib/auth'
+import prisma from '@/lib/db'
+import { env } from '@/lib/env'
+import { s3, S3_URL } from '@/lib/s3'
+import { updateListingSchema, uploadListingImageSchema } from '@/validators/listing'
+import { _Object, DeleteObjectCommand } from '@aws-sdk/client-s3'
+import { getSuccessRedirect, parseFormData } from '@cgambrell/utils'
+import { Listing, ListingImage } from '@prisma/client'
 import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
+import { uploadFile } from './s3'
 
 export async function createListing() {
-	const { auth, supabase } = await getAuth()
-
-	const { data, error } = await supabase.from('listings').insert({ user_id: auth.id }).select().single()
-	if (error || !data) redirect(getErrorRedirect('/listings', error.message ?? 'An unexpected error occurred'))
+	const user = await auth()
+	const newListing = await prisma.listing.create({ data: { userId: user.id } })
 
 	revalidatePath('/listings', 'layout')
-	redirect(`/listings/${data.id}/edit`)
+	redirect(`/listings/${newListing.id}/edit`)
 }
 
 export async function updateListing({ listingId }: { listingId: Listing['id'] }, formData: FormData) {
 	const { data, errors } = parseFormData(formData, updateListingSchema)
 	if (errors) return { errors }
 
-	const supabase = createClient()
-
-	const { error } = await supabase.from('listings').update(data).eq('id', listingId)
-	if (error) redirect(getErrorRedirect(`/listings/${listingId}/edit`, error.message))
+	await prisma.listing.update({ where: { id: listingId }, data })
 
 	revalidatePath(`/listings/${listingId}/edit`, 'page')
 	redirect(getSuccessRedirect(`/listings/${listingId}/edit`, 'Listing updated'))
 }
 
 export async function deleteListing({ listingId }: { listingId: Listing['id'] }) {
-	const supabase = createClient()
-
-	const { error } = await supabase.from('listings').delete().eq('id', listingId)
-	if (error) redirect(getErrorRedirect(`/listings/${listingId}/edit`, error.message))
+	await prisma.listing.delete({ where: { id: listingId } })
 
 	revalidatePath('/listings', 'layout')
 	redirect(getSuccessRedirect('/listings', 'Listing deleted'))
 }
 
-export async function generateListingData({ listingId }: { listingId: Listing['id'] }) {
-	const supabase = createClient()
+export async function uploadListingImage({ listingId }: { listingId: Listing['id'] }, _prevState: any, formData: FormData) {
+	const { data, errors } = parseFormData(formData, uploadListingImageSchema)
+	if (errors) return { errors }
 
-	const { data, error } = await supabase.functions.invoke('generate-listing-details', { body: { listingId } })
-
-	if (error || !data) {
-		let errorMessage = error?.message ?? 'An unexpected error occurred'
-		if (error instanceof FunctionsHttpError) {
-			errorMessage = (await error.context.json()).error
-		}
-		redirect(
-			getErrorRedirect(
-				errorMessage === 'Not enough credits to generate data' ? '/pricing' : `/listings/${listingId}/edit`,
-				errorMessage
-			)
-		)
-	}
+	const url = await uploadFile(data.file, `listingImages/${listingId}`)
+	await prisma.listingImage.create({ data: { listingId, imagePath: url } })
 
 	revalidatePath(`/listings/${listingId}/edit`, 'page')
-	redirect(getSuccessRedirect(`/listings/${listingId}/edit`, 'Listing data generated'))
+	redirect(getSuccessRedirect(`/listings/${listingId}/edit`, 'Image uploaded'))
 }
 
-export async function deleteImage({ listingId, path }: { listingId: Listing['id']; path: ListingImage['image_path'] }) {
-	const supabase = createClient()
+// BUG: Need to do this with prisma
+// export async function generateListingData({ listingId }: { listingId: Listing['id'] }) {
+// 	const supabase = createClient()
 
-	const { error } = await supabase.storage.from('listing_images').remove([path])
-	if (error) redirect(getErrorRedirect(`/listings/${listingId}/edit`, error.message))
+// 	const { data, error } = await supabase.functions.invoke('generate-listing-details', { body: { listingId } })
 
-	revalidatePath(`/listings/${listingId}/edit`, 'page')
-	redirect(getSuccessRedirect(`/listings/${listingId}/edit`, 'Image deleted'))
+// 	if (error || !data) {
+// 		let errorMessage = error?.message ?? 'An unexpected error occurred'
+// 		if (error instanceof FunctionsHttpError) {
+// 			errorMessage = (await error.context.json()).error
+// 		}
+// 		redirect(
+// 			getErrorRedirect(
+// 				errorMessage === 'Not enough credits to generate data' ? '/pricing' : `/listings/${listingId}/edit`,
+// 				errorMessage
+// 			)
+// 		)
+// 	}
+
+// 	revalidatePath(`/listings/${listingId}/edit`, 'page')
+// 	redirect(getSuccessRedirect(`/listings/${listingId}/edit`, 'Listing data generated'))
+// }
+
+export async function deleteListingImage({ listingImageId }: { listingImageId: ListingImage['id'] }) {
+	const listingImage = await prisma.listingImage.findUnique({ where: { id: listingImageId } })
+	if (!listingImage) throw new Error('Listing image not found')
+
+	await s3.send(new DeleteObjectCommand({ Bucket: env.AWS_BUCKET_NAME, Key: listingImage.imagePath }))
+	await prisma.listingImage.delete({ where: { id: listingImageId } })
+
+	revalidatePath(`/listings/${listingImage.listingId}/edit`, 'page')
+	redirect(getSuccessRedirect(`/listings/${listingImage.listingId}/edit`, 'Deleted successfully'))
 }

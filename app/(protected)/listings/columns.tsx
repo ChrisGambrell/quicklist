@@ -1,25 +1,27 @@
 'use client'
 
+import { deleteListing } from '@/actions/listing'
 import { ColumnHeader } from '@/components/column-header'
 import { Button } from '@/components/ui/button'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
-import { PLACEHOLDER_IMAGE } from '@/utils/constants'
-import { getImageUrl } from '@/utils/helpers'
-import { createClient } from '@/utils/supabase/client'
-import { Listing, ListingWithGenerationsAndImages } from '@/utils/types'
+import { PLACEHOLDER_IMAGE } from '@/lib/constants'
+import { getImageUrl } from '@/lib/utils'
+import { Listing, Prisma } from '@prisma/client'
 import { ColumnDef } from '@tanstack/react-table'
 import { MoreHorizontalIcon } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import toast from 'react-hot-toast'
 
-export const columns: ColumnDef<ListingWithGenerationsAndImages>[] = [
+type ColType = Prisma.ListingGetPayload<{ include: { generations: true; images: true } }>
+
+// TODO: Check all accessorKeys to make sure they're correct
+export const columns: ColumnDef<ColType>[] = [
 	{
 		id: 'image',
 		cell: ({ row }) => (
 			<Image
-				src={row.original.images.length ? getImageUrl(row.original.images[0].image_path) : PLACEHOLDER_IMAGE}
+				src={row.original.images.length ? getImageUrl(row.original.images[0].imagePath) : PLACEHOLDER_IMAGE}
 				alt='Listing image'
 				className='aspect-square rounded-md object-cover'
 				height={64}
@@ -33,7 +35,7 @@ export const columns: ColumnDef<ListingWithGenerationsAndImages>[] = [
 		header: ({ column }) => <ColumnHeader column={column} title='Title' />,
 		cell: ({ getValue, row }) => (
 			<Link className='line-clamp-1 hover:underline' href={`/listings/${row.original.id}/edit`}>
-				{getValue<ListingWithGenerationsAndImages['title']>() ?? '-'}
+				{getValue<ColType['title']>() ?? '-'}
 			</Link>
 		),
 		meta: { cellClassName: 'font-medium w-[99%] break-all' },
@@ -45,9 +47,9 @@ export const columns: ColumnDef<ListingWithGenerationsAndImages>[] = [
 		meta: { className: 'hidden md:table-cell whitespace-nowrap' },
 	},
 	{
-		accessorKey: 'created_at',
+		accessorKey: 'createdAt',
 		header: ({ column }) => <ColumnHeader column={column} title='Created at' />,
-		cell: ({ getValue }) => new Date(getValue<ListingWithGenerationsAndImages['created_at']>()).toDateString(),
+		cell: ({ getValue }) => new Date(getValue<ColType['createdAt']>()).toDateString(),
 		meta: { className: 'hidden md:table-cell whitespace-nowrap' },
 	},
 	{
@@ -61,16 +63,6 @@ export const columns: ColumnDef<ListingWithGenerationsAndImages>[] = [
 function Actions({ listingId }: { listingId: Listing['id'] }) {
 	const router = useRouter()
 
-	async function deleteListing() {
-		const supabase = createClient()
-
-		const { error } = await supabase.from('listings').delete().eq('id', listingId)
-		if (error) return toast.error(error.message)
-
-		toast.success('Listing deleted')
-		router.refresh()
-	}
-
 	return (
 		<DropdownMenu>
 			<DropdownMenuTrigger asChild>
@@ -82,7 +74,13 @@ function Actions({ listingId }: { listingId: Listing['id'] }) {
 			<DropdownMenuContent align='end'>
 				<DropdownMenuLabel>Actions</DropdownMenuLabel>
 				<DropdownMenuItem onClick={() => router.push(`/listings/${listingId}/edit`)}>Edit</DropdownMenuItem>
-				<DropdownMenuItem onClick={deleteListing}>Delete</DropdownMenuItem>
+				<DropdownMenuItem asChild>
+					<form action={deleteListing.bind(null, { listingId })}>
+						<button className='w-full text-left' type='submit'>
+							Delete
+						</button>
+					</form>
+				</DropdownMenuItem>
 			</DropdownMenuContent>
 		</DropdownMenu>
 	)

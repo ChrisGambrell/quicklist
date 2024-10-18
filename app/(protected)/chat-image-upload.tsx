@@ -2,17 +2,14 @@
 
 'use client'
 
-import { generateListingData } from '@/actions/listing'
 import { Button } from '@/components/ui/button'
-import { requiredCredits } from '@/utils/helpers'
-import { createClient } from '@/utils/supabase/client'
+import { requiredCredits } from '@/lib/utils'
 import { Loader2Icon, UploadIcon } from 'lucide-react'
 import Image from 'next/image'
 import { ChangeEvent, FormEvent, useState } from 'react'
-import toast from 'react-hot-toast'
 
 // BUG: Need to only accept certain files and a max file size of 50mb
-export default function ChatImageUpload() {
+export function ChatImageUpload() {
 	const [images, setImages] = useState<File[]>([])
 	const [isLoading, setIsLoading] = useState(false)
 
@@ -22,38 +19,31 @@ export default function ChatImageUpload() {
 		setImages(Array.from(files))
 	}
 
+	// BUG: Can't do this in a client component
 	async function upload(event: FormEvent) {
 		event.preventDefault()
 
 		setIsLoading(true)
 		if (!images.length) return setIsLoading(false)
 
-		const supabase = createClient()
+		// const user = await auth()
+		// const listing = await prisma.listing.create({ data: { userId: user.id } })
 
-		const {
-			data: { user },
-		} = await supabase.auth.getUser()
-		if (!user) return toast.error('User not found')
+		// FIXME: Upload each image
+		// for (let i = 0; i < images.length; i++) {
+		// 	const file = images[i]
+		// 	const fileExt = file.name.split('.').pop()
+		// 	const filePath = `${listing.id}/${new Date().getTime()}-${Math.random()}.${fileExt}`
 
-		const { data: listing, error: createListingError } = await supabase.from('listings').insert({ user_id: user.id }).select().single()
-		if (createListingError || !listing) {
-			setIsLoading(false)
-			return toast.error(createListingError?.message ?? 'An unexpected error occurred')
-		}
+		// 	const { error } = await supabase.storage.from('listing_images').upload(filePath, file)
+		// 	if (error) {
+		// 		setIsLoading(false)
+		// 		return toast.error(error.message)
+		// 	}
+		// }
 
-		for (let i = 0; i < images.length; i++) {
-			const file = images[i]
-			const fileExt = file.name.split('.').pop()
-			const filePath = `${listing.id}/${new Date().getTime()}-${Math.random()}.${fileExt}`
-
-			const { error } = await supabase.storage.from('listing_images').upload(filePath, file)
-			if (error) {
-				setIsLoading(false)
-				return toast.error(error.message)
-			}
-		}
-
-		await generateListingData({ listingId: listing.id })
+		// BUG: Need to do this with prisma on the server
+		// await generateListingData({ listingId: listing.id })
 		setIsLoading(false)
 	}
 

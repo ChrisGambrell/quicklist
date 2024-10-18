@@ -1,9 +1,9 @@
-import { getAuth } from '@/utils/_helpers'
-import AvatarForm from './forms/avatar-form'
-import NameForm from './forms/name-form'
+import { auth } from '@/lib/auth'
+import { AvatarForm } from './forms/avatar-form'
+import { NameForm } from './forms/name-form'
 
 export default async function ProfileSettingsPage() {
-	const { user } = await getAuth()
+	const user = await auth()
 
 	return (
 		<>

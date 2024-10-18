@@ -6,7 +6,7 @@ import { cloneElement } from 'react'
 import { Button } from './ui/button'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from './ui/tooltip'
 
-export default function CopyButton({ children, value }: { children: JSX.Element; value: string }) {
+export function CopyButton({ children, value }: { children: JSX.Element; value: string }) {
 	return (
 		<div className='relative'>
 			{cloneElement(children, { className: cn(children.props.className, 'pr-16') })}

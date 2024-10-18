@@ -1,13 +1,12 @@
 'use client'
 
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
-import { cn } from '@/lib/utils'
-import { NavLinkProps } from '@/utils/types'
+import { cn, NavLinkProps } from '@/lib/utils'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useMemo } from 'react'
 
-export default function NavLink({ exact = false, href, icon, label }: NavLinkProps) {
+export function NavLink({ exact = false, href, icon, label }: NavLinkProps) {
 	const pathname = usePathname()
 
 	const isActive = useMemo(() => {

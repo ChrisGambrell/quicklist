@@ -1,12 +1,12 @@
 import { updateAvatar } from '@/actions/user'
-import ActionButton from '@/components/action-button'
+import { ActionButton } from '@/components/action-button'
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
-import { PLACEHOLDER_AVATAR } from '@/utils/constants'
-import { User } from '@/utils/types'
+import { PLACEHOLDER_AVATAR } from '@/lib/constants'
+import { AuthUser } from '@/lib/utils'
 import Image from 'next/image'
 
-export default function AvatarForm({ user }: { user: User }) {
+export function AvatarForm({ user }: { user: AuthUser }) {
 	return (
 		<form action={updateAvatar}>
 			<Card>
@@ -17,7 +17,7 @@ export default function AvatarForm({ user }: { user: User }) {
 				<CardContent>
 					<div className='grid gap-4'>
 						<Image
-							src={user.avatar_url ?? PLACEHOLDER_AVATAR}
+							src={user.image ?? PLACEHOLDER_AVATAR}
 							alt='Listing image'
 							className='aspect-square rounded-md object-cover'
 							height={128}

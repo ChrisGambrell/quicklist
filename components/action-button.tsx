@@ -2,13 +2,20 @@
 
 import { Loader2Icon } from 'lucide-react'
 import { useFormStatus } from 'react-dom'
+import { cn } from '../lib/utils'
 import { Button, ButtonProps } from './ui/button'
 
-export default function ActionButton({ children, disabled, ...props }: ButtonProps) {
+export function ActionButton({ children, className, disabled, ...props }: ButtonProps) {
 	const { pending } = useFormStatus()
+
 	return (
-		<Button disabled={disabled || pending} {...props}>
-			{pending ? <Loader2Icon className='w-5 h-5 animate-spin' /> : children}
+		<Button className={cn('relative', className)} disabled={disabled || pending} type='submit' {...props}>
+			<span className={cn('flex items-center', { invisible: pending })}>{children}</span>
+			{pending && (
+				<div className='absolute m-auto'>
+					<Loader2Icon className='size-5 animate-spin' />
+				</div>
+			)}
 		</Button>
 	)
 }

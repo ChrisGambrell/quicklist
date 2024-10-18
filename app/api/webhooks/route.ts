@@ -1,5 +1,3 @@
-import { env } from '@/env'
-import { stripe } from '@/utils/stripe/config'
 import {
 	deletePriceRecord,
 	deleteProductRecord,
@@ -7,7 +5,9 @@ import {
 	upsertPriceRecord,
 	upsertProductRecord,
 	upsertPurchaseRecord,
-} from '@/utils/supabase/admin'
+} from '@/actions/stripe'
+import { env } from '@/lib/env'
+import { stripe } from '@/lib/stripe/config'
 import Stripe from 'stripe'
 
 const relevantEvents = new Set([

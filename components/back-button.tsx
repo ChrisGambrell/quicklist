@@ -4,7 +4,7 @@ import { ChevronLeftIcon } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { Button } from './ui/button'
 
-export default function BackButton({ href }: { href?: string }) {
+export function BackButton({ href }: { href?: string }) {
 	const router = useRouter()
 
 	return (

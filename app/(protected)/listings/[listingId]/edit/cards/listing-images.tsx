@@ -1,12 +1,18 @@
-import { deleteImage } from '@/actions/listing'
+import { deleteListingImage } from '@/actions/listing'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { PLACEHOLDER_IMAGE } from '@/utils/constants'
-import { getImageUrl } from '@/utils/helpers'
-import { ListingWithGenerationsAndImages, ListingImage as TListingImage } from '@/utils/types'
+import { PLACEHOLDER_IMAGE } from '@/lib/constants'
+import { getImageUrl } from '@/lib/utils'
+import { Prisma, ListingImage as TListingImage } from '@prisma/client'
 import Image from 'next/image'
-import UploadImages from '../components/upload-images'
+import { UploadImages } from '../components/upload-images'
 
-export default function ListingImages({ canEdit, listing }: { canEdit: boolean; listing: ListingWithGenerationsAndImages }) {
+export function ListingImages({
+	canEdit,
+	listing,
+}: {
+	canEdit: boolean
+	listing: Prisma.ListingGetPayload<{ include: { images: true } }>
+}) {
 	return (
 		<Card className='overflow-hidden' x-chunk='dashboard-07-chunk-4'>
 			<CardHeader>
@@ -40,7 +46,7 @@ export default function ListingImages({ canEdit, listing }: { canEdit: boolean; 
 }
 
 function ListingImage({ image, variant }: { image: TListingImage; variant: 'primary' | 'secondary' }) {
-	const useDeleteImage = deleteImage.bind(null, { listingId: image.listing_id, path: image.image_path })
+	const useDeleteImage = deleteListingImage.bind(null, { listingImageId: image.id })
 
 	const sizeMap: Record<'primary' | 'secondary', number> = {
 		primary: 84,
@@ -50,7 +56,7 @@ function ListingImage({ image, variant }: { image: TListingImage; variant: 'prim
 	return (
 		<button formAction={useDeleteImage}>
 			<Image
-				src={getImageUrl(image.image_path)}
+				src={getImageUrl(image.imagePath)}
 				alt='Listing image'
 				className='aspect-square w-full rounded-md object-cover'
 				height={sizeMap[variant]}

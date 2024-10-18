@@ -1,9 +1,9 @@
 import { DataTable } from '@/components/data-table'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Rule } from '@/utils/types'
+import { Rule } from '@prisma/client'
 import { ruleColumns } from '../components/rule-columns'
 
-export default function UserRules({ rules }: { rules: Rule[] }) {
+export function UserRules({ rules }: { rules: Rule[] }) {
 	return (
 		<Card>
 			<CardHeader>
@@ -12,7 +12,8 @@ export default function UserRules({ rules }: { rules: Rule[] }) {
 				</div>
 			</CardHeader>
 			<CardContent>
-				<DataTable columns={ruleColumns} data={rules} defaultState={{ pageSize: 5, sorting: [{ id: 'created_at', desc: true }] }} />
+				{/* TODO: Need to check all data tables to make sure all columns and default state are using correct field names */}
+				<DataTable columns={ruleColumns} data={rules} defaultState={{ pageSize: 5, sorting: [{ id: 'createdAt', desc: true }] }} />
 			</CardContent>
 		</Card>
 	)

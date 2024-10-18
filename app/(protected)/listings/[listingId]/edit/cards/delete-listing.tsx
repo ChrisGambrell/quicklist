@@ -1,9 +1,9 @@
 import { deleteListing } from '@/actions/listing'
-import ActionButton from '@/components/action-button'
+import { ActionButton } from '@/components/action-button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { ListingWithGenerationsAndImages } from '@/utils/types'
+import { Listing } from '@prisma/client'
 
-export default function DeleteListing({ listing }: { listing: ListingWithGenerationsAndImages }) {
+export function DeleteListing({ listing }: { listing: Listing }) {
 	const useDeleteListing = deleteListing.bind(null, { listingId: listing.id })
 
 	return (

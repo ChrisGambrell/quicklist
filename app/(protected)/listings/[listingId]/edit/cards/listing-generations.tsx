@@ -1,9 +1,9 @@
 import { DataTable } from '@/components/data-table'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { ListingWithGenerationsAndImages } from '@/utils/types'
+import { Prisma } from '@prisma/client'
 import { columns } from '../components/columns'
 
-export default function ListingGenerations({ listing }: { listing: ListingWithGenerationsAndImages }) {
+export function ListingGenerations({ listing }: { listing: Prisma.ListingGetPayload<{ include: { generations: true } }> }) {
 	return (
 		<Card>
 			<CardHeader>

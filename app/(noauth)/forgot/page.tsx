@@ -1,18 +1,18 @@
 import feature from '@/assets/feature.png'
-import NoAuthLayout from '@/components/layout/noauth-layout'
+import { NoAuthLayout } from '@/components/layout/noauth-layout'
 import Image from 'next/image'
-import ForgotPasswordForm from './forms/forgot-password-form'
+import { ClientPage } from './client'
 
-export default function Component() {
+export default function ForgotPage() {
 	return (
-		<NoAuthLayout action={{ href: '/sign-in', label: 'Sign In' }}>
+		<NoAuthLayout action={{ href: '/login', label: 'Login' }}>
 			<div className='mx-auto grid w-full max-w-[900px] grid-cols-1 items-center gap-12 rounded-xl bg-white p-8 shadow-lg dark:bg-gray-950 md:grid-cols-2 border'>
 				<div className='space-y-4'>
 					<div className='space-y-2'>
 						<h1 className='text-3xl font-bold'>Forgot Password</h1>
 						<p className='text-gray-500 dark:text-gray-400'>Enter your email to reset your password.</p>
 					</div>
-					<ForgotPasswordForm />
+					<ClientPage />
 				</div>
 
 				<Image

@@ -3,8 +3,8 @@
 import { ColumnHeader } from '@/components/column-header'
 import { Button } from '@/components/ui/button'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
-import { createClient } from '@/utils/supabase/client'
-import { Rule } from '@/utils/types'
+import prisma from '@/lib/db'
+import { Rule } from '@prisma/client'
 import { ColumnDef } from '@tanstack/react-table'
 import { MoreHorizontalIcon } from 'lucide-react'
 import Link from 'next/link'
@@ -23,9 +23,9 @@ export const columns: ColumnDef<Rule>[] = [
 		meta: { cellClassName: 'font-medium w-[99%] break-all' },
 	},
 	{
-		accessorKey: 'created_at',
+		accessorKey: 'createdAt',
 		header: ({ column }) => <ColumnHeader column={column} title='Created at' />,
-		cell: ({ getValue }) => new Date(getValue<Rule['created_at']>()).toDateString(),
+		cell: ({ getValue }) => new Date(getValue<Rule['createdAt']>()).toDateString(),
 		meta: { className: 'hidden md:table-cell whitespace-nowrap' },
 	},
 	{
@@ -36,15 +36,12 @@ export const columns: ColumnDef<Rule>[] = [
 	},
 ]
 
-export default function Actions({ ruleId }: { ruleId: Rule['id'] }) {
+function Actions({ ruleId }: { ruleId: Rule['id'] }) {
 	const router = useRouter()
 
+	// BUG: Needs to be server action
 	async function deleteRule() {
-		const supabase = createClient()
-
-		const { error } = await supabase.from('rules').delete().eq('id', ruleId)
-		if (error) return toast.error(error.message)
-
+		await prisma.rule.delete({ where: { id: ruleId } })
 		toast.success('Rule deleted')
 		router.refresh()
 	}

@@ -5,7 +5,7 @@ import { usePathname } from 'next/navigation'
 import { useMemo } from 'react'
 import { LogoLink } from '../logo'
 
-export default function Header() {
+export function Header() {
 	const pathname = usePathname()
 
 	const routeTitle = useMemo(() => {
