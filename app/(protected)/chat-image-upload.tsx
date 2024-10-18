@@ -3,8 +3,6 @@
 'use client'
 
 import { Button } from '@/components/ui/button'
-import { auth } from '@/lib/auth'
-import prisma from '@/lib/db'
 import { requiredCredits } from '@/lib/utils'
 import { Loader2Icon, UploadIcon } from 'lucide-react'
 import Image from 'next/image'
@@ -28,8 +26,8 @@ export function ChatImageUpload() {
 		setIsLoading(true)
 		if (!images.length) return setIsLoading(false)
 
-		const user = await auth()
-		const listing = await prisma.listing.create({ data: { userId: user.id } })
+		// const user = await auth()
+		// const listing = await prisma.listing.create({ data: { userId: user.id } })
 
 		// FIXME: Upload each image
 		// for (let i = 0; i < images.length; i++) {

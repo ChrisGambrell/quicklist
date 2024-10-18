@@ -1,10 +1,10 @@
 'use client'
 
+import { deleteListing } from '@/actions/listing'
 import { ColumnHeader } from '@/components/column-header'
 import { Button } from '@/components/ui/button'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
 import { PLACEHOLDER_IMAGE } from '@/lib/constants'
-import prisma from '@/lib/db'
 import { getImageUrl } from '@/lib/utils'
 import { Listing, Prisma } from '@prisma/client'
 import { ColumnDef } from '@tanstack/react-table'
@@ -12,7 +12,6 @@ import { MoreHorizontalIcon } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import toast from 'react-hot-toast'
 
 type ColType = Prisma.ListingGetPayload<{ include: { generations: true; images: true } }>
 
@@ -61,15 +60,8 @@ export const columns: ColumnDef<ColType>[] = [
 	},
 ]
 
-// BUG: Can't do this in a client component
 function Actions({ listingId }: { listingId: Listing['id'] }) {
 	const router = useRouter()
-
-	async function deleteListing() {
-		await prisma.listing.delete({ where: { id: listingId } })
-		toast.success('Listing deleted')
-		router.refresh()
-	}
 
 	return (
 		<DropdownMenu>
@@ -82,7 +74,13 @@ function Actions({ listingId }: { listingId: Listing['id'] }) {
 			<DropdownMenuContent align='end'>
 				<DropdownMenuLabel>Actions</DropdownMenuLabel>
 				<DropdownMenuItem onClick={() => router.push(`/listings/${listingId}/edit`)}>Edit</DropdownMenuItem>
-				<DropdownMenuItem onClick={deleteListing}>Delete</DropdownMenuItem>
+				<DropdownMenuItem asChild>
+					<form action={deleteListing.bind(null, { listingId })}>
+						<button className='w-full text-left' type='submit'>
+							Delete
+						</button>
+					</form>
+				</DropdownMenuItem>
 			</DropdownMenuContent>
 		</DropdownMenu>
 	)
