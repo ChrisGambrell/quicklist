@@ -1,12 +1,9 @@
 import { Header } from '@/components/layout/header'
 import { NewGenerationButton } from '@/components/layout/new-generation-button'
 import { UserMenu } from '@/components/layout/user-menu'
-import { auth } from '@/lib/auth'
 import { LayoutProps } from '@cgambrell/utils'
 
 export default async function ProtectedLayout({ children }: LayoutProps) {
-	await auth()
-
 	return (
 		<div className='flex min-h-[100dvh] flex-col'>
 			<header className='flex items-center px-6 py-4'>

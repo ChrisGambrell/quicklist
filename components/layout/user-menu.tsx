@@ -86,7 +86,7 @@ export async function UserMenu() {
 				<DropdownMenuSeparator />
 				<DropdownMenuItem asChild>
 					<form action={logout}>
-						<button className='w-full text-left' type='submit'>
+						<button className='w-full text-left flex items-center' type='submit'>
 							<LogOutIcon className='mr-2 size-4' />
 							Logout
 						</button>

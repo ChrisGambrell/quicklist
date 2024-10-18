@@ -28,7 +28,7 @@ export async function logout() {
 
 export async function oauth(provider: BuiltInProviderType) {
 	try {
-		await signIn(provider, { redirectTo: '/' })
+		await signIn(provider, { redirectTo: '/listings' })
 	} catch (error) {
 		if (error instanceof AuthError) redirect(getErrorRedirect('/login', error.cause?.err?.message))
 		throw error

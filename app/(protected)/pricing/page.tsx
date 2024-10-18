@@ -3,7 +3,6 @@ import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/componen
 import prisma from '@/lib/db'
 
 export default async function PricingPage() {
-	// BUG: Check all prisma calls and make sure I'm using RLS queries
 	// FIXME: Order by metadata->index
 	const products = await prisma.product.findMany({
 		where: { active: true, prices: { some: { active: true } } },

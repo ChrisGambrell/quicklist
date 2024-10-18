@@ -14,15 +14,15 @@ export const authConfig = {
 	adapter: PrismaAdapter(prisma),
 	callbacks: {
 		authorized: ({ auth, request: { nextUrl } }) => {
-			const allowedRoutes = ['/forgot', '/login', '/register']
+			const allowedRoutes = ['/', '/forgot', '/login', '/register']
 
 			const isAuthed = !!auth?.user
-			const isAuthRoute = allowedRoutes.some((route) => nextUrl.pathname.startsWith(route))
+			const isAuthRoute = allowedRoutes.some((route) => nextUrl.pathname === route)
 
 			if (!isAuthRoute) {
 				if (isAuthed) return true
 				return false
-			} else if (isAuthed) return Response.redirect(new URL('/', nextUrl))
+			} else if (isAuthed) return Response.redirect(new URL('/listings', nextUrl))
 			return true
 		},
 	},
