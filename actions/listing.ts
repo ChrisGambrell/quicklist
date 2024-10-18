@@ -6,11 +6,11 @@ import { env } from '@/lib/env'
 import { s3, S3_URL } from '@/lib/s3'
 import { updateListingSchema, uploadListingImageSchema } from '@/validators/listing'
 import { _Object, DeleteObjectCommand } from '@aws-sdk/client-s3'
-import { createPresignedPost } from '@aws-sdk/s3-presigned-post'
 import { getSuccessRedirect, parseFormData } from '@cgambrell/utils'
 import { Listing, ListingImage } from '@prisma/client'
 import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
+import { uploadFile } from './s3'
 
 export async function createListing() {
 	const user = await auth()
@@ -41,21 +41,8 @@ export async function uploadListingImage({ listingId }: { listingId: Listing['id
 	const { data, errors } = parseFormData(formData, uploadListingImageSchema)
 	if (errors) return { errors }
 
-	const fileExt = data.file.name.split('.').pop()
-	const Key = `listingImages/${listingId}/${new Date().getTime()}-${Math.random()}.${fileExt}`
-
-	try {
-		const { url, fields } = await createPresignedPost(s3, { Bucket: env.AWS_BUCKET_NAME, Key, Expires: 600 })
-
-		const fd = new FormData()
-		Object.entries(fields).forEach(([key, value]) => fd.append(key, value as string))
-		fd.append('file', data.file)
-
-		await fetch(url, { method: 'POST', body: fd })
-		await prisma.listingImage.create({ data: { listingId, imagePath: `${S3_URL}/${Key}` } })
-	} catch (error) {
-		throw error
-	}
+	const url = await uploadFile(data.file, `listingImages/${listingId}`)
+	await prisma.listingImage.create({ data: { listingId, imagePath: url } })
 
 	revalidatePath(`/listings/${listingId}/edit`, 'page')
 	redirect(getSuccessRedirect(`/listings/${listingId}/edit`, 'Image uploaded'))
