@@ -14,7 +14,7 @@ export const metadata: Metadata = {
 
 export default async function RulesPage() {
 	const user = await auth()
-	const rules = await prisma.rule.findMany({ where: { userId: user.id }, orderBy: { createdAt: 'asc' } })
+	const rules = await prisma.rule.findMany({ where: { userId: user.isAdmin ? undefined : user.id }, orderBy: { createdAt: 'asc' } })
 
 	return (
 		<div className='container grid gap-4'>

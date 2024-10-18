@@ -16,7 +16,7 @@ export const maxDuration = 300
 export default async function ListingsPage() {
 	const user = await auth()
 	const listings = await prisma.listing.findMany({
-		where: { userId: user.id },
+		where: { userId: user.isAdmin ? undefined : user.id },
 		include: { generations: { orderBy: { createdAt: 'desc' } }, images: { orderBy: { isPrimary: 'desc' } } },
 		orderBy: { createdAt: 'desc' },
 	})

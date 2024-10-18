@@ -21,7 +21,7 @@ export const maxDuration = 300
 export default async function EditListingPage({ params: { listingId } }: { params: { listingId: Listing['id'] } }) {
 	const user = await auth()
 	const listing = await prisma.listing.findUnique({
-		where: { id: listingId },
+		where: { id: listingId, userId: user.isAdmin ? undefined : user.id },
 		include: { generations: { orderBy: { createdAt: 'desc' } }, images: { orderBy: { isPrimary: 'desc' } } },
 	})
 	// TODO: Not found page

@@ -14,7 +14,7 @@ export const metadata: Metadata = {
 
 export default async function EditRulePage({ params: { ruleId } }: { params: { ruleId: Rule['id'] } }) {
 	const user = await auth()
-	const rule = await prisma.rule.findUnique({ where: { id: ruleId } })
+	const rule = await prisma.rule.findUnique({ where: { id: ruleId, userId: user.isAdmin ? undefined : user.id } })
 	if (!rule) return notFound()
 
 	return (
