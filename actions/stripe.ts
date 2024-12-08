@@ -1,9 +1,16 @@
 'use server'
 
+import { auth } from '@/lib/auth'
 import prisma from '@/lib/db'
-import { stripe } from '@/utils/stripe/config'
-import { Prisma, Subscription, User } from '@prisma/client'
+import { stripe } from '@/lib/stripe/server'
+import { getErrorRedirect, getSuccessRedirect, getURL } from '@cgambrell/utils'
+import { Price, Prisma, Subscription, User } from '@prisma/client'
 import Stripe from 'stripe'
+
+type CheckoutResponse = {
+	errorRedirect?: string
+	sessionId?: string
+}
 
 const TRIAL_PERIOD_DAYS = 0
 
@@ -158,8 +165,88 @@ export const upsertPurchaseRecord = async (lineItem: Stripe.LineItem, stripeCust
 	console.log(`Inserted/updated purchase for user [${userId}]`)
 }
 
+export async function checkoutWithStripe(price: Price): Promise<CheckoutResponse> {
+	try {
+		const user = await auth()
+
+		// Retrieve or create the customer in Stripe
+		let customer: string
+		try {
+			customer = await createOrRetrieveCustomer({ email: user?.email, userId: user?.id })
+		} catch (err) {
+			console.error(err)
+			throw new Error('Unable to access customer record.')
+		}
+
+		let params: Stripe.Checkout.SessionCreateParams = {
+			allow_promotion_codes: true,
+			billing_address_collection: 'required',
+			customer,
+			customer_update: {
+				address: 'auto',
+			},
+			line_items: [
+				{
+					price: price.id,
+					quantity: 1,
+				},
+			],
+			cancel_url: getURL('/pricing'),
+			success_url: getURL(getSuccessRedirect('/listings', 'Purchase successful.')),
+		}
+
+		console.log('Trial end:', calculateTrialEndUnixTimestamp(price.trialPeriodDays))
+		if (price.type === 'recurring')
+			params = {
+				...params,
+				mode: 'subscription',
+				subscription_data: {
+					trial_end: calculateTrialEndUnixTimestamp(price.trialPeriodDays),
+				},
+			}
+		else if (price.type === 'one_time')
+			params = {
+				...params,
+				mode: 'payment',
+			}
+
+		// Create a checkout session in Stripe
+		let session
+		try {
+			session = await stripe.checkout.sessions.create(params)
+		} catch (err) {
+			console.error(err)
+			throw new Error('Unable to create checkout session.')
+		}
+
+		// Instead of returning a Response, just return the data or error.
+		if (session) return { sessionId: session.id }
+		else throw new Error('Unable to create checkout session.')
+	} catch (error) {
+		if (error instanceof Error)
+			return {
+				errorRedirect: getErrorRedirect('/pricing', error.message),
+			}
+		else
+			return {
+				errorRedirect: getErrorRedirect('/pricing', 'An unknown error occurred.'),
+			}
+	}
+}
+
 const toDateTime = (secs: number) => {
 	var t = new Date(+0)
 	t.setSeconds(secs)
 	return t
+}
+
+const calculateTrialEndUnixTimestamp = (trialPeriodDays: number | null | undefined) => {
+	// Check if trialPeriodDays is null, undefined, or less than 2 days
+	if (trialPeriodDays === null || trialPeriodDays === undefined || trialPeriodDays < 2) {
+		return undefined
+	}
+
+	const currentDate = new Date() // Current date and time
+	const trialEnd = new Date(currentDate.getTime() + (trialPeriodDays + 1) * 24 * 60 * 60 * 1000) // Add trial days
+	return Math.floor(trialEnd.getTime() / 1000) // Convert to Unix timestamp in seconds
 }
