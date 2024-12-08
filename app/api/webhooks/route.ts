@@ -6,7 +6,7 @@ import {
 	upsertProductRecord,
 	upsertPurchaseRecord,
 } from '@/actions/stripe'
-import { env } from '@/env'
+import { env } from '@/lib/env'
 import { stripe } from '@/lib/stripe/server'
 import Stripe from 'stripe'
 
