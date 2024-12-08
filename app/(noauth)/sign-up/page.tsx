@@ -1,7 +1,7 @@
 import feature from '@/assets/feature.png'
 import NoAuthLayout from '@/components/layout/noauth-layout'
 import Image from 'next/image'
-import PasswordSignUp from './forms/password-sign-up'
+import { ClientPage } from './client'
 
 export default function Component() {
 	return (
@@ -12,7 +12,7 @@ export default function Component() {
 						<h1 className='text-3xl font-bold'>Sign Up</h1>
 						<p className='text-gray-500 dark:text-gray-400'>Enter your information to create an account.</p>
 					</div>
-					<PasswordSignUp />
+					<ClientPage />
 				</div>
 
 				<Image
