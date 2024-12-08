@@ -2,7 +2,7 @@ import { updateAvatar } from '@/actions/user'
 import ActionButton from '@/components/action-button'
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
-import { PLACEHOLDER_AVATAR } from '@/utils/constants'
+import { PLACEHOLDER_AVATAR } from '@/lib/constants'
 import { User } from '@/utils/types'
 import Image from 'next/image'
 

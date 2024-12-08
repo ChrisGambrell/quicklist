@@ -3,7 +3,7 @@
 import { ColumnHeader } from '@/components/column-header'
 import { Button } from '@/components/ui/button'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
-import { PLACEHOLDER_IMAGE } from '@/utils/constants'
+import { PLACEHOLDER_IMAGE } from '@/lib/constants'
 import { getImageUrl } from '@/utils/helpers'
 import { createClient } from '@/utils/supabase/client'
 import { Listing, ListingWithGenerationsAndImages } from '@/utils/types'
