@@ -2,7 +2,7 @@
 
 import { ColumnHeader } from '@/components/column-header'
 import { PLACEHOLDER_IMAGE } from '@/lib/constants'
-import { getImageUrl } from '@/utils/helpers'
+import { getImageUrl } from '@/lib/helpers'
 import { Prisma } from '@prisma/client'
 import { ColumnDef } from '@tanstack/react-table'
 import Image from 'next/image'

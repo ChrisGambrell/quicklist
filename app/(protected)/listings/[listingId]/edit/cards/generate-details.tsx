@@ -1,6 +1,6 @@
 import ActionButton from '@/components/action-button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { requiredCredits } from '@/utils/helpers'
+import { requiredCredits } from '@/lib/helpers'
 import { ListingImage } from '@prisma/client'
 
 export default function GenerateDetails({ images }: { images: ListingImage[] }) {

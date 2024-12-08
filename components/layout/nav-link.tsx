@@ -2,10 +2,16 @@
 
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
 import { cn } from '@/lib/utils'
-import { NavLinkProps } from '@/utils/types'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { useMemo } from 'react'
+import { ReactNode, useMemo } from 'react'
+
+type NavLinkProps = {
+	exact?: boolean
+	href: string
+	icon: ReactNode
+	label: string
+}
 
 export default function NavLink({ exact = false, href, icon, label }: NavLinkProps) {
 	const pathname = usePathname()
