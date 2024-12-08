@@ -14,9 +14,9 @@ export const authConfig = {
 	adapter: PrismaAdapter(prisma),
 	callbacks: {
 		authorized: ({ auth, request: { nextUrl } }) => {
-			const allowedPages = ['/', '/forgot', '/sign-in', '/privacy', '/sign-up', '/terms']
+			const allowedPages = ['/', '/forgot', '/sign-in', '/sign-up']
 			const isAuthed = !!auth?.user
-			const isAuthRoute = allowedPages.some((page) => nextUrl.pathname.startsWith(page))
+			const isAuthRoute = allowedPages.some((page) => nextUrl.pathname === page)
 
 			if (!isAuthRoute) {
 				if (isAuthed) return true

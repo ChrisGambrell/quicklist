@@ -29,10 +29,15 @@ export function ClientPage() {
 				<FormError value={state?.errors.email} />
 			</div>
 
-			<div className='col-span-full grid gap-2'>
+			<div className='grid gap-2'>
 				<Label htmlFor='password'>Password</Label>
 				<Input id='password' name='password' type='password' />
 				<FormError value={state?.errors.password} />
+			</div>
+			<div className='grid gap-2'>
+				<Label htmlFor='password'>Confirm password</Label>
+				<Input id='confirmPassword' name='confirmPassword' type='password' />
+				<FormError value={state?.errors.confirmPassword} />
 			</div>
 
 			<ActionButton className='col-span-full'>Sign Up</ActionButton>

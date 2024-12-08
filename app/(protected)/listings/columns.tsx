@@ -5,14 +5,12 @@ import { Button } from '@/components/ui/button'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
 import { PLACEHOLDER_IMAGE } from '@/lib/constants'
 import { getImageUrl } from '@/utils/helpers'
-import { createClient } from '@/utils/supabase/client'
 import { Listing, ListingWithGenerationsAndImages } from '@/utils/types'
 import { ColumnDef } from '@tanstack/react-table'
 import { MoreHorizontalIcon } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import toast from 'react-hot-toast'
 
 export const columns: ColumnDef<ListingWithGenerationsAndImages>[] = [
 	{
@@ -61,15 +59,15 @@ export const columns: ColumnDef<ListingWithGenerationsAndImages>[] = [
 function Actions({ listingId }: { listingId: Listing['id'] }) {
 	const router = useRouter()
 
-	async function deleteListing() {
-		const supabase = createClient()
+	// async function deleteListing() {
+	// 	const supabase = createClient()
 
-		const { error } = await supabase.from('listings').delete().eq('id', listingId)
-		if (error) return toast.error(error.message)
+	// 	const { error } = await supabase.from('listings').delete().eq('id', listingId)
+	// 	if (error) return toast.error(error.message)
 
-		toast.success('Listing deleted')
-		router.refresh()
-	}
+	// 	toast.success('Listing deleted')
+	// 	router.refresh()
+	// }
 
 	return (
 		<DropdownMenu>
@@ -82,7 +80,8 @@ function Actions({ listingId }: { listingId: Listing['id'] }) {
 			<DropdownMenuContent align='end'>
 				<DropdownMenuLabel>Actions</DropdownMenuLabel>
 				<DropdownMenuItem onClick={() => router.push(`/listings/${listingId}/edit`)}>Edit</DropdownMenuItem>
-				<DropdownMenuItem onClick={deleteListing}>Delete</DropdownMenuItem>
+				{/* TODO: Delete listing */}
+				<DropdownMenuItem>Delete</DropdownMenuItem>
 			</DropdownMenuContent>
 		</DropdownMenu>
 	)

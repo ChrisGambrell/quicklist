@@ -3,13 +3,11 @@
 import { ColumnHeader } from '@/components/column-header'
 import { Button } from '@/components/ui/button'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
-import { createClient } from '@/utils/supabase/client'
 import { Rule } from '@/utils/types'
 import { ColumnDef } from '@tanstack/react-table'
 import { MoreHorizontalIcon } from 'lucide-react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import toast from 'react-hot-toast'
 
 export const columns: ColumnDef<Rule>[] = [
 	{
@@ -39,15 +37,15 @@ export const columns: ColumnDef<Rule>[] = [
 export default function Actions({ ruleId }: { ruleId: Rule['id'] }) {
 	const router = useRouter()
 
-	async function deleteRule() {
-		const supabase = createClient()
+	// async function deleteRule() {
+	// 	const supabase = createClient()
 
-		const { error } = await supabase.from('rules').delete().eq('id', ruleId)
-		if (error) return toast.error(error.message)
+	// 	const { error } = await supabase.from('rules').delete().eq('id', ruleId)
+	// 	if (error) return toast.error(error.message)
 
-		toast.success('Rule deleted')
-		router.refresh()
-	}
+	// 	toast.success('Rule deleted')
+	// 	router.refresh()
+	// }
 
 	return (
 		<DropdownMenu>
@@ -60,7 +58,8 @@ export default function Actions({ ruleId }: { ruleId: Rule['id'] }) {
 			<DropdownMenuContent align='end'>
 				<DropdownMenuLabel>Actions</DropdownMenuLabel>
 				<DropdownMenuItem onClick={() => router.push(`/rules/${ruleId}/edit`)}>Edit</DropdownMenuItem>
-				<DropdownMenuItem onClick={deleteRule}>Delete</DropdownMenuItem>
+				{/* TODO: Delete rule */}
+				<DropdownMenuItem>Delete</DropdownMenuItem>
 			</DropdownMenuContent>
 		</DropdownMenu>
 	)
