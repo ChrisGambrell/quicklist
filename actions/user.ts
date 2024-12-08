@@ -1,24 +1,19 @@
 'use server'
 
+import { auth } from '@/lib/auth'
+import prisma from '@/lib/db'
 import { getAuth } from '@/utils/_helpers'
-import { parseFormData } from '@/utils/helpers'
-import { createClient } from '@/utils/supabase/server'
-import { getErrorRedirect, getSuccessRedirect } from '@cgambrell/utils'
+import { updateAvatarSchema, updateNameSchema, updatePasswordSchema } from '@/validators/user'
+import { getErrorRedirect, getSuccessRedirect, parseFormData } from '@cgambrell/utils'
+import bcrypt from 'bcryptjs'
 import { redirect } from 'next/navigation'
-import { z } from 'zod'
 
-const updateNameSchema = z.object({ full_name: z.string().transform((arg) => (!arg.trim() ? null : arg)) })
-const updateAvatarSchema = z.object({ avatar: z.instanceof(File) })
-const updatePasswordSchema = z.object({ password: z.string().min(8).optional(), confirm_password: z.string().optional() })
-
-export async function updateName(formData: FormData) {
+export async function updateName(_prevState: any, formData: FormData) {
 	const { data, errors } = parseFormData(formData, updateNameSchema)
 	if (errors) return { errors }
 
-	const { auth, supabase } = await getAuth()
-
-	const { error } = await supabase.from('users').update(data).eq('id', auth.id)
-	if (error) redirect(getErrorRedirect('/settings', error.message))
+	const user = await auth()
+	await prisma.user.update({ where: { id: user.id }, data: { name: data.name } })
 
 	redirect(getSuccessRedirect('/settings', 'Name updated'))
 }
@@ -49,12 +44,13 @@ export async function updatePassword(_prevState: any, formData: FormData) {
 	const { data, errors } = parseFormData(formData, updatePasswordSchema)
 	if (errors) return { errors }
 
-	if (!!data.password && data.password !== data.confirm_password) return { errors: { confirm_password: ['Passwords do not match'] } }
+	// TODO: Handle in validator
+	if (!!data.password && data.password !== data.confirmPassword) return { errors: { confirmPassword: ['Passwords do not match'] } }
 
-	const supabase = createClient()
+	const user = await auth()
 
-	const { error } = await supabase.auth.updateUser({ password: data.password })
-	if (error) redirect(getErrorRedirect('/settings/password', error.message))
+	const passwordHash = await bcrypt.hash(data.password, 10)
+	await prisma.user.update({ where: { id: user.id }, data: { passwordHash } })
 
 	redirect(getSuccessRedirect('/settings/password', 'Password updated'))
 }
