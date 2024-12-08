@@ -1,6 +1,5 @@
 import { DataTable } from '@/components/data-table'
-import { createClient } from '@/utils/supabase/server'
-import { UserWithGenerationsAndPurchases } from '@/utils/types'
+import prisma from '@/lib/db'
 import { Metadata } from 'next'
 import { columns } from './columns'
 
@@ -10,19 +9,17 @@ export const metadata: Metadata = {
 }
 
 export default async function UsersPage() {
-	const supabase = createClient()
-
-	const { data: users } = await supabase
-		.from('users')
-		.select('*, generations(*), purchases(*, price:prices(*, product:products(*, product_amount:product_amounts(*))))')
-		.order('created_at', { ascending: false })
-		.returns<UserWithGenerationsAndPurchases[]>()
+	// TODO: Check RLS
+	const users = await prisma.user.findMany({
+		include: { generations: true, purchases: { include: { price: { include: { product: { include: { productAmount: true } } } } } } },
+		orderBy: { createdAt: 'desc' },
+	})
 
 	return (
 		<div className='container'>
 			<DataTable
 				columns={columns}
-				data={users ?? []}
+				data={users}
 				defaultState={{
 					pageSize: 10,
 					sorting: [

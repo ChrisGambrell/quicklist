@@ -8,9 +8,9 @@ import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/componen
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
-import { ListingWithGenerationsAndImages } from '@/utils/types'
 import { updateListingSchema } from '@/validators/listing'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { Listing } from '@prisma/client'
 import { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
@@ -21,7 +21,7 @@ const placeholder = {
 	description: 'Enhance your wardrobe with this timeless navy and white checkered long sleeve shirt...',
 }
 
-export default function ListingForm({ canEdit, listing }: { canEdit: boolean; listing: ListingWithGenerationsAndImages }) {
+export default function ListingForm({ canEdit, listing }: { canEdit: boolean; listing: Listing }) {
 	const useUpdateListing = updateListing.bind(null, { listingId: listing.id })
 	const form = useForm<z.infer<typeof updateListingSchema>>({ defaultValues: { ...listing }, resolver: zodResolver(updateListingSchema) })
 

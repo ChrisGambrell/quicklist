@@ -9,8 +9,8 @@ model Product {
     image    String?
     metadata Json?
 
-    prices         Price[]
-    productAmounts ProductAmount[]
+    productAmount ProductAmount?
+    prices        Price[]
 }
 
 enum PricingType {
@@ -67,6 +67,7 @@ model Subscription {
     userId String
     user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
+    // BUG: status is spelled wrong
     staus              SubscriptionStatus?
     metadata           Json?
     quantity           Int?

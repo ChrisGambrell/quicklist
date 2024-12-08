@@ -23,8 +23,6 @@ export async function updateName(_prevState: any, formData: FormData) {
 // 	if (errors) return { errors }
 // 	else if (data.avatar.size === 0) redirect(getErrorRedirect('/settings', 'File must not be empty'))
 
-// 	const { user, supabase } = await getAuth()
-
 // 	const file = data.avatar
 // 	const fileExt = file.name.split('.').pop()
 // 	const filePath = `${user.id}/${new Date().getTime()}-${Math.random()}.${fileExt}`

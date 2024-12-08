@@ -1,9 +1,4 @@
-import { DataTable } from '@/components/data-table'
-import { cn } from '@/lib/utils'
-import { getAuth } from '@/utils/_helpers'
 import { Metadata } from 'next'
-import ChatImageUpload from '../chat-image-upload'
-import { columns } from './columns'
 
 export const metadata: Metadata = {
 	title: 'QuickList - Listings',
@@ -13,7 +8,6 @@ export const metadata: Metadata = {
 export const maxDuration = 300
 
 export default async function ListingsPage() {
-	// const { user, supabase } = await getAuth()
 	// const { data: listings } = await supabase
 	// 	.from('listings')
 	// 	.select('*, generations(*), images:listing_images(*)')

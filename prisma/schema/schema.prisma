@@ -74,6 +74,7 @@ model ProductAmount {
 
   product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
 
-  listingAmount Int
-  ruleAmount    Int
+  credits       Int @default(0)
+  listingAmount Int @default(0)
+  ruleAmount    Int @default(0)
 }

@@ -1,8 +1,14 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { ListingWithGenerationsAndImages } from '@/utils/types'
+import { Prisma } from '@prisma/client'
 import UploadImages from '../components/upload-images'
 
-export default function ListingImages({ canEdit, listing }: { canEdit: boolean; listing: ListingWithGenerationsAndImages }) {
+export default function ListingImages({
+	canEdit,
+	listing,
+}: {
+	canEdit: boolean
+	listing: Prisma.ListingGetPayload<{ include: { images: true } }>
+}) {
 	return (
 		<Card className='overflow-hidden' x-chunk='dashboard-07-chunk-4'>
 			<CardHeader>

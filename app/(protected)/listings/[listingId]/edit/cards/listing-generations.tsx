@@ -1,9 +1,9 @@
 import { DataTable } from '@/components/data-table'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { ListingWithGenerationsAndImages } from '@/utils/types'
+import { Generation } from '@prisma/client'
 import { columns } from '../components/columns'
 
-export default function ListingGenerations({ listing }: { listing: ListingWithGenerationsAndImages }) {
+export default function ListingGenerations({ generations }: { generations: Generation[] }) {
 	return (
 		<Card>
 			<CardHeader>
@@ -12,7 +12,7 @@ export default function ListingGenerations({ listing }: { listing: ListingWithGe
 				</div>
 			</CardHeader>
 			<CardContent>
-				<DataTable columns={columns} data={listing.generations} defaultState={{ sorting: [{ id: 'created_at', desc: true }] }} />
+				<DataTable columns={columns} data={generations} defaultState={{ sorting: [{ id: 'created_at', desc: true }] }} />
 			</CardContent>
 		</Card>
 	)

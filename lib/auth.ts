@@ -53,7 +53,15 @@ export const auth = async (): Promise<AuthUser> => {
 	const session = await NextAuth(authConfig).auth()
 	if (!session?.user) throw new Error('Not authenticated.')
 
-	const user = await prisma.user.findFirst({ where: { email: session.user.email ?? '' } })
+	const user = await prisma.user.findFirst({
+		where: { email: session.user.email ?? '' },
+		include: {
+			subscriptions: {
+				where: { staus: 'active', price: { active: true, product: { active: true } } },
+				include: { price: { include: { product: { include: { productAmount: true } } } } },
+			},
+		},
+	})
 	if (!user) throw new Error('User not found')
 
 	return user

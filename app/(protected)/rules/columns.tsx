@@ -3,7 +3,7 @@
 import { ColumnHeader } from '@/components/column-header'
 import { Button } from '@/components/ui/button'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
-import { Rule } from '@/utils/types'
+import { Rule } from '@prisma/client'
 import { ColumnDef } from '@tanstack/react-table'
 import { MoreHorizontalIcon } from 'lucide-react'
 import Link from 'next/link'
@@ -23,7 +23,7 @@ export const columns: ColumnDef<Rule>[] = [
 	{
 		accessorKey: 'created_at',
 		header: ({ column }) => <ColumnHeader column={column} title='Created at' />,
-		cell: ({ getValue }) => new Date(getValue<Rule['created_at']>()).toDateString(),
+		cell: ({ getValue }) => new Date(getValue<Rule['createdAt']>()).toDateString(),
 		meta: { className: 'hidden md:table-cell whitespace-nowrap' },
 	},
 	{
