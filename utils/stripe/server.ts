@@ -4,8 +4,7 @@ import { auth } from '@/lib/auth'
 import { getErrorRedirect, getSuccessRedirect, getURL } from '@cgambrell/utils'
 import { Price } from '@prisma/client'
 import Stripe from 'stripe'
-import { calculateTrialEndUnixTimestamp } from '../helpers'
-import { createOrRetrieveCustomer } from '../supabase/admin'
+import { createOrRetrieveCustomer } from '../../actions/stripe'
 import { CheckoutResponse } from '../types'
 import { stripe } from './config'
 
@@ -16,10 +15,7 @@ export async function checkoutWithStripe(price: Price): Promise<CheckoutResponse
 		// Retrieve or create the customer in Stripe
 		let customer: string
 		try {
-			customer = await createOrRetrieveCustomer({
-				uuid: user?.id || '',
-				email: user?.email || '',
-			})
+			customer = await createOrRetrieveCustomer({ email: user?.email, userId: user?.id })
 		} catch (err) {
 			console.error(err)
 			throw new Error('Unable to access customer record.')
@@ -87,10 +83,7 @@ export async function createStripePortal(currentPath: string) {
 
 		let customer
 		try {
-			customer = await createOrRetrieveCustomer({
-				uuid: user.id || '',
-				email: user.email || '',
-			})
+			customer = await createOrRetrieveCustomer({ email: user.email, userId: user.id })
 		} catch (err) {
 			console.error(err)
 			throw new Error('Unable to access customer record.')
@@ -116,4 +109,15 @@ export async function createStripePortal(currentPath: string) {
 			return getErrorRedirect(currentPath, error.message)
 		} else return getErrorRedirect(currentPath, 'An unknown error occurred.')
 	}
+}
+
+const calculateTrialEndUnixTimestamp = (trialPeriodDays: number | null | undefined) => {
+	// Check if trialPeriodDays is null, undefined, or less than 2 days
+	if (trialPeriodDays === null || trialPeriodDays === undefined || trialPeriodDays < 2) {
+		return undefined
+	}
+
+	const currentDate = new Date() // Current date and time
+	const trialEnd = new Date(currentDate.getTime() + (trialPeriodDays + 1) * 24 * 60 * 60 * 1000) // Add trial days
+	return Math.floor(trialEnd.getTime() / 1000) // Convert to Unix timestamp in seconds
 }
