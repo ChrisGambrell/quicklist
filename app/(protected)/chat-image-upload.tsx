@@ -2,14 +2,11 @@
 
 'use client'
 
-import { generateListingData } from '@/actions/listing'
 import { Button } from '@/components/ui/button'
 import { requiredCredits } from '@/utils/helpers'
-import { createClient } from '@/utils/supabase/client'
 import { Loader2Icon, UploadIcon } from 'lucide-react'
 import Image from 'next/image'
-import { ChangeEvent, FormEvent, useState } from 'react'
-import toast from 'react-hot-toast'
+import { ChangeEvent, useState } from 'react'
 
 // BUG: Need to only accept certain files and a max file size of 50mb
 export default function ChatImageUpload() {
@@ -22,40 +19,41 @@ export default function ChatImageUpload() {
 		setImages(Array.from(files))
 	}
 
-	async function upload(event: FormEvent) {
-		event.preventDefault()
+	// TODO: Reactivate uploading images and generating data
+	// async function upload(event: FormEvent) {
+	// 	event.preventDefault()
 
-		setIsLoading(true)
-		if (!images.length) return setIsLoading(false)
+	// 	setIsLoading(true)
+	// 	if (!images.length) return setIsLoading(false)
 
-		const supabase = createClient()
+	// 	const supabase = createClient()
 
-		const {
-			data: { user },
-		} = await supabase.auth.getUser()
-		if (!user) return toast.error('User not found')
+	// 	const {
+	// 		data: { user },
+	// 	} = await supabase.auth.getUser()
+	// 	if (!user) return toast.error('User not found')
 
-		const { data: listing, error: createListingError } = await supabase.from('listings').insert({ user_id: user.id }).select().single()
-		if (createListingError || !listing) {
-			setIsLoading(false)
-			return toast.error(createListingError?.message ?? 'An unexpected error occurred')
-		}
+	// 	const { data: listing, error: createListingError } = await supabase.from('listings').insert({ user_id: user.id }).select().single()
+	// 	if (createListingError || !listing) {
+	// 		setIsLoading(false)
+	// 		return toast.error(createListingError?.message ?? 'An unexpected error occurred')
+	// 	}
 
-		for (let i = 0; i < images.length; i++) {
-			const file = images[i]
-			const fileExt = file.name.split('.').pop()
-			const filePath = `${listing.id}/${new Date().getTime()}-${Math.random()}.${fileExt}`
+	// 	for (let i = 0; i < images.length; i++) {
+	// 		const file = images[i]
+	// 		const fileExt = file.name.split('.').pop()
+	// 		const filePath = `${listing.id}/${new Date().getTime()}-${Math.random()}.${fileExt}`
 
-			const { error } = await supabase.storage.from('listing_images').upload(filePath, file)
-			if (error) {
-				setIsLoading(false)
-				return toast.error(error.message)
-			}
-		}
+	// 		const { error } = await supabase.storage.from('listing_images').upload(filePath, file)
+	// 		if (error) {
+	// 			setIsLoading(false)
+	// 			return toast.error(error.message)
+	// 		}
+	// 	}
 
-		await generateListingData({ listingId: listing.id })
-		setIsLoading(false)
-	}
+	// 	await generateListingData({ listingId: listing.id })
+	// 	setIsLoading(false)
+	// }
 
 	// TODO: Upload more, tap to delete
 	return (
@@ -65,7 +63,8 @@ export default function ChatImageUpload() {
 				<p className='text-sm px-2 text-center'>Upload images and hit generate to get a clever title and description!</p>
 			</div>
 
-			<form className='grid gap-4' onSubmit={upload}>
+			{/* <form className='grid gap-4' onSubmit={upload}> */}
+			<form className='grid gap-4'>
 				{images.length > 0 && (
 					<div className='grid grid-cols-3 gap-2'>
 						{images.map((image) => (
