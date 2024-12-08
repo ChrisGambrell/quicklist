@@ -5,7 +5,7 @@ import Link from 'next/link'
 
 export default function RootPage() {
 	return (
-		<NoAuthLayout action={{ href: '/sign-in', label: 'Sign In' }}>
+		<NoAuthLayout action={{ href: '/login', label: 'Log in' }}>
 			<div className='container px-4 md:px-6'>
 				<div className='grid gap-6 lg:grid-cols-[1fr_550px] lg:gap-12 xl:grid-cols-[1fr_650px]'>
 					<div className='flex flex-col justify-center space-y-6'>
@@ -20,10 +20,10 @@ export default function RootPage() {
 							</p>
 						</div>
 						<div className='flex flex-col gap-4 sm:flex-row'>
-							<Link className={buttonVariants({ className: 'h-12 px-8' })} href='/sign-in'>
-								Sign In
+							<Link className={buttonVariants({ className: 'h-12 px-8' })} href='/login'>
+								Log in
 							</Link>
-							<Link className={buttonVariants({ className: 'h-12 px-8', variant: 'outline' })} href='/sign-in'>
+							<Link className={buttonVariants({ className: 'h-12 px-8', variant: 'outline' })} href='/login'>
 								Get Started
 							</Link>
 						</div>

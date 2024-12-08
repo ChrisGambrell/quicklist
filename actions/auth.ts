@@ -18,13 +18,13 @@ export async function login(_prevState: unknown, formData: FormData) {
 	try {
 		await signIn('credentials', { email: data.email, password: data.password, redirectTo: '/' })
 	} catch (error) {
-		if (error instanceof AuthError) redirect(getErrorRedirect('/sign-in', error.cause?.err?.message))
+		if (error instanceof AuthError) redirect(getErrorRedirect('/login', error.cause?.err?.message))
 		throw error
 	}
 }
 
 export async function logout() {
-	await signOut({ redirectTo: '/sign-in' })
+	await signOut({ redirectTo: '/login' })
 }
 
 // BUG: No oauth is working
@@ -32,7 +32,7 @@ export async function oauth(provider: BuiltInProviderType) {
 	try {
 		await signIn(provider, { redirectTo: '/' })
 	} catch (error) {
-		if (error instanceof AuthError) redirect(getErrorRedirect('/sign-in', error.cause?.err?.message))
+		if (error instanceof AuthError) redirect(getErrorRedirect('/login', error.cause?.err?.message))
 		throw error
 	}
 }
@@ -47,11 +47,11 @@ export async function register(_prevState: unknown, formData: FormData) {
 	} catch (error) {
 		if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === 'P2002')
 			return { errors: { email: ['User already exists with that email'] } }
-		else if (error instanceof AuthError) redirect(getErrorRedirect('/sign-up', error.cause?.err?.message))
+		else if (error instanceof AuthError) redirect(getErrorRedirect('/register', error.cause?.err?.message))
 		throw error
 	}
 
-	redirect(getSuccessRedirect('/sign-in', 'Account created, please login'))
+	redirect(getSuccessRedirect('/login', 'Account created, please login'))
 }
 
 export async function updateProfile(_prevState: unknown, formData: FormData) {
@@ -76,5 +76,5 @@ export async function verifyEmail(_prevState: unknown, formData: FormData) {
 		throw error
 	}
 
-	redirect(getSuccessRedirect('/sign-in', 'A sign in link has been sent to your email address.'))
+	redirect(getSuccessRedirect('/login', 'A sign in link has been sent to your email address.'))
 }

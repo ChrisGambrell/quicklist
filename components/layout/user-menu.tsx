@@ -89,7 +89,7 @@ export default async function UserMenu() {
 					<DropdownMenuItem>
 						<button className='w-full flex items-center'>
 							<LogOutIcon className='mr-2 h-4 w-4' />
-							<span>Sign out</span>
+							<span>Logout</span>
 						</button>
 					</DropdownMenuItem>
 				</form>

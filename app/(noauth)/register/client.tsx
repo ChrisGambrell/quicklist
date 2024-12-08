@@ -40,7 +40,7 @@ export function ClientPage() {
 				<FormError value={state?.errors.confirmPassword} />
 			</div>
 
-			<ActionButton className='col-span-full'>Sign Up</ActionButton>
+			<ActionButton className='col-span-full'>Register</ActionButton>
 		</form>
 	)
 }

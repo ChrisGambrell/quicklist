@@ -32,7 +32,7 @@ export function ClientPage() {
 					<FormError value={state?.errors.password} />
 				</div>
 
-				<ActionButton>Sign In</ActionButton>
+				<ActionButton>Log in</ActionButton>
 			</div>
 
 			<div className='flex items-center gap-2'>
@@ -43,10 +43,10 @@ export function ClientPage() {
 
 			<div className='flex flex-col gap-2'>
 				<ActionButton formAction={oauth.bind(null, 'google')} className='w-full' variant='outline'>
-					Sign in with Google
+					Log in with Google
 				</ActionButton>
 				<ActionButton formAction={oauth.bind(null, 'github')} className='w-full' variant='outline'>
-					Sign in with GitHub
+					Log in with GitHub
 				</ActionButton>
 			</div>
 		</form>
