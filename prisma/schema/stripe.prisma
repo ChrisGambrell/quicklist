@@ -1,0 +1,92 @@
+model Product {
+    id        String   @id
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    active   Boolean?
+    name     String?
+    desc     String?
+    image    String?
+    metadata Json?
+
+    prices         Price[]
+    productAmounts ProductAmount[]
+}
+
+enum PricingType {
+    one_time
+    recurring
+}
+
+enum PricingInterval {
+    day
+    week
+    month
+    year
+}
+
+model Price {
+    id        String   @id
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    productId String
+    product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+    active          Boolean?
+    unitAmount      Int?
+    currency        String?
+    type            PricingType?
+    interval        PricingInterval?
+    intervalCount   Int?
+    trialPeriodDays Int?
+
+    purchases     Purchase[]
+    subscriptions Subscription[]
+}
+
+enum SubscriptionStatus {
+    trialing
+    active
+    canceled
+    incomplete
+    incomplete_expired
+    past_due
+    unpaid
+    paused
+}
+
+model Subscription {
+    id        String   @id
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    priceId String
+    price   Price  @relation(fields: [priceId], references: [id], onDelete: Cascade)
+
+    userId String
+    user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+    staus              SubscriptionStatus?
+    metadata           Json?
+    quantity           Int?
+    cancelAtPeriodEnd  Boolean?
+    currentPeriodStart DateTime
+    currentPeriodEnd   DateTime
+    endedAt            DateTime?
+    canceledAt         DateTime?
+    trialStart         DateTime?
+    trialEnd           DateTime?
+}
+
+model Purchase {
+    id        String   @id @default(cuid())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    priceId String
+    price   Price  @relation(fields: [priceId], references: [id], onDelete: Cascade)
+
+    userId String
+    user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+}

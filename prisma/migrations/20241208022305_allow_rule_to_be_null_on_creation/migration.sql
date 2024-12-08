@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE "Rule" ALTER COLUMN "rule" DROP NOT NULL;
