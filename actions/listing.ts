@@ -2,9 +2,9 @@
 
 import { auth } from '@/lib/auth'
 import prisma from '@/lib/db'
-import { Listing } from '@/utils/types'
 import { updateListingSchema } from '@/validators/listing'
 import { getSuccessRedirect, parseFormData } from '@cgambrell/utils'
+import { Listing } from '@prisma/client'
 import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
 

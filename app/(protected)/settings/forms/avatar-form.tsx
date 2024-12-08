@@ -2,7 +2,7 @@ import ActionButton from '@/components/action-button'
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { PLACEHOLDER_AVATAR } from '@/lib/constants'
-import { User } from '@/utils/types'
+import { User } from '@prisma/client'
 import Image from 'next/image'
 
 export default function AvatarForm({ user }: { user: User }) {
@@ -18,7 +18,7 @@ export default function AvatarForm({ user }: { user: User }) {
 				<CardContent>
 					<div className='grid gap-4'>
 						<Image
-							src={user.avatar_url ?? PLACEHOLDER_AVATAR}
+							src={user.image ?? PLACEHOLDER_AVATAR}
 							alt='Listing image'
 							className='aspect-square rounded-md object-cover'
 							height={128}

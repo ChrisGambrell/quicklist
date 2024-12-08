@@ -1,6 +1,6 @@
 'use client'
 
-import { Listing } from '@/utils/types'
+import { Listing } from '@prisma/client'
 import { Loader2Icon, UploadIcon } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'

@@ -3,7 +3,7 @@
 'use client'
 
 import { Button } from '@/components/ui/button'
-import { requiredCredits } from '@/lib/helpers'
+import { requiredCredits } from '@/lib/utils'
 import { Loader2Icon, UploadIcon } from 'lucide-react'
 import Image from 'next/image'
 import { ChangeEvent, useState } from 'react'

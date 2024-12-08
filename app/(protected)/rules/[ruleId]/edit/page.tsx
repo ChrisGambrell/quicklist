@@ -1,7 +1,7 @@
 import BackButton from '@/components/back-button'
 import { auth } from '@/lib/auth'
 import prisma from '@/lib/db'
-import { Rule } from '@/utils/types'
+import { Rule } from '@prisma/client'
 import { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import DeleteRule from './cards/delete-rule'
