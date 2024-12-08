@@ -1,13 +1,13 @@
 import BackButton from '@/components/back-button'
 import prisma from '@/lib/db'
+import { ServerProps } from '@cgambrell/utils'
 import { notFound } from 'next/navigation'
 import UserListings from './cards/user-listings'
 import UserRules from './cards/user-rules'
 
 // TODO: Finish this page with user info like name, email, avatar, oauth privider, etc
 
-// TODO: Change all 'params' and 'searchParams' to my type
-export default async function UserPage({ params: { userId } }: { params: { userId: string } }) {
+export default async function UserPage({ params: { userId } }: ServerProps) {
 	// TODO: Check RLS
 	const user = await prisma.user.findUnique({ where: { id: userId }, include: { listings: { include: { images: true } }, rules: true } })
 	if (!user) return notFound()

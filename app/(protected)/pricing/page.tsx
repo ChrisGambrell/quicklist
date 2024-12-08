@@ -2,7 +2,7 @@ import AddCreditsButton from '@/components/layout/add-credits-button'
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 import prisma from '@/lib/db'
 
-export default async function Component() {
+export default async function PricingPage() {
 	// TODO: Check RLS
 	// TODO: order by metadata->index
 	const products = await prisma.product.findMany({

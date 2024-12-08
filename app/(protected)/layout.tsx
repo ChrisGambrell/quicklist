@@ -1,9 +1,9 @@
 import Header from '@/components/layout/header'
 import NewGenerationButton from '@/components/layout/new-generation-button'
 import UserMenu from '@/components/layout/user-menu'
-import { ReactNode } from 'react'
+import { LayoutProps } from '@cgambrell/utils'
 
-export default async function ProtectedLayout({ children }: { children: ReactNode }) {
+export default function ProtectedLayout({ children }: LayoutProps) {
 	return (
 		<div className='flex min-h-[100dvh] flex-col'>
 			<header className='flex items-center px-6 py-4'>

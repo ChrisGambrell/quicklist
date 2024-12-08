@@ -1,7 +1,7 @@
 import BackButton from '@/components/back-button'
 import { auth } from '@/lib/auth'
 import prisma from '@/lib/db'
-import { Rule } from '@prisma/client'
+import { ServerProps } from '@cgambrell/utils'
 import { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import DeleteRule from './cards/delete-rule'
@@ -12,7 +12,7 @@ export const metadata: Metadata = {
 	description: 'Edit a rule',
 }
 
-export default async function EditRulePage({ params: { ruleId } }: { params: { ruleId: Rule['id'] } }) {
+export default async function EditRulePage({ params: { ruleId } }: ServerProps) {
 	const user = await auth()
 	const rule = await prisma.rule.findUnique({ where: { id: ruleId } })
 	if (!rule) return notFound()

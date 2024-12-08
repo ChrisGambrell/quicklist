@@ -3,7 +3,7 @@ import NoAuthLayout from '@/components/layout/noauth-layout'
 import Image from 'next/image'
 import { ClientPage } from './client'
 
-export default function Component() {
+export default function SignUpPage() {
 	return (
 		<NoAuthLayout action={{ href: '/sign-in', label: 'Sign In' }}>
 			<div className='mx-auto grid w-full max-w-[900px] grid-cols-1 items-center gap-12 rounded-xl bg-white p-8 shadow-lg dark:bg-gray-950 md:grid-cols-2 border'>

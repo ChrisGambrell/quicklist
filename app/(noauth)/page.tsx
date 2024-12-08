@@ -3,7 +3,7 @@ import Logo from '@/components/logo'
 import { buttonVariants } from '@/components/ui/button'
 import Link from 'next/link'
 
-export default function LandingPage() {
+export default function RootPage() {
 	return (
 		<NoAuthLayout action={{ href: '/sign-in', label: 'Sign In' }}>
 			<div className='container px-4 md:px-6'>

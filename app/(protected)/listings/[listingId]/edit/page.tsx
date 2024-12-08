@@ -1,7 +1,7 @@
 import BackButton from '@/components/back-button'
 import { auth } from '@/lib/auth'
 import prisma from '@/lib/db'
-import { Listing } from '@prisma/client'
+import { ServerProps } from '@cgambrell/utils'
 import { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import DeleteListing from './cards/delete-listing'
@@ -17,7 +17,7 @@ export const metadata: Metadata = {
 
 export const maxDuration = 300
 
-export default async function EditListingPage({ params: { listingId } }: { params: { listingId: Listing['id'] } }) {
+export default async function EditListingPage({ params: { listingId } }: ServerProps) {
 	const user = await auth()
 	// TODO: Check RLS
 	const listing = await prisma.listing.findUnique({
