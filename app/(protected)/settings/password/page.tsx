@@ -2,9 +2,8 @@
 
 import { updatePassword } from '@/actions/user'
 import ActionButton from '@/components/action-button'
-import { FormError } from '@/components/form-error'
+import { FormInput } from '@/components/form-input'
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
-import { Input } from '@/components/ui/input'
 import { useFormState } from 'react-dom'
 
 export default function PasswordSettingsPage() {
@@ -18,14 +17,13 @@ export default function PasswordSettingsPage() {
 					<CardDescription>Change the password you use to sign in.</CardDescription>
 				</CardHeader>
 				<CardContent className='grid gap-4'>
-					<div className='grid gap-2'>
-						<Input name='password' placeholder='Password' type='password' />
-						<FormError value={state?.errors.password} />
-					</div>
-					<div className='grid gap-2'>
-						<Input name='confirmPassword' placeholder='Confirm Password' type='password' />
-						<FormError value={state?.errors.confirmPassword} />
-					</div>
+					<FormInput name='password' placeholder='Password' type='password' error={state?.errors.password} />
+					<FormInput
+						name='confirmPassword'
+						placeholder='Confirm password'
+						type='password'
+						error={state?.errors.confirmPassword}
+					/>
 				</CardContent>
 				<CardFooter className='border-t px-6 py-4'>
 					<ActionButton>Save</ActionButton>
