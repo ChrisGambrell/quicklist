@@ -13,7 +13,7 @@ type ColType = Prisma.UserGetPayload<{
 
 export const columns: ColumnDef<ColType>[] = [
 	{
-		accessorKey: 'avatar_url',
+		accessorKey: 'image',
 		header: '',
 		cell: ({ getValue }) => (
 			<Image
@@ -27,7 +27,7 @@ export const columns: ColumnDef<ColType>[] = [
 		meta: { className: 'min-w-[64] sm:min-w-[100px] sm:table-cell' },
 	},
 	{
-		accessorKey: 'full_name',
+		accessorKey: 'name',
 		header: ({ column }) => <ColumnHeader column={column} title='Name' />,
 		cell: ({ getValue, row }) => (
 			<Link className='hover:underline' href={`/users/${row.original.id}`}>
@@ -52,7 +52,8 @@ export const columns: ColumnDef<ColType>[] = [
 		meta: { className: 'hidden lg:table-cell' },
 	},
 	{
-		accessorKey: 'created_at',
+		// FIXME: Search everywhere for 'assessorKey' and make sure they're accurate
+		accessorKey: 'createdAt',
 		header: ({ column }) => <ColumnHeader column={column} title='Created at' />,
 		cell: ({ getValue }) => new Date(getValue<ColType['createdAt']>()).toDateString(),
 		meta: { className: 'hidden md:table-cell' },

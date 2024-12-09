@@ -10,7 +10,8 @@
 		"postinstall": "npx prisma generate",
 		"ngrok:listen": "ngrok http 54321",
 		"stripe:listen": "stripe listen --forward-to=localhost:3000/api/webhooks",
-		"stripe:seed": "npx ts-node -r ./scripts/dotenv.config.ts scripts/seed-stripe.ts"
+		"seed:db": "npx ts-node scripts/seed-db.ts",
+		"seed:stripe": "npx ts-node -r ./scripts/dotenv.config.ts scripts/seed-stripe.ts"
 	},
 	"dependencies": {
 		"@auth/prisma-adapter": "^2.7.4",
@@ -49,10 +50,13 @@
 		"zod": "^3.23.8"
 	},
 	"devDependencies": {
+		"@ai-sdk/openai": "^1.0.7",
+		"@faker-js/faker": "^9.3.0",
 		"@types/bcryptjs": "^2.4.6",
 		"@types/node": "^20",
 		"@types/react": "^18",
 		"@types/react-dom": "^18",
+		"ai": "^4.0.13",
 		"autoprefixer": "^10.0.1",
 		"dotenv": "^16.4.5",
 		"eslint": "^8",
