@@ -4,10 +4,9 @@ import { checkoutWithStripe } from '@/actions/stripe'
 import { getStripe } from '@/lib/stripe/client'
 import { getErrorRedirect } from '@cgambrell/utils'
 import { Prisma } from '@prisma/client'
-import { Loader2Icon } from 'lucide-react'
 import { usePathname, useRouter } from 'next/navigation'
 import { useState } from 'react'
-import { Button } from '../ui/button'
+import { ActionButton } from '../action-button'
 
 export default function AddCreditsButton({ product }: { product: Prisma.ProductGetPayload<{ include: { prices: true } }> }) {
 	const pathname = usePathname()
@@ -39,8 +38,8 @@ export default function AddCreditsButton({ product }: { product: Prisma.ProductG
 	}
 
 	return (
-		<Button className='w-full' disabled={isLoading} onClick={handleStripeCheckout}>
-			{isLoading ? <Loader2Icon className='w-5 h-5 animate-spin' /> : 'Purchase'}
-		</Button>
+		<ActionButton className='w-full' loading={isLoading} type='button' onClick={handleStripeCheckout}>
+			Purchase
+		</ActionButton>
 	)
 }

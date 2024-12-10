@@ -1,7 +1,7 @@
 'use client'
 
 import { verifyEmail } from '@/actions/auth'
-import ActionButton from '@/components/action-button'
+import { ActionButton } from '@/components/action-button'
 import { FormInput } from '@/components/form-input'
 import { useFormState } from 'react-dom'
 

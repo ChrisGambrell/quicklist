@@ -1,7 +1,7 @@
 'use client'
 
 import { login, oauth } from '@/actions/auth'
-import ActionButton from '@/components/action-button'
+import { ActionButton } from '@/components/action-button'
 import { FormInput } from '@/components/form-input'
 import { Label } from '@/components/ui/label'
 import Link from 'next/link'

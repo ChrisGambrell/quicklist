@@ -2,7 +2,7 @@
 
 import { ReactNode, useEffect, useState } from 'react'
 import { useFormState } from 'react-dom'
-import ActionButton from './action-button'
+import { ActionButton } from './action-button'
 import {
 	AlertDialog,
 	AlertDialogCancel,

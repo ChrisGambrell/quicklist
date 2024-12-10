@@ -28,13 +28,13 @@ export const columns: ColumnDef<Rule>[] = [
 		cell: ({ row }) => (
 			<div className='flex gap-1'>
 				<UpsertRule rule={row.original}>
-					<Button className='size-6 p-0' variant='outline'>
-						<EditIcon className='size-4' />
+					<Button size='icon' variant='outline'>
+						<EditIcon />
 					</Button>
 				</UpsertRule>
 				<ConfirmDelete action={deleteRule.bind(null, { ruleId: row.original.id })}>
-					<Button className='size-6 p-0' variant='outline'>
-						<Trash2Icon className='size-4' />
+					<Button size='icon' variant='outline'>
+						<Trash2Icon />
 					</Button>
 				</ConfirmDelete>
 			</div>

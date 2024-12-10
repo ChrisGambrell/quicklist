@@ -1,7 +1,7 @@
 'use client'
 
 import { updatePassword } from '@/actions/user'
-import ActionButton from '@/components/action-button'
+import { ActionButton } from '@/components/action-button'
 import { FormInput } from '@/components/form-input'
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 import { useFormState } from 'react-dom'

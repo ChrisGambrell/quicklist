@@ -3,7 +3,7 @@ import { Button } from '@/components/ui/button'
 import { UpsertRule } from '@/components/upsert-rule'
 import { auth } from '@/lib/auth'
 import prisma from '@/lib/db'
-import { PlusCircleIcon } from 'lucide-react'
+import { PlusIcon } from 'lucide-react'
 import { Metadata } from 'next'
 import { columns } from './columns'
 
@@ -21,9 +21,9 @@ export default async function RulesPage() {
 		<div className='container grid gap-4'>
 			<div className='flex justify-end'>
 				<UpsertRule>
-					<Button size='sm'>
-						<PlusCircleIcon className='size-4 mr-2' />
-						Add Rule
+					<Button>
+						<PlusIcon />
+						<span>Add Rule</span>
 					</Button>
 				</UpsertRule>
 			</div>
@@ -36,9 +36,9 @@ export default async function RulesPage() {
 						<h3 className='text-2xl font-bold tracking-tight'>You have no rules</h3>
 						<p className='text-sm text-muted-foreground mb-4'>Start by adding a rule.</p>
 						<UpsertRule>
-							<Button size='sm'>
-								<PlusCircleIcon className='size-4 mr-2' />
-								Add Rule
+							<Button>
+								<PlusIcon />
+								<span>Add Rule</span>
 							</Button>
 						</UpsertRule>
 					</div>

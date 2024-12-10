@@ -1,7 +1,7 @@
 'use client'
 
 import { updateListing } from '@/actions/listing'
-import ActionButton from '@/components/action-button'
+import { ActionButton } from '@/components/action-button'
 import CopyButton from '@/components/copy-button'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
@@ -93,10 +93,10 @@ export default function ListingForm({ canEdit, listing }: { canEdit: boolean; li
 					{canEdit && (
 						<CardFooter>
 							<div className='ml-auto flex gap-2'>
-								<Button variant='outline' size='sm' type='reset'>
+								<Button variant='outline' type='reset'>
 									Discard
 								</Button>
-								<ActionButton size='sm'>Save Listing</ActionButton>
+								<ActionButton>Save Listing</ActionButton>
 							</div>
 						</CardFooter>
 					)}

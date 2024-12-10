@@ -34,7 +34,7 @@ export default async function UserMenu() {
 	return (
 		<DropdownMenu>
 			<DropdownMenuTrigger asChild>
-				<Button variant='outline' size='icon' className='overflow-hidden rounded-full'>
+				<Button className='overflow-hidden rounded-full h-9 w-9 p-0' variant='outline'>
 					<Image
 						src={user.image ?? PLACEHOLDER_AVATAR}
 						alt='User avatar'
@@ -56,7 +56,7 @@ export default async function UserMenu() {
 							<Tooltip>
 								<TooltipTrigger>
 									<Link className={cn(buttonVariants({ variant: 'outline' }), 'h-6 rounded-full px-2')} href='/pricing'>
-										<ClockIcon className='w-4 h-4 mr-1.5' />
+										<ClockIcon />
 										{/* TODO: Remaining credits */}
 										{/* <span>{credits}</span> */}
 									</Link>

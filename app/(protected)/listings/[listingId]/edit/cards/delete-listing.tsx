@@ -13,7 +13,7 @@ export default function DeleteListing({ listingId }: { listingId: Listing['id'] 
 			</CardHeader>
 			<CardContent>
 				<ConfirmDelete action={deleteListing.bind(null, { listingId })}>
-					<Button className='w-full' size='sm' variant='destructive'>
+					<Button className='w-full' variant='destructive'>
 						Delete Listing
 					</Button>
 				</ConfirmDelete>

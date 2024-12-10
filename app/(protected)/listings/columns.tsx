@@ -55,14 +55,12 @@ export const columns: ColumnDef<ColType>[] = [
 		header: () => <span className='sr-only'>Actions</span>,
 		cell: ({ row }) => (
 			<div className='flex gap-1'>
-				<Link
-					className={cn(buttonVariants({ variant: 'outline', className: 'size-6 p-0' }))}
-					href={`/listings/${row.original.id}/edit`}>
-					<EditIcon className='size-4' />
+				<Link className={cn(buttonVariants({ size: 'icon', variant: 'outline' }))} href={`/listings/${row.original.id}/edit`}>
+					<EditIcon />
 				</Link>
 				<ConfirmDelete action={deleteListing.bind(null, { listingId: row.original.id })}>
-					<Button className='size-6 p-0' variant='outline'>
-						<Trash2Icon className='size-4' />
+					<Button size='icon' variant='outline'>
+						<Trash2Icon />
 					</Button>
 				</ConfirmDelete>
 			</div>

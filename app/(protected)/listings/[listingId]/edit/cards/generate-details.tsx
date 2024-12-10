@@ -1,4 +1,4 @@
-import ActionButton from '@/components/action-button'
+import { ActionButton } from '@/components/action-button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { requiredCredits } from '@/lib/utils'
 import { ListingImage } from '@prisma/client'
@@ -16,8 +16,8 @@ export default function GenerateDetails({ images }: { images: ListingImage[] }) 
 					<CardDescription>Generate the listing&apos;s data based on its details and images.</CardDescription>
 				</CardHeader>
 				<CardContent>
-					{/* <ActionButton className='w-full' disabled={!listing.images.length} size='sm' variant='secondary'> */}
-					<ActionButton className='w-full' disabled size='sm' variant='secondary'>
+					{/* <ActionButton className='w-full' disabled={!listing.images.length}  variant='secondary'> */}
+					<ActionButton className='w-full' disabled variant='secondary'>
 						Generate
 						{images.length ? ` (${requiredCredits(images.length)} credit${requiredCredits(images.length) > 1 ? 's' : ''})` : ''}
 					</ActionButton>

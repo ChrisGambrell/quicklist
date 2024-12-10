@@ -4,7 +4,7 @@ import { upsertRule } from '@/actions/rule'
 import { Rule } from '@prisma/client'
 import { ReactNode, useEffect, useState } from 'react'
 import { useFormState } from 'react-dom'
-import ActionButton from './action-button'
+import { ActionButton } from './action-button'
 import { FormInput } from './form-input'
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from './ui/dialog'
 
