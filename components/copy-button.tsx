@@ -10,7 +10,7 @@ export default function CopyButton({ children, value }: { children: JSX.Element;
 	return (
 		<div className='relative'>
 			{cloneElement(children, { className: cn(children.props.className, 'pr-16') })}
-			<div className='absolute top-0 right-0 h-full pr-1.5 pt-1.5'>
+			<div className='absolute top-0 right-0 h-full pr-1.5 pt-1'>
 				<TooltipProvider>
 					<Tooltip>
 						<TooltipTrigger asChild>
