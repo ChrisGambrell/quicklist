@@ -102,7 +102,7 @@ function DropdownLink({ disabled, href, icon: Icon, label }: { disabled?: boolea
 	if (disabled)
 		return (
 			<DropdownMenuItem disabled>
-				<Icon className='mr-2 h-4 w-4' />
+				<Icon />
 				<span>{label}</span>
 			</DropdownMenuItem>
 		)
@@ -110,7 +110,7 @@ function DropdownLink({ disabled, href, icon: Icon, label }: { disabled?: boolea
 	return (
 		<Link href={href}>
 			<DropdownMenuItem>
-				<Icon className='mr-2 h-4 w-4' />
+				<Icon />
 				<span>{label}</span>
 			</DropdownMenuItem>
 		</Link>

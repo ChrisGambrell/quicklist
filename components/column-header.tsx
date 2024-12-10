@@ -29,12 +29,12 @@ export function ColumnHeader<TData, TValue>({ column, title, className }: Column
 				</DropdownMenuTrigger>
 				<DropdownMenuContent align='start'>
 					<DropdownMenuItem onClick={() => column.toggleSorting(false)}>
-						<ArrowUpIcon className='mr-2 h-3.5 w-3.5 text-muted-foreground/70' />
-						Asc
+						<ArrowUpIcon className='text-muted-foreground/70' />
+						<span>Asc</span>
 					</DropdownMenuItem>
 					<DropdownMenuItem onClick={() => column.toggleSorting(true)}>
-						<ArrowDownIcon className='mr-2 h-3.5 w-3.5 text-muted-foreground/70' />
-						Desc
+						<ArrowDownIcon className='text-muted-foreground/70' />
+						<span>Desc</span>
 					</DropdownMenuItem>
 				</DropdownMenuContent>
 			</DropdownMenu>
