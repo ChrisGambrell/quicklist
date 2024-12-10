@@ -1,9 +1,10 @@
 import { cn } from '@/lib/utils'
+import { ComponentProps } from 'react'
 import { FormError } from './form-error'
-import { Input, InputProps } from './ui/input'
+import { Input } from './ui/input'
 import { Label } from './ui/label'
 
-type FormInputProps = InputProps & { error?: string[]; label?: string }
+type FormInputProps = ComponentProps<'input'> & { desc?: string; error?: string[]; label?: string }
 
 export function FormInput({ className, error, id, label, name, ...props }: FormInputProps) {
 	return (
