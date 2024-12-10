@@ -27,7 +27,6 @@ export async function logout() {
 	await signOut({ redirectTo: '/login' })
 }
 
-// BUG: No oauth is working
 export async function oauth(provider: BuiltInProviderType) {
 	try {
 		await signIn(provider, { redirectTo: '/' })
