@@ -1,9 +1,6 @@
-import { openai } from '@ai-sdk/openai'
 import { faker } from '@faker-js/faker'
 import { PrismaClient } from '@prisma/client'
-import { generateObject } from 'ai'
 import dotenv from 'dotenv'
-import { z } from 'zod'
 
 dotenv.config()
 const prisma = new PrismaClient()
@@ -18,17 +15,17 @@ async function main() {
 	await prisma.generation.deleteMany()
 	await prisma.rule.deleteMany()
 
-	const { object: generatedUsers } = await generateObject({
-		model: openai('gpt-4o'),
-		output: 'array',
-		schema: z.object({
-			name: z.string().describe('The name of the user.'),
-			email: z.string().email().describe('The email of the user.'),
+	await prisma.user.createMany({
+		data: Array.from({ length: NUM_USERS - 1 }, () => {
+			const firstName = faker.person.firstName()
+			const lastName = faker.person.lastName()
+			return {
+				name: `${firstName} ${lastName}`,
+				email: faker.internet.email({ firstName, lastName }),
+				isAdmin: Math.random() <= 0.25,
+			}
 		}),
-		prompt: `Generate ${NUM_USERS} users.`,
 	})
-
-	await prisma.user.createMany({ data: generatedUsers.map((user) => ({ ...user, isAdmin: Math.random() <= 0.25 })) })
 	const users = await prisma.user.findMany()
 
 	await prisma.listing.createMany({
