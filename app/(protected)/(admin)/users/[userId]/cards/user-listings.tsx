@@ -15,7 +15,7 @@ export default function UserListings({ listings }: { listings: Prisma.ListingGet
 				<DataTable
 					columns={listingColumns}
 					data={listings}
-					defaultState={{ pageSize: 5, sorting: [{ id: 'created_at', desc: true }] }}
+					defaultState={{ pageSize: 5, sorting: [{ id: 'createdAt', desc: true }] }}
 				/>
 			</CardContent>
 		</Card>

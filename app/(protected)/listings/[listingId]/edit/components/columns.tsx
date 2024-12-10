@@ -6,7 +6,7 @@ import { ColumnDef } from '@tanstack/react-table'
 
 export const columns: ColumnDef<Generation>[] = [
 	{
-		accessorKey: 'created_at',
+		accessorKey: 'createdAt',
 		header: ({ column }) => <ColumnHeader column={column} title='Created at' />,
 		cell: ({ getValue }) => new Date(getValue<Generation['createdAt']>()).toDateString(),
 	},

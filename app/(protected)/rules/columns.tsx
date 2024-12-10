@@ -21,7 +21,7 @@ export const columns: ColumnDef<Rule>[] = [
 		meta: { cellClassName: 'font-medium w-[99%] break-all' },
 	},
 	{
-		accessorKey: 'created_at',
+		accessorKey: 'createdAt',
 		header: ({ column }) => <ColumnHeader column={column} title='Created at' />,
 		cell: ({ getValue }) => new Date(getValue<Rule['createdAt']>()).toDateString(),
 		meta: { className: 'hidden md:table-cell whitespace-nowrap' },

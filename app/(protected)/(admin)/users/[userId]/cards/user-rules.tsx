@@ -12,7 +12,7 @@ export default function UserRules({ rules }: { rules: Rule[] }) {
 				</div>
 			</CardHeader>
 			<CardContent>
-				<DataTable columns={ruleColumns} data={rules} defaultState={{ pageSize: 5, sorting: [{ id: 'created_at', desc: true }] }} />
+				<DataTable columns={ruleColumns} data={rules} defaultState={{ pageSize: 5, sorting: [{ id: 'createdAt', desc: true }] }} />
 			</CardContent>
 		</Card>
 	)

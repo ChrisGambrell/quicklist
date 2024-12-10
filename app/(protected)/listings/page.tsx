@@ -27,7 +27,7 @@ export default async function ListingsPage() {
 			<ChatImageUpload />
 
 			{listings && listings.length > 0 && (
-				<DataTable columns={columns} data={listings} defaultState={{ pageSize: 5, sorting: [{ id: 'created_at', desc: true }] }} />
+				<DataTable columns={columns} data={listings} defaultState={{ pageSize: 5, sorting: [{ id: 'createdAt', desc: true }] }} />
 			)}
 		</div>
 	)

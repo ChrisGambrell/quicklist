@@ -45,7 +45,7 @@ export const columns: ColumnDef<ColType>[] = [
 		meta: { className: 'hidden md:table-cell whitespace-nowrap' },
 	},
 	{
-		accessorKey: 'created_at',
+		accessorKey: 'createdAt',
 		header: ({ column }) => <ColumnHeader column={column} title='Created at' />,
 		cell: ({ getValue }) => new Date(getValue<ColType['createdAt']>()).toDateString(),
 		meta: { className: 'hidden md:table-cell whitespace-nowrap' },

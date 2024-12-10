@@ -12,7 +12,7 @@ export default function ListingGenerations({ generations }: { generations: Gener
 				</div>
 			</CardHeader>
 			<CardContent>
-				<DataTable columns={columns} data={generations} defaultState={{ sorting: [{ id: 'created_at', desc: true }] }} />
+				<DataTable columns={columns} data={generations} defaultState={{ sorting: [{ id: 'createdAt', desc: true }] }} />
 			</CardContent>
 		</Card>
 	)
