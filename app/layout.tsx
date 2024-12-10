@@ -1,4 +1,4 @@
-import GlobalToaster from '@/components/global-toaster'
+import { GlobalToaster } from '@/components/global-toaster'
 import '@/lib/env'
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
