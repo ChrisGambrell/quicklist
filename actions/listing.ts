@@ -16,7 +16,7 @@ export async function createListing() {
 	redirect(`/listings/${newListing.id}/edit`)
 }
 
-export async function updateListing({ listingId }: { listingId: Listing['id'] }, formData: FormData) {
+export async function updateListing({ listingId }: { listingId: Listing['id'] }, _prevState: any, formData: FormData) {
 	const { data, errors } = parseFormData(formData, updateListingSchema)
 	if (errors) return { errors }
 
