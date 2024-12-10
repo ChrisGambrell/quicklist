@@ -8,17 +8,12 @@ import { UpsertRule } from '@/components/upsert-rule'
 import { Rule } from '@prisma/client'
 import { ColumnDef } from '@tanstack/react-table'
 import { EditIcon, Trash2Icon } from 'lucide-react'
-import Link from 'next/link'
 
 export const columns: ColumnDef<Rule>[] = [
 	{
 		accessorKey: 'rule',
 		header: ({ column }) => <ColumnHeader column={column} title='Rule' />,
-		cell: ({ getValue, row }) => (
-			<Link className='line-clamp-1 hover:underline' href={`/rules/${row.original.id}/edit`}>
-				{getValue<Rule['rule']>() ?? '-'}
-			</Link>
-		),
+		cell: ({ getValue }) => getValue<Rule['rule']>() ?? '-',
 		meta: { cellClassName: 'font-medium w-[99%] break-all' },
 	},
 	{
