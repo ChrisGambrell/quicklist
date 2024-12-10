@@ -1,13 +1,14 @@
 'use client'
 
+import { deleteRule } from '@/actions/rule'
 import { ColumnHeader } from '@/components/column-header'
+import { ConfirmDelete } from '@/components/confirm-delete'
 import { Button } from '@/components/ui/button'
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
+import { UpsertRule } from '@/components/upsert-rule'
 import { Rule } from '@prisma/client'
 import { ColumnDef } from '@tanstack/react-table'
-import { MoreHorizontalIcon } from 'lucide-react'
+import { EditIcon, Trash2Icon } from 'lucide-react'
 import Link from 'next/link'
-import { useRouter } from 'next/navigation'
 
 export const columns: ColumnDef<Rule>[] = [
 	{
@@ -29,38 +30,19 @@ export const columns: ColumnDef<Rule>[] = [
 	{
 		id: 'actions',
 		header: () => <span className='sr-only'>Actions</span>,
-		cell: ({ row }) => <Actions ruleId={row.original.id} />,
-		meta: { className: 'whitespace-nowrap' },
+		cell: ({ row }) => (
+			<div className='flex gap-1'>
+				<UpsertRule rule={row.original}>
+					<Button className='size-6 p-0' variant='outline'>
+						<EditIcon className='size-4' />
+					</Button>
+				</UpsertRule>
+				<ConfirmDelete action={deleteRule.bind(null, { ruleId: row.original.id })}>
+					<Button className='size-6 p-0' variant='outline'>
+						<Trash2Icon className='size-4' />
+					</Button>
+				</ConfirmDelete>
+			</div>
+		),
 	},
 ]
-
-export default function Actions({ ruleId }: { ruleId: Rule['id'] }) {
-	const router = useRouter()
-
-	// async function deleteRule() {
-	// 	const supabase = createClient()
-
-	// 	const { error } = await supabase.from('rules').delete().eq('id', ruleId)
-	// 	if (error) return toast.error(error.message)
-
-	// 	toast.success('Rule deleted')
-	// 	router.refresh()
-	// }
-
-	return (
-		<DropdownMenu>
-			<DropdownMenuTrigger asChild>
-				<Button aria-haspopup='true' size='icon' variant='ghost'>
-					<MoreHorizontalIcon className='h-4 w-4' />
-					<span className='sr-only'>Toggle menu</span>
-				</Button>
-			</DropdownMenuTrigger>
-			<DropdownMenuContent align='end'>
-				<DropdownMenuLabel>Actions</DropdownMenuLabel>
-				<DropdownMenuItem onClick={() => router.push(`/rules/${ruleId}/edit`)}>Edit</DropdownMenuItem>
-				{/* TODO: Delete rule */}
-				<DropdownMenuItem>Delete</DropdownMenuItem>
-			</DropdownMenuContent>
-		</DropdownMenu>
-	)
-}

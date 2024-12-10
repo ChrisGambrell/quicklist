@@ -1,6 +1,6 @@
-import { createRule } from '@/actions/rule'
-import ActionButton from '@/components/action-button'
 import { DataTable } from '@/components/data-table'
+import { Button } from '@/components/ui/button'
+import { UpsertRule } from '@/components/upsert-rule'
 import { auth } from '@/lib/auth'
 import prisma from '@/lib/db'
 import { PlusCircleIcon } from 'lucide-react'
@@ -19,30 +19,31 @@ export default async function RulesPage() {
 
 	return (
 		<div className='container grid gap-4'>
-			<AddRuleButton />
+			<div className='flex justify-end'>
+				<UpsertRule>
+					<Button size='sm'>
+						<PlusCircleIcon className='size-4 mr-2' />
+						Add Rule
+					</Button>
+				</UpsertRule>
+			</div>
 
 			{rules?.length ? (
-				<DataTable columns={columns} data={rules} defaultState={{ pageSize: 10, sorting: [{ id: 'created_at', desc: true }] }} />
+				<DataTable columns={columns} data={rules} defaultState={{ pageSize: 10, sorting: [{ id: 'createdAt', desc: true }] }} />
 			) : (
 				<div className='flex items-center justify-center rounded-lg border border-dashed shadow-sm p-12'>
 					<div className='flex flex-col items-center gap-1 text-center'>
 						<h3 className='text-2xl font-bold tracking-tight'>You have no rules</h3>
 						<p className='text-sm text-muted-foreground mb-4'>Start by adding a rule.</p>
-						<AddRuleButton />
+						<UpsertRule>
+							<Button size='sm'>
+								<PlusCircleIcon className='size-4 mr-2' />
+								Add Rule
+							</Button>
+						</UpsertRule>
 					</div>
 				</div>
 			)}
 		</div>
-	)
-}
-
-function AddRuleButton() {
-	return (
-		<form action={createRule} className='flex justify-end'>
-			<ActionButton className='gap-1' size='sm'>
-				<PlusCircleIcon className='w-3.5 h-3.5' />
-				Add Rule
-			</ActionButton>
-		</form>
 	)
 }

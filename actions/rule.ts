@@ -4,27 +4,21 @@ import { auth } from '@/lib/auth'
 import prisma from '@/lib/db'
 import { getSuccessRedirect, parseFormData } from '@cgambrell/utils'
 import { Rule } from '@prisma/client'
-import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
 import { z } from 'zod'
 
-const updateRuleSchema = z.object({ rule: z.string().transform((arg) => (!arg.trim() ? null : arg)) })
-
-export async function createRule() {
-	const user = await auth()
-	const newRule = await prisma.rule.create({ data: { userId: user.id } })
-
-	revalidatePath('/rules', 'layout')
-	redirect(`/rules/${newRule.id}/edit`)
-}
-
-export async function updateRule({ ruleId }: { ruleId: Rule['id'] }, _prevState: any, formData: FormData) {
-	const { data, errors } = parseFormData(formData, updateRuleSchema)
+export async function upsertRule({ ruleId }: { ruleId?: Rule['id'] }, _prevState: any, formData: FormData) {
+	const { data, errors } = parseFormData(
+		formData,
+		z.object({ rule: z.string({ required_error: 'Rule is required' }).min(1, { message: 'Rule is required' }) })
+	)
 	if (errors) return { errors }
 
-	await prisma.rule.update({ where: { id: ruleId }, data })
+	const user = await auth()
+	// TODO: Where should slways come last on upsert
+	await prisma.rule.upsert({ create: { ...data, userId: user.id }, update: data, where: { id: ruleId ?? '' } })
 
-	redirect(getSuccessRedirect(`/rules/${ruleId}/edit`, 'Rule updated'))
+	redirect(getSuccessRedirect('/rules', 'Rule saved'))
 }
 
 export async function deleteRule({ ruleId }: { ruleId: Rule['id'] }) {
