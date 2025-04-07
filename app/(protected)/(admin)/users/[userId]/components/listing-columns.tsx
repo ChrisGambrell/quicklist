@@ -1,7 +1,7 @@
 'use client'
 
 import { ColumnHeader } from '@/components/column-header'
-import { PLACEHOLDER_IMAGE } from '@/utils/constants'
+import { PLACEHOLDER_IMAGE } from '@/lib/constants'
 import { getImageUrl } from '@/utils/helpers'
 import { Listing, ListingWithImages } from '@/utils/types'
 import { ColumnDef } from '@tanstack/react-table'

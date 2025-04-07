@@ -1,5 +1,5 @@
 import { Database } from '@/db_types'
-import { env } from '@/env'
+import { env } from '@/lib/env'
 import { createServerClient, type CookieOptions } from '@supabase/ssr'
 import { NextResponse, type NextRequest } from 'next/server'
 

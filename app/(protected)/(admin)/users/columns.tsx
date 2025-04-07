@@ -1,7 +1,7 @@
 'use client'
 
 import { ColumnHeader } from '@/components/column-header'
-import { PLACEHOLDER_AVATAR } from '@/utils/constants'
+import { PLACEHOLDER_AVATAR } from '@/lib/constants'
 import { UserWithGenerationsAndPurchases } from '@/utils/types'
 import { ColumnDef } from '@tanstack/react-table'
 import Image from 'next/image'

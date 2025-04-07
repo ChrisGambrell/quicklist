@@ -1,6 +1,6 @@
 import { deleteImage } from '@/actions/listing'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { PLACEHOLDER_IMAGE } from '@/utils/constants'
+import { PLACEHOLDER_IMAGE } from '@/lib/constants'
 import { getImageUrl } from '@/utils/helpers'
 import { ListingWithGenerationsAndImages, ListingImage as TListingImage } from '@/utils/types'
 import Image from 'next/image'

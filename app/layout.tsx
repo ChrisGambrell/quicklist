@@ -1,5 +1,5 @@
-import GlobalToaster from '@/components/global-toaster'
-import '@/env'
+import { GlobalToaster } from '@/components/ui/f/global-toaster'
+import '@/lib/env'
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import { Suspense } from 'react'

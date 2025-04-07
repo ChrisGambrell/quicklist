@@ -1,12 +1,12 @@
 'use server'
 
-import { env } from '@/env'
+import { env } from '@/lib/env'
+import { getErrorRedirect, getSuccessRedirect } from '@/lib/utils'
 import { getAuth } from '@/utils/_helpers'
 import { parseFormData } from '@/utils/helpers'
 import { createClient } from '@/utils/supabase/server'
 import { Listing, ListingImage } from '@/utils/types'
 import { updateListingSchema } from '@/validators/listing'
-import { getErrorRedirect, getSuccessRedirect } from '@cgambrell/utils'
 import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
 import { OpenAI } from 'openai'
@@ -15,7 +15,7 @@ export async function createListing() {
 	const { auth, supabase } = await getAuth()
 
 	const { data, error } = await supabase.from('listings').insert({ user_id: auth.id }).select().single()
-	if (error || !data) redirect(getErrorRedirect('/listings', error.message ?? 'An unexpected error occurred'))
+	if (error || !data) redirect(getErrorRedirect('/listings', error?.message ?? 'An unexpected error occurred'))
 
 	revalidatePath('/listings', 'layout')
 	redirect(`/listings/${data.id}/edit`)

@@ -1,64 +1,66 @@
 'use server'
 
-import { parseFormData } from '@/utils/helpers'
-import { createClient } from '@/utils/supabase/server'
-import { getErrorRedirect, getSuccessRedirect, getURL } from '@cgambrell/utils'
-import { Provider } from '@supabase/supabase-js'
+import { handleFormAction } from '@/components/ui/f/action'
+import { signIn, signOut } from '@/lib/auth'
+import prisma from '@/lib/db'
+import { getErrorRedirect, getSuccessRedirect } from '@/lib/utils'
+import { registerSchema, verifyEmailSchema } from '@/validators/auth'
+import { Prisma } from '@prisma/client'
+import bcrypt from 'bcryptjs'
+import { AuthError } from 'next-auth'
+import { BuiltInProviderType } from 'next-auth/providers'
 import { redirect } from 'next/navigation'
-import { z } from 'zod'
 
-const signInWithPasswordSchema = z.object({ email: z.string().email(), password: z.string() })
-const signUpSchema = z.object({ name: z.string().min(1), email: z.string().email(), password: z.string() })
-const passwordResetSchema = z.object({ email: z.string().email() })
+export const login = async (_: unknown, formData: FormData) =>
+	handleFormAction(formData, registerSchema, async (data) => {
+		try {
+			await signIn('credentials', { email: data.email, password: data.password, redirectTo: '/listings' })
+		} catch (error) {
+			if (error instanceof AuthError) return { globalError: error.cause?.err?.message }
+			throw error
+		}
 
-export async function signInWithPassword(_prevState: any, formData: FormData) {
-	const { data, errors } = parseFormData(formData, signInWithPasswordSchema)
-	if (errors) return { errors }
-
-	const supabase = createClient()
-
-	const { error } = await supabase.auth.signInWithPassword(data)
-	if (error) redirect(getErrorRedirect('/sign-in', error.message))
-
-	redirect('/listings')
-}
-
-export async function signInWithOAuth(provider: Provider) {
-	const supabase = createClient()
-
-	const { data, error } = await supabase.auth.signInWithOAuth({
-		provider,
-		options: { redirectTo: getURL('/auth/callback') },
+		redirect('/listings')
 	})
-	if (error || !data) redirect(getErrorRedirect('/sign-in', error?.message ?? 'An unknown error occured'))
 
-	redirect(data.url)
+export async function logout() {
+	await signOut({ redirectTo: '/login' })
 }
 
-export async function signUp(_prevState: any, formData: FormData) {
-	const { data, errors } = parseFormData(formData, signUpSchema)
-	if (errors) return { errors }
+export async function oauth(provider: BuiltInProviderType) {
+	// TODO: Callback url
 
-	const supabase = createClient()
+	try {
+		await signIn(provider, { redirectTo: '/dashboard' })
+	} catch (error) {
+		if (error instanceof AuthError) redirect(getErrorRedirect('/login'))
+		throw error
+	}
+}
 
-	const { error } = await supabase.auth.signUp({
-		email: data.email,
-		password: data.password,
-		options: { data: { full_name: data.name } },
+export const register = async (_: unknown, formData: FormData) =>
+	handleFormAction(formData, registerSchema, async (data) => {
+		try {
+			const passwordHash = await bcrypt.hash(data.password, 10)
+			await prisma.user.create({ data: { name: `${data.firstName} ${data.lastName}`, email: data.email, passwordHash } })
+		} catch (error) {
+			if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === 'P2002')
+				return { errors: { email: ['User already exists with that email'] } }
+			else if (error instanceof AuthError) return { globalError: error.cause?.err?.message }
+			throw error
+		}
+
+		redirect(getSuccessRedirect('/login', 'Account created, please login'))
 	})
-	if (error) redirect(getErrorRedirect('/sign-up', error.message))
 
-	redirect(getSuccessRedirect('/sign-up', 'Account created successfully. Check your email for verification.'))
-}
+export const verifyEmail = async (_prevState: unknown, formData: FormData) =>
+	handleFormAction(formData, verifyEmailSchema, async (data) => {
+		try {
+			await signIn('resend', { email: data.email, redirect: false })
+		} catch (error) {
+			if (error instanceof AuthError) redirect(getErrorRedirect('/forgot', error.cause?.err?.message))
+			throw error
+		}
 
-export async function sendPasswordReset(_prevState: any, formData: FormData) {
-	const { data, errors } = parseFormData(formData, passwordResetSchema)
-	if (errors) return { errors }
-
-	const supabase = createClient()
-
-	const { error } = await supabase.auth.resetPasswordForEmail(data.email, { redirectTo: getURL('/auth/reset') })
-	if (error) redirect(getErrorRedirect('/forgot', error.message))
-
-	redirect(getSuccessRedirect('/forgot', 'Check your email for next steps.'))
-}
+		redirect(getSuccessRedirect('/login', 'A sign in link has been sent to your email address.'))
+	})

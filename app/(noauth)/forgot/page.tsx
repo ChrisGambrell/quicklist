@@ -1,28 +1,32 @@
-import feature from '@/assets/feature.png'
-import NoAuthLayout from '@/components/layout/noauth-layout'
-import Image from 'next/image'
-import ForgotPasswordForm from './forms/forgot-password-form'
+'use client'
 
-export default function Component() {
+import { verifyEmail } from '@/actions/auth'
+import { AuthLayout } from '@/components/layout/auth-layout'
+import { CardContent, CardFooter } from '@/components/ui/card'
+import { ActionButton } from '@/components/ui/f/action-button'
+import { FormInput } from '@/components/ui/f/form-input'
+import { useForm } from '@/components/ui/f/use-form'
+import Link from 'next/link'
+
+export default function ForgotPage() {
+	const [state, action] = useForm(verifyEmail)
+
 	return (
-		<NoAuthLayout action={{ href: '/sign-in', label: 'Sign In' }}>
-			<div className='mx-auto grid w-full max-w-[900px] grid-cols-1 items-center gap-12 rounded-xl bg-white p-8 shadow-lg dark:bg-gray-950 md:grid-cols-2 border'>
-				<div className='space-y-4'>
-					<div className='space-y-2'>
-						<h1 className='text-3xl font-bold'>Forgot Password</h1>
-						<p className='text-gray-500 dark:text-gray-400'>Enter your email to reset your password.</p>
-					</div>
-					<ForgotPasswordForm />
-				</div>
-
-				<Image
-					src={feature}
-					alt='Authentication'
-					className='mx-auto aspect-square overflow-hidden rounded-xl object-cover'
-					height={550}
-					width={550}
-				/>
-			</div>
-		</NoAuthLayout>
+		<AuthLayout title='Reset your password' desc="Enter your email address and we'll send you a link to reset your password">
+			<CardContent>
+				<form action={action} className='grid gap-4'>
+					<FormInput label='Email' name='email' placeholder='m@example.com' state={state} />
+					<ActionButton>Send verification</ActionButton>
+				</form>
+			</CardContent>
+			<CardFooter>
+				<p className='text-center text-sm text-muted-foreground'>
+					Remember your password?{' '}
+					<Link className='text-primary hover:underline' href='/login'>
+						Sign in
+					</Link>
+				</p>
+			</CardFooter>
+		</AuthLayout>
 	)
 }

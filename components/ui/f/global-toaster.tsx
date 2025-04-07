@@ -2,9 +2,10 @@
 
 import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 import { useEffect } from 'react'
-import toast, { Toaster } from 'react-hot-toast'
+import { toast } from 'sonner'
+import { Toaster } from '../sonner'
 
-export default function GlobalToaster() {
+export function GlobalToaster() {
 	const pathname = usePathname()
 	const router = useRouter()
 	const searchParams = useSearchParams()
@@ -23,7 +24,7 @@ export default function GlobalToaster() {
 		paramsToRemove.forEach((param) => newSearchParams.delete(param))
 		const redirectPath = `${pathname}?${newSearchParams.toString()}`
 		router.replace(redirectPath, { scroll: false })
-	}, [searchParams])
+	}, [pathname, router, searchParams])
 
-	return <Toaster />
+	return <Toaster position='top-center' richColors />
 }
