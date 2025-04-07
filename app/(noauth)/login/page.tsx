@@ -22,7 +22,7 @@ export default function LoginPage() {
 
 function Page() {
 	const searchParams = useSearchParams()
-	const callbackUrl = searchParams.get('callbackUrl') ?? '/dashboard'
+	const callbackUrl = searchParams.get('callbackUrl') ?? '/listings'
 
 	const [state, action] = useForm(login)
 

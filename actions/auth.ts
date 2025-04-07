@@ -31,7 +31,7 @@ export async function oauth(provider: BuiltInProviderType) {
 	// TODO: Callback url
 
 	try {
-		await signIn(provider, { redirectTo: '/dashboard' })
+		await signIn(provider, { redirectTo: '/listings' })
 	} catch (error) {
 		if (error instanceof AuthError) redirect(getErrorRedirect('/login'))
 		throw error
