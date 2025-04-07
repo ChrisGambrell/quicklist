@@ -15,6 +15,8 @@
 	},
 	"dependencies": {
 		"@auth/prisma-adapter": "^2.7.4",
+		"@aws-sdk/client-s3": "^3.709.0",
+		"@aws-sdk/s3-presigned-post": "^3.709.0",
 		"@cgambrell/utils": "^0.1.0",
 		"@prisma/client": "^6.0.1",
 		"@radix-ui/react-alert-dialog": "^1.1.2",

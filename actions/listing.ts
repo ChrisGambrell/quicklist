@@ -2,11 +2,15 @@
 
 import { auth } from '@/lib/auth'
 import prisma from '@/lib/db'
+import { env } from '@/lib/env'
+import { s3 } from '@/lib/s3'
 import { updateListingSchema } from '@/validators/listing'
+import { createPresignedPost } from '@aws-sdk/s3-presigned-post'
 import { getSuccessRedirect, parseFormData } from '@cgambrell/utils'
 import { Listing } from '@prisma/client'
 import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
+import { z } from 'zod'
 
 export async function createListing() {
 	const user = await auth()
@@ -23,7 +27,7 @@ export async function updateListing({ listingId }: { listingId: Listing['id'] },
 	await prisma.listing.update({ where: { id: listingId }, data })
 
 	revalidatePath(`/listings/${listingId}/edit`, 'page')
-	redirect(getSuccessRedirect(`/listings/${listingId}/edit`, 'Listing updated'))
+	redirect(getSuccessRedirect('', 'Listing updated'))
 }
 
 export async function deleteListing({ listingId }: { listingId: Listing['id'] }) {
@@ -119,6 +123,40 @@ export async function deleteListing({ listingId }: { listingId: Listing['id'] })
 // 		redirect(getErrorRedirect(`/listings/${listingId}/edit`, error instanceof Error ? error.message : 'An unexpected error occurred'))
 // 	}
 // }
+
+export async function createListingImage(_prevState: any, formData: FormData) {
+	console.log('formData', formData)
+
+	const { data, errors } = parseFormData(
+		formData,
+		z.object({
+			testing_images: z
+				.string()
+				.transform((arg) => arg.split(','))
+				.refine((arg) => arg.length > 0, { message: 'No images found' }),
+		})
+	)
+	if (errors) return { errors }
+
+	const file = data.testing_images[0]
+
+	const fileExt = file.split('.').pop()
+	const Key = `${new Date().getTime()}-${Math.random()}.${fileExt}`
+
+	try {
+		const { url, fields } = await createPresignedPost(s3, { Bucket: env.AWS_BUCKET_NAME, Key, Expires: 600 })
+
+		const fd = new FormData()
+		Object.entries(fields).forEach(([key, value]) => fd.append(key, value as string))
+		fd.append('file', file)
+
+		await fetch(url, { method: 'POST', body: fd })
+	} catch (error) {
+		throw error
+	}
+
+	redirect(getSuccessRedirect('', 'Uploaded successfully'))
+}
 
 // TODO: Reactivate delete listing image
 // export async function deleteImage({ listingId, path }: { listingId: Listing['id']; path: ListingImage['image_path'] }) {
