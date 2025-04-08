@@ -9,6 +9,8 @@ export async function handleFormAction<T extends Record<string, unknown>>(
 	onValid: (data: T) => Promise<OnValidResult<T>>
 ): Promise<ActionResult<T>> {
 	const raw: Record<string, unknown> = {}
+	// TODO: fix this
+	// @ts-ignore
 	for (const [key, value] of formData.entries()) {
 		raw[key] = value === 'on' ? true : value
 	}

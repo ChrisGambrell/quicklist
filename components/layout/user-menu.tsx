@@ -1,6 +1,7 @@
+import { logout } from '@/actions/auth'
+import { auth } from '@/lib/auth'
 import { PLACEHOLDER_AVATAR } from '@/lib/constants'
 import { cn } from '@/lib/utils'
-import { getAuth, getRemainingCredits } from '@/utils/_helpers'
 import {
 	CircleDollarSignIcon,
 	ClockIcon,
@@ -14,6 +15,7 @@ import {
 } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
+import { Icons } from '../icons'
 import { Button, buttonVariants } from '../ui/button'
 import {
 	DropdownMenu,
@@ -24,18 +26,19 @@ import {
 	DropdownMenuTrigger,
 } from '../ui/dropdown-menu'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '../ui/tooltip'
-import SignOutButton from './sign-out-button'
 
 export default async function UserMenu() {
-	const { user } = await getAuth()
-	const credits = await getRemainingCredits()
+	const user = await auth()
+	// TOOD: get remaining credits
+	// const credits = await getRemainingCredits()
+	const credits = 0
 
 	return (
 		<DropdownMenu>
 			<DropdownMenuTrigger asChild>
 				<Button variant='outline' size='icon' className='overflow-hidden rounded-full'>
 					<Image
-						src={user.avatar_url ?? PLACEHOLDER_AVATAR}
+						src={user.image ?? PLACEHOLDER_AVATAR}
 						alt='User avatar'
 						className='overflow-hidden rounded-full object-cover w-full h-full'
 						width={40}
@@ -47,7 +50,7 @@ export default async function UserMenu() {
 			<DropdownMenuContent className='w-80 mr-4'>
 				<div className='flex items-center text-sm px-2 py-1'>
 					<div>
-						<div>{user.full_name}</div>
+						<div>{user.name}</div>
 						<div className='text-xs text-foreground/80'>{user.email}</div>
 					</div>
 					<div className='ml-auto'>
@@ -69,7 +72,7 @@ export default async function UserMenu() {
 				<DropdownMenuGroup>
 					<DropdownLink href='/listings' icon={HistoryIcon} label='History' />
 					<DropdownLink href='/rules' icon={ScaleIcon} label='Rules' />
-					{user.is_admin && <DropdownLink href='/users' icon={Users2Icon} label='Users' />}
+					{user.isAdmin && <DropdownLink href='/users' icon={Users2Icon} label='Users' />}
 				</DropdownMenuGroup>
 				<DropdownMenuSeparator />
 				<DropdownMenuGroup>
@@ -82,7 +85,14 @@ export default async function UserMenu() {
 					<DropdownLink href='/settings' icon={SettingsIcon} label='Settings' />
 				</DropdownMenuGroup>
 				<DropdownMenuSeparator />
-				<SignOutButton />
+				<DropdownMenuItem>
+					<form action={logout}>
+						<button className='w-full flex items-center'>
+							<Icons.logout className='size-4 mr-2' />
+							<span>Sign out</span>
+						</button>
+					</form>
+				</DropdownMenuItem>
 			</DropdownMenuContent>
 		</DropdownMenu>
 	)
@@ -92,7 +102,7 @@ function DropdownLink({ disabled, href, icon: Icon, label }: { disabled?: boolea
 	if (disabled)
 		return (
 			<DropdownMenuItem disabled>
-				<Icon className='mr-2 h-4 w-4' />
+				<Icon />
 				<span>{label}</span>
 			</DropdownMenuItem>
 		)
@@ -100,7 +110,7 @@ function DropdownLink({ disabled, href, icon: Icon, label }: { disabled?: boolea
 	return (
 		<Link href={href}>
 			<DropdownMenuItem>
-				<Icon className='mr-2 h-4 w-4' />
+				<Icon />
 				<span>{label}</span>
 			</DropdownMenuItem>
 		</Link>

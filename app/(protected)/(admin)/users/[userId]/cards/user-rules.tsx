@@ -1,6 +1,6 @@
 import { DataTable } from '@/components/data-table'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Rule } from '@/utils/types'
+import { Rule } from '@prisma/client'
 import { ruleColumns } from '../components/rule-columns'
 
 export default function UserRules({ rules }: { rules: Rule[] }) {

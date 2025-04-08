@@ -2,14 +2,11 @@
 
 'use client'
 
-import { generateListingData } from '@/actions/listing'
 import { Button } from '@/components/ui/button'
 import { requiredCredits } from '@/utils/helpers'
-import { createClient } from '@/utils/supabase/client'
 import { Loader2Icon, UploadIcon } from 'lucide-react'
 import Image from 'next/image'
 import { ChangeEvent, FormEvent, useState } from 'react'
-import toast from 'react-hot-toast'
 
 // BUG: Need to only accept certain files and a max file size of 50mb
 export default function ChatImageUpload() {
@@ -26,34 +23,33 @@ export default function ChatImageUpload() {
 		event.preventDefault()
 
 		setIsLoading(true)
-		if (!images.length) return setIsLoading(false)
+		// TODO: upload images
+		// if (!images.length) return setIsLoading(false)
 
-		const supabase = createClient()
+		// const {
+		// 	data: { user },
+		// } = await supabase.auth.getUser()
+		// if (!user) return toast.error('User not found')
 
-		const {
-			data: { user },
-		} = await supabase.auth.getUser()
-		if (!user) return toast.error('User not found')
+		// const { data: listing, error: createListingError } = await supabase.from('listings').insert({ user_id: user.id }).select().single()
+		// if (createListingError || !listing) {
+		// 	setIsLoading(false)
+		// 	return toast.error(createListingError?.message ?? 'An unexpected error occurred')
+		// }
 
-		const { data: listing, error: createListingError } = await supabase.from('listings').insert({ user_id: user.id }).select().single()
-		if (createListingError || !listing) {
-			setIsLoading(false)
-			return toast.error(createListingError?.message ?? 'An unexpected error occurred')
-		}
+		// for (let i = 0; i < images.length; i++) {
+		// 	const file = images[i]
+		// 	const fileExt = file.name.split('.').pop()
+		// 	const filePath = `${listing.id}/${new Date().getTime()}-${Math.random()}.${fileExt}`
 
-		for (let i = 0; i < images.length; i++) {
-			const file = images[i]
-			const fileExt = file.name.split('.').pop()
-			const filePath = `${listing.id}/${new Date().getTime()}-${Math.random()}.${fileExt}`
+		// 	const { error } = await supabase.storage.from('listing_images').upload(filePath, file)
+		// 	if (error) {
+		// 		setIsLoading(false)
+		// 		return toast.error(error.message)
+		// 	}
+		// }
 
-			const { error } = await supabase.storage.from('listing_images').upload(filePath, file)
-			if (error) {
-				setIsLoading(false)
-				return toast.error(error.message)
-			}
-		}
-
-		await generateListingData({ listingId: listing.id })
+		// await generateListingData({ listingId: listing.id })
 		setIsLoading(false)
 	}
 

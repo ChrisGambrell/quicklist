@@ -1,7 +1,8 @@
 import { createRule } from '@/actions/rule'
-import ActionButton from '@/components/action-button'
 import { DataTable } from '@/components/data-table'
-import { getAuth } from '@/utils/_helpers'
+import { ActionButton } from '@/components/ui/f/action-button'
+import { auth } from '@/lib/auth'
+import prisma from '@/lib/db'
 import { PlusCircleIcon } from 'lucide-react'
 import { Metadata } from 'next'
 import { columns } from './columns'
@@ -12,8 +13,8 @@ export const metadata: Metadata = {
 }
 
 export default async function RulesPage() {
-	const { user, supabase } = await getAuth()
-	const { data: rules } = await supabase.from('rules').select().eq('user_id', user.id).order('created_at', { ascending: true })
+	const user = await auth()
+	const rules = await prisma.rule.findMany({ where: { userId: user.id }, orderBy: { createdAt: 'desc' } })
 
 	return (
 		<div className='container grid gap-4'>
@@ -37,9 +38,9 @@ export default async function RulesPage() {
 function AddRuleButton() {
 	return (
 		<form action={createRule} className='flex justify-end'>
-			<ActionButton className='gap-1' size='sm'>
-				<PlusCircleIcon className='w-3.5 h-3.5' />
-				Add Rule
+			<ActionButton size='sm'>
+				<PlusCircleIcon />
+				<span>Add Rule</span>
 			</ActionButton>
 		</form>
 	)

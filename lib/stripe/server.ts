@@ -1,24 +1,22 @@
 'use server'
 
-import { getErrorRedirect, getSuccessRedirect, getURL } from '@cgambrell/utils'
+import { calculateTrialEndUnixTimestamp } from '@/utils/helpers'
+import { createOrRetrieveCustomer } from '@/utils/supabase/admin'
+import { CheckoutResponse } from '@/utils/types'
+import { Price } from '@prisma/client'
 import Stripe from 'stripe'
-import { getAuth } from '../_helpers'
-import { calculateTrialEndUnixTimestamp } from '../helpers'
-import { createOrRetrieveCustomer } from '../supabase/admin'
-import { CheckoutResponse, Price } from '../types'
+import { auth } from '../auth'
+import { getErrorRedirect, getSuccessRedirect } from '../utils'
 import { stripe } from './config'
 
 export async function checkoutWithStripe(price: Price): Promise<CheckoutResponse> {
 	try {
-		const { user } = await getAuth()
+		const user = await auth()
 
 		// Retrieve or create the customer in Stripe
 		let customer: string
 		try {
-			customer = await createOrRetrieveCustomer({
-				uuid: user?.id || '',
-				email: user?.email || '',
-			})
+			customer = await createOrRetrieveCustomer({ uuid: user.id ?? '', email: user.email ?? '' })
 		} catch (err) {
 			console.error(err)
 			throw new Error('Unable to access customer record.')
@@ -37,17 +35,19 @@ export async function checkoutWithStripe(price: Price): Promise<CheckoutResponse
 					quantity: 1,
 				},
 			],
-			cancel_url: getURL('/pricing'),
-			success_url: getURL(getSuccessRedirect('/listings', 'Purchase successful.')),
+			// TOOD: getURL
+			// cancel_url: getURL('/pricing'),
+			cancel_url: '/pricing',
+			success_url: getSuccessRedirect('/listings', 'Purchase successful.'),
 		}
 
-		console.log('Trial end:', calculateTrialEndUnixTimestamp(price.trial_period_days))
+		console.log('Trial end:', calculateTrialEndUnixTimestamp(price.trialPeriodDays))
 		if (price.type === 'recurring')
 			params = {
 				...params,
 				mode: 'subscription',
 				subscription_data: {
-					trial_end: calculateTrialEndUnixTimestamp(price.trial_period_days),
+					trial_end: calculateTrialEndUnixTimestamp(price.trialPeriodDays),
 				},
 			}
 		else if (price.type === 'one_time')
@@ -82,7 +82,7 @@ export async function checkoutWithStripe(price: Price): Promise<CheckoutResponse
 
 export async function createStripePortal(currentPath: string) {
 	try {
-		const { user } = await getAuth()
+		const user = await auth()
 
 		let customer
 		try {
@@ -100,7 +100,9 @@ export async function createStripePortal(currentPath: string) {
 		try {
 			const { url } = await stripe.billingPortal.sessions.create({
 				customer,
-				return_url: getURL('/'),
+				// return_url: getURL('/'),
+				// TODO: getURL
+				return_url: '/',
 			})
 			if (!url) throw new Error('Could not create billing portal')
 

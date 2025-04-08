@@ -1,9 +1,9 @@
 'use server'
 
-import { getAuth } from '@/utils/_helpers'
+import { auth } from '@/lib/auth'
+import prisma from '@/lib/db'
+import { getSuccessRedirect } from '@/lib/utils'
 import { parseFormData } from '@/utils/helpers'
-import { createClient } from '@/utils/supabase/server'
-import { getErrorRedirect, getSuccessRedirect } from '@cgambrell/utils'
 import { redirect } from 'next/navigation'
 import { z } from 'zod'
 
@@ -14,47 +14,47 @@ const updatePasswordSchema = z.object({ password: z.string().min(8).optional(), 
 export async function updateName(formData: FormData) {
 	const { data, errors } = parseFormData(formData, updateNameSchema)
 	if (errors) return { errors }
+	const user = await auth()
 
-	const { auth, supabase } = await getAuth()
-
-	const { error } = await supabase.from('users').update(data).eq('id', auth.id)
-	if (error) redirect(getErrorRedirect('/settings', error.message))
-
+	await prisma.user.update({ where: { id: user.id }, data })
 	redirect(getSuccessRedirect('/settings', 'Name updated'))
 }
 
-export async function updateAvatar(formData: FormData) {
-	const { data, errors } = parseFormData(formData, updateAvatarSchema)
-	if (errors) return { errors }
-	else if (data.avatar.size === 0) redirect(getErrorRedirect('/settings', 'File must not be empty'))
+// TODO: Update avatar
+// export async function updateAvatar(formData: FormData) {
+// 	const { data, errors } = parseFormData(formData, updateAvatarSchema)
+// 	if (errors) return { errors }
+// 	else if (data.avatar.size === 0) redirect(getErrorRedirect('/settings', 'File must not be empty'))
 
-	const { user, supabase } = await getAuth()
+// 	const { user, supabase } = await auth()
 
-	const file = data.avatar
-	const fileExt = file.name.split('.').pop()
-	const filePath = `${user.id}/${new Date().getTime()}-${Math.random()}.${fileExt}`
+// 	const file = data.avatar
+// 	const fileExt = file.name.split('.').pop()
+// 	const filePath = `${user.id}/${new Date().getTime()}-${Math.random()}.${fileExt}`
 
-	const { error: uploadError } = await supabase.storage.from('avatars').upload(filePath, file)
-	if (uploadError) redirect(getErrorRedirect('/settings', uploadError.message))
+// 	const { error: uploadError } = await supabase.storage.from('avatars').upload(filePath, file)
+// 	if (uploadError) redirect(getErrorRedirect('/settings', uploadError.message))
 
-	const { data: uploadedAvatar } = await supabase.storage.from('avatars').getPublicUrl(filePath)
+// 	const { data: uploadedAvatar } = await supabase.storage.from('avatars').getPublicUrl(filePath)
 
-	const { error: updateUserError } = await supabase.from('users').update({ avatar_url: uploadedAvatar.publicUrl }).eq('id', user.id)
-	if (updateUserError) redirect(getErrorRedirect('/settings', updateUserError.message))
+// 	const { error: updateUserError } = await supabase.from('users').update({ avatar_url: uploadedAvatar.publicUrl }).eq('id', user.id)
+// 	if (updateUserError) redirect(getErrorRedirect('/settings', updateUserError.message))
 
-	redirect(getSuccessRedirect('/settings', 'Avatar updated'))
-}
+// 	redirect(getSuccessRedirect('/settings', 'Avatar updated'))
+// }
 
-export async function updatePassword(_prevState: any, formData: FormData) {
-	const { data, errors } = parseFormData(formData, updatePasswordSchema)
-	if (errors) return { errors }
+// TODO: Update password
+// export async function updatePassword(_prevState: any, formData: FormData) {
+// 	const { data, errors } = parseFormData(formData, updatePasswordSchema)
+// 	if (errors) return { errors }
+// 	const user = await auth()
 
-	if (!!data.password && data.password !== data.confirm_password) return { errors: { confirm_password: ['Passwords do not match'] } }
+// 	if (!!data.password && data.password !== data.confirm_password) return { errors: { confirm_password: ['Passwords do not match'] } }
 
-	const supabase = createClient()
+// 	const passwordHash = await bcrypt.hash(data.password, 10)
+// 	await prisma.user.update({where: {id: user.id, passwordHash: }})
+// 	const { error } = await supabase.auth.updateUser({ password: data.password })
+// 	if (error) redirect(getErrorRedirect('/settings/password', error.message))
 
-	const { error } = await supabase.auth.updateUser({ password: data.password })
-	if (error) redirect(getErrorRedirect('/settings/password', error.message))
-
-	redirect(getSuccessRedirect('/settings/password', 'Password updated'))
-}
+// 	redirect(getSuccessRedirect('/settings/password', 'Password updated'))
+// }

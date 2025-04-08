@@ -1,11 +1,10 @@
 'use client'
 
-import { createClient } from '@/utils/supabase/client'
-import { Listing } from '@/utils/types'
+import { Listing } from '@prisma/client'
 import { Loader2Icon, UploadIcon } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { ChangeEvent, useState } from 'react'
-import toast from 'react-hot-toast'
+import { toast } from 'sonner'
 
 export default function UploadImages({ listingId }: { listingId: Listing['id'] }) {
 	const router = useRouter()
@@ -14,20 +13,17 @@ export default function UploadImages({ listingId }: { listingId: Listing['id'] }
 	async function uploadImages(event: ChangeEvent<HTMLInputElement>) {
 		setPending(true)
 
+		// TODO: Upload images
 		try {
-			const files = event.target.files
-			if (!files || files.length === 0) throw 'No files selected'
-
-			const supabase = createClient()
-
-			for (let i = 0; i < files.length; i++) {
-				const file = files[i]
-				const fileExt = file.name.split('.').pop()
-				const filePath = `${listingId}/${new Date().getTime()}-${Math.random()}.${fileExt}`
-
-				const { error } = await supabase.storage.from('listing_images').upload(filePath, file)
-				if (error) throw error.message
-			}
+			// 	const files = event.target.files
+			// 	if (!files || files.length === 0) throw 'No files selected'
+			// 	for (let i = 0; i < files.length; i++) {
+			// 		const file = files[i]
+			// 		const fileExt = file.name.split('.').pop()
+			// 		const filePath = `${listingId}/${new Date().getTime()}-${Math.random()}.${fileExt}`
+			// 		const { error } = await supabase.storage.from('listing_images').upload(filePath, file)
+			// 		if (error) throw error.message
+			// 	}
 		} catch (error: any) {
 			toast.error(error)
 		} finally {

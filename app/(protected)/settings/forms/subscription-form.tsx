@@ -1,9 +1,13 @@
 import { updateName } from '@/actions/user'
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
-import { SubscriptionWithPriceWithProductWithAmount } from '@/utils/types'
+import { Prisma } from '@prisma/client'
 import ManageSubscriptionButton from './manage-subscription-button'
 
-export default function SubscriptionForm({ subscription }: { subscription: SubscriptionWithPriceWithProductWithAmount }) {
+export default function SubscriptionForm({
+	subscription,
+}: {
+	subscription: Prisma.SubscriptionGetPayload<{ include: { price: { include: { product: { include: { productAmounts: true } } } } } }>
+}) {
 	return (
 		<form action={updateName}>
 			<Card>
@@ -14,10 +18,11 @@ export default function SubscriptionForm({ subscription }: { subscription: Subsc
 				<CardContent>
 					<h6 className='text-xl font-semibold'>{subscription.price.product.name}</h6>
 					<p>
-						${(subscription.price.unit_amount ?? 0) / 100}/{subscription.price.interval}
+						${(subscription.price.unitAmount ?? 0) / 100}/{subscription.price.interval}
 					</p>
-					<p>{subscription.price.product.amount.listing_amount} listings/month</p>
-					<p>{subscription.price.product.amount.rule_amount} rules</p>
+					{/* TODO: fix this */}
+					{/* <p>{subscription.price.product.amount.listing_amount} listings/month</p>
+					<p>{subscription.price.product.amount.rule_amount} rules</p> */}
 				</CardContent>
 				<CardFooter className='border-t px-6 py-4'>
 					<ManageSubscriptionButton />

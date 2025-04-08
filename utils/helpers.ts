@@ -1,7 +1,7 @@
+import { ListingImage } from '@prisma/client'
 import { ZodTypeAny, z } from 'zod'
-import { ListingImage } from './types'
 
-export const getImageUrl = (path: ListingImage['image_path']) =>
+export const getImageUrl = (path: ListingImage['imagePath']) =>
 	// `${env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/listing_images/${path}`
 	`/storage/v1/object/public/listing_images/${path}`
 
@@ -28,6 +28,7 @@ export const calculateTrialEndUnixTimestamp = (trialPeriodDays: number | null | 
 	return Math.floor(trialEnd.getTime() / 1000) // Convert to Unix timestamp in seconds
 }
 
+// TODO: Remove this
 export const parseFormData = <T extends ZodTypeAny>(
 	formData: FormData,
 	schema: T

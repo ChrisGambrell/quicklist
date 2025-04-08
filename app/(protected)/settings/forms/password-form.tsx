@@ -1,14 +1,14 @@
 'use client'
 
-import { updatePassword } from '@/actions/user'
-import ActionButton from '@/components/action-button'
-import { FormError } from '@/components/form-error'
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
-import { Input } from '@/components/ui/input'
+import { ActionButton } from '@/components/ui/f/action-button'
+import { FormInput } from '@/components/ui/f/form-input'
 import { useFormState } from 'react-dom'
 
 export default function PasswordForm() {
-	const [state, action] = useFormState(updatePassword, null)
+	// TODO: updatePassword
+	// const [state, action] = useFormState(updatePassword, null)
+	const [state, action] = useFormState(async (_: unknown, formData: FormData) => {}, null)
 
 	return (
 		<form action={action}>
@@ -18,14 +18,10 @@ export default function PasswordForm() {
 					<CardDescription>Change the password you use to sign in.</CardDescription>
 				</CardHeader>
 				<CardContent className='grid gap-4'>
-					<div className='grid gap-2'>
-						<Input name='password' placeholder='Password' type='password' />
-						<FormError value={state?.errors.password} />
-					</div>
-					<div className='grid gap-2'>
-						<Input name='confirm_password' placeholder='Confirm Password' type='password' />
-						<FormError value={state?.errors.confirm_password} />
-					</div>
+					{/* TODO: State */}
+					<FormInput name='password' type='password' state={undefined} />
+					{/* TODO: State */}
+					<FormInput name='confirmPassword' type='password' state={undefined} />
 				</CardContent>
 				<CardFooter className='border-t px-6 py-4'>
 					<ActionButton>Save</ActionButton>

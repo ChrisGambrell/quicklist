@@ -1,17 +1,18 @@
-import { env } from '@/lib/env'
 import { stripe } from '@/lib/stripe/config'
 import { toDateTime } from '@/utils/helpers'
-import { Price as TPrice, Product as TProduct } from '@/utils/types'
 import { createClient } from '@supabase/supabase-js'
 import Stripe from 'stripe'
 
-type OmitDates<T> = Omit<T, 'created_at' | 'updated_at'>
-type Product = OmitDates<TProduct>
-type ProductAmount = TablesInsert<'product_amounts'>
-type Price = OmitDates<TPrice>
+// TOOD: fix this
+type Product = any
+// TOOD: fix this
+type ProductAmount = any
+// TOOD: fix this
+type Price = any
 
 const TRIAL_PERIOD_DAYS = 0
-const supabaseAdmin = createClient(env.NEXT_PUBLIC_SUPABASE_URL, env.SUPABASE_SERVICE_ROLE_KEY)
+// const supabaseAdmin = createClient(env.NEXT_PUBLIC_SUPABASE_URL, env.SUPABASE_SERVICE_ROLE_KEY)
+const supabaseAdmin = createClient('', '')
 
 const upsertProductRecord = async (product: Stripe.Product) => {
 	const productData: Product = {
@@ -180,7 +181,8 @@ const manageSubscriptionStatusChange = async (subscriptionId: string, customerId
 		expand: ['default_payment_method'],
 	})
 	// Upsert the latest status of the subscription object.
-	const subscriptionData: TablesInsert<'subscriptions'> = {
+	// TODO: fix this
+	const subscriptionData: any = {
 		id: subscription.id,
 		user_id: uuid,
 		metadata: subscription.metadata,
@@ -221,7 +223,8 @@ const upsertPurchaseRecord = async (lineItem: Stripe.LineItem, customerId: strin
 	if (noCustomerError) throw new Error(`Customer lookup failed: ${noCustomerError.message}`)
 
 	const { id: uuid } = customerData!
-	const purchaseData: TablesInsert<'purchases'> = {
+	// TODO: fix this
+	const purchaseData: any = {
 		price_id: lineItem.price?.id,
 		user_id: uuid,
 	}
